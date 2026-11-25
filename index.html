@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مختبر الأوفاق (3×3 حتى 10×10) | أرقام وحروف</title>
+  <title>حاسبة الجُمّل والأسماء وفرز الطبائع</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +18,10 @@
       --gold-border: rgba(212, 175, 55, 0.35);
       --text: #f3f5f8;
       --muted: #9aa5b8;
-      --success: #22c55e;
+      --fire: #ef4444;
+      --earth: #22c55e;
+      --air: #38bdf8;
+      --water: #6366f1;
       --radius: 16px;
     }
 
@@ -34,15 +37,52 @@
     }
 
     .container {
-      max-width: 1080px;
+      max-width: 1020px;
       margin: 0 auto;
+    }
+
+    .nav-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--muted);
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 7px 14px;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .nav-link.active, .nav-link:hover {
+      color: var(--gold-bright);
+      border-color: var(--gold-border);
+      background: var(--gold-soft);
     }
 
     header {
       text-align: center;
+      margin-bottom: 24px;
       padding: 24px 18px;
-      margin-bottom: 22px;
-      background: linear-gradient(180deg, rgba(212,175,55,0.09), rgba(18,23,34,0.65));
+      background: linear-gradient(180deg, rgba(212,175,55,0.09), rgba(18,23,34,0.68));
       border: 1px solid var(--gold-border);
       border-radius: var(--radius);
     }
@@ -57,106 +97,20 @@
     header p {
       color: var(--muted);
       font-size: 0.95rem;
-      max-width: 720px;
+      max-width: 700px;
       margin: 0 auto;
     }
 
-    .size-selector-card {
-      background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .section-title {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .badge-free {
-      font-size: 0.78rem;
-      background: rgba(34, 197, 94, 0.15);
-      color: #4ade80;
-      border: 1px solid rgba(34, 197, 94, 0.35);
-      padding: 2px 10px;
-      border-radius: 999px;
-    }
-
-    .badge-pro {
-      font-size: 0.78rem;
-      background: var(--gold-soft);
-      color: var(--gold-bright);
-      border: 1px solid var(--gold-border);
-      padding: 2px 10px;
-      border-radius: 999px;
-    }
-
-    .sizes-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 10px;
-    }
-
-    .size-btn {
-      position: relative;
-      background: var(--surface-2);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 12px 8px;
-      font-family: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .size-btn:hover {
-      border-color: var(--gold-border);
-      transform: translateY(-1px);
-    }
-
-    .size-btn.active {
-      background: var(--gold-soft);
-      border-color: var(--gold);
-      color: var(--gold-bright);
-    }
-
-    .size-btn .tag {
-      font-size: 0.72rem;
-      padding: 1px 7px;
-      border-radius: 999px;
-    }
-
-    .size-btn.free-btn .tag {
-      background: rgba(34, 197, 94, 0.14);
-      color: #86efac;
-    }
-
-    .size-btn.pro-btn .tag {
-      background: rgba(212, 175, 55, 0.16);
-      color: var(--gold-bright);
-    }
-
-    .controls-card {
+    .card {
       background: var(--surface);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: var(--radius);
       padding: 22px;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.3);
     }
 
-    .controls-row {
+    .input-row {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
@@ -164,30 +118,30 @@
     }
 
     .field {
-      flex: 1 1 220px;
+      flex: 1 1 260px;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
 
     label {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: var(--muted);
       font-weight: 600;
     }
 
-    input[type="text"], select {
+    input[type="text"] {
       background: var(--surface-2);
       border: 1px solid rgba(255,255,255,0.12);
       color: var(--text);
       border-radius: 10px;
-      padding: 11px 14px;
+      padding: 12px 14px;
       font-family: inherit;
-      font-size: 0.98rem;
+      font-size: 1.05rem;
       outline: none;
     }
 
-    input:focus, select:focus {
+    input[type="text"]:focus {
       border-color: var(--gold);
     }
 
@@ -196,156 +150,131 @@
       color: #111;
       border: none;
       border-radius: 10px;
-      padding: 11px 20px;
+      padding: 12px 20px;
       font-family: inherit;
       font-weight: 800;
       font-size: 0.95rem;
       cursor: pointer;
       transition: transform 0.15s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .btn:hover { transform: translateY(-1px); }
 
-    .btn-outline {
+    .btn-secondary {
       background: var(--surface-2);
       color: var(--gold);
       border: 1px solid var(--gold-border);
     }
 
-    .meta-bar {
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .stat-card {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-card .label { font-size: 0.85rem; color: var(--muted); }
+    .stat-card .value {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--gold-bright);
+      margin-top: 2px;
+    }
+
+    .dominant-banner {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: var(--gold-soft);
+      border: 1px solid var(--gold-border);
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .meta-bar span strong { color: var(--gold-bright); }
-
-    .models-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 20px;
-    }
-
-    .model-card {
-      background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius);
-      padding: 20px;
-      overflow-x: auto;
-    }
-
-    .model-header {
-      display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      margin-bottom: 14px;
+      font-size: 0.95rem;
     }
 
-    .model-header h2 {
-      font-size: 1.08rem;
-      color: var(--gold);
-    }
-
-    .copy-btn {
-      background: var(--surface-2);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 8px;
-      padding: 5px 12px;
-      font-family: inherit;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-
-    .copy-btn:hover { border-color: var(--gold); color: var(--gold); }
-
-    table.grid-table {
-      border-collapse: collapse;
-      margin: 0 auto;
-    }
-
-    table.grid-table td {
-      min-width: 48px;
-      height: 46px;
-      padding: 4px 6px;
-      text-align: center;
-      vertical-align: middle;
-      border: 1px solid var(--gold-border);
-      background: var(--surface-2);
-      font-weight: 700;
-      font-size: 0.92rem;
-    }
-
-    table.grid-table td.letters-cell {
-      font-family: 'Amiri', serif;
-      font-size: 1.05rem;
-      color: var(--gold-bright);
-      min-width: 58px;
-    }
-
-    table.grid-table td.sum-cell {
-      background: transparent;
-      border: none;
-      color: var(--gold);
-      font-size: 0.8rem;
-      font-weight: 700;
-      min-width: 44px;
-    }
-
-    /* نافذة الاشتراك / الدفع للأحجام 6x6 إلى 10x10 */
-    .paywall-card {
-      background: linear-gradient(145deg, rgba(212,175,55,0.11), rgba(18,23,34,0.95));
-      border: 1px solid var(--gold);
-      border-radius: var(--radius);
-      padding: 32px 24px;
-      text-align: center;
-      max-width: 660px;
-      margin: 24px auto;
-    }
-
-    .paywall-card h2 {
-      color: var(--gold-bright);
-      font-size: 1.45rem;
-      margin-bottom: 10px;
-    }
-
-    .paywall-card p {
-      color: var(--muted);
-      margin-bottom: 18px;
-      font-size: 0.96rem;
-    }
-
-    .paywall-features {
-      list-style: none;
-      text-align: right;
-      max-width: 440px;
-      margin: 0 auto 22px;
+    .el-row {
       display: grid;
-      gap: 8px;
+      grid-template-columns: 105px 1fr 56px;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
       font-size: 0.92rem;
     }
 
-    .paywall-features li::before {
-      content: "✦ ";
-      color: var(--gold);
-      font-weight: bold;
+    .bar-wrap {
+      height: 11px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow: hidden;
     }
 
-    .paywall-actions {
+    .bar-fill { height: 100%; border-radius: 999px; transition: width 0.35s ease; }
+
+    .sorted-groups {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .group-box {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .group-box h4 {
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .group-box .chars-list {
+      font-size: 0.95rem;
+      color: var(--muted);
+      min-height: 26px;
+    }
+
+    .letters-wrap {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
     }
 
+    .letter-chip {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px;
+      padding: 8px 12px;
+      text-align: center;
+      min-width: 64px;
+    }
+
+    .letter-chip .ch { font-size: 1.2rem; font-weight: 700; display: block; }
+    .letter-chip .val { font-size: 0.82rem; color: var(--gold); }
+    .letter-chip .el { font-size: 0.72rem; color: var(--muted); display: block; }
+
     .note {
-      margin-top: 24px;
+      margin-top: 20px;
       padding: 14px 16px;
       border-radius: 12px;
       background: rgba(212, 175, 55, 0.06);
@@ -357,54 +286,86 @@
 </head>
 <body>
   <div class="container">
+    <nav class="nav-bar">
+      <div class="nav-links">
+        <a href="index.html" class="nav-link active">حاسبة الجُمّل والطبائع</a>
+        <a href="wafq.html" class="nav-link" id="goWafqLink">صفحة الأوفاق (3×3 – 10×10)</a>
+      </div>
+      <span style="font-size: 0.82rem; color: var(--muted);">نظام أبجد هوز</span>
+    </nav>
+
     <header>
-      <h1>مختبر الأوفاق العددية والحرفية</h1>
-      <p>توليد أوفاق صحيحة الأعداد بدون كسور من الثلاثي (3×3) إلى العشري (10×10)، مع تحويل الأرقام إلى حروف وكلمات وعرضها بنموذجين متكاملين.</p>
+      <h1>حاسبة الجُمّل والأسماء وفرز الطبائع</h1>
+      <p>احسب قيمة الأسماء والعبارات بحساب الجُمّل الكبير والصغير والوسيط، وافرِز حروفها حسب الطبائع الأربع بدقة وسرعة.</p>
     </header>
 
-    <!-- اختيار حجم الوفق -->
-    <section class="size-selector-card">
-      <div class="section-title">
-        <span>اختر رتبة الوفق (حجم الشبكة)</span>
-        <div>
-          <span class="badge-free">3×3 حتى 5×5: مجاني</span>
-          <span class="badge-pro">6×6 حتى 10×10: باقة الاشتراك</span>
+    <section class="card">
+      <div class="input-row">
+        <div class="field">
+          <label for="textInput">أدخل اسماً أو كلمة أو عبارة</label>
+          <input type="text" id="textInput" value="سعد خليل" placeholder="اكتب اسماً أو نصاً عربياً..." />
+        </div>
+        <button class="btn" id="calcBtn">تحليل الاسم / النص</button>
+        <button class="btn btn-secondary" id="exportBtn">حفظ بطاقة صورة</button>
+        <a href="wafq.html" class="btn btn-secondary" id="sendToWafqBtn">توليد وفق للرقم</a>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="label">الجُمّل الكبير</div>
+          <div class="value" id="bigTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">الجُمّل الصغير (جذري 9)</div>
+          <div class="value" id="smallTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">الوسيط (الباقي على 12)</div>
+          <div class="value" id="wasitTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">عدد الحروف المحتسبة</div>
+          <div class="value" id="lettersCount">0</div>
         </div>
       </div>
-      <div class="sizes-grid" id="sizesGrid"></div>
+
+      <div class="dominant-banner" id="dominantBanner"></div>
     </section>
 
-    <!-- منطقة الإدخال والتحكم -->
-    <section class="controls-card" id="controlsSection">
-      <div class="controls-row">
-        <div class="field">
-          <label for="targetInput">أدخل عدداً صحيحاً أو اسماً / عبارة</label>
-          <input type="text" id="targetInput" value="45" placeholder="مثال: 45 أو اسم..." />
-        </div>
-        <div class="field">
-          <label for="modeSelect">النمط الحسابي</label>
-          <select id="modeSelect">
-            <option value="balanced">متوازن صحيح الأعداد (توزيع المجموع)</option>
-            <option value="canonical">الوفق القياسي المتسلسل (من 1 إلى N²)</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="letterMode">طريقة تحويل الرقم إلى حروف</label>
-          <select id="letterMode">
-            <option value="compound">تركيب أبجدي (مئات + عشرات + آحاد مثل: ي ج = 13)</option>
-            <option value="direct">قيمة حرفية مباشرة / تفصيلية</option>
-          </select>
-        </div>
-        <button class="btn" id="generateBtn">توليد النموذجين</button>
+    <section class="card">
+      <h2 style="font-size: 1.08rem; color: var(--gold); margin-bottom: 14px;">فرز وتوزيع الطبائع الأربع</h2>
+
+      <div class="el-row">
+        <span>ناري 🔥</span>
+        <div class="bar-wrap"><div class="bar-fill" id="fireBar" style="background: var(--fire); width: 0%;"></div></div>
+        <span id="firePct">0%</span>
       </div>
-      <div class="meta-bar" id="metaBar"></div>
+      <div class="el-row">
+        <span>ترابي 🌱</span>
+        <div class="bar-wrap"><div class="bar-fill" id="earthBar" style="background: var(--earth); width: 0%;"></div></div>
+        <span id="earthPct">0%</span>
+      </div>
+      <div class="el-row">
+        <span>هوائي 🌬️</span>
+        <div class="bar-wrap"><div class="bar-fill" id="airBar" style="background: var(--air); width: 0%;"></div></div>
+        <span id="airPct">0%</span>
+      </div>
+      <div class="el-row">
+        <span>مائي 💧</span>
+        <div class="bar-wrap"><div class="bar-fill" id="waterBar" style="background: var(--water); width: 0%;"></div></div>
+        <span id="waterPct">0%</span>
+      </div>
+
+      <div class="sorted-groups" id="sortedGroups"></div>
     </section>
 
-    <!-- عرض النموذجين أو بوابة الاشتراك -->
-    <div id="outputArea"></div>
+    <section class="card">
+      <h2 style="font-size: 1.08rem; color: var(--gold); margin-bottom: 6px;">تفصيل قيمة وطبيعة كل حرف</h2>
+      <div class="letters-wrap" id="lettersBreakdown"></div>
+    </section>
 
     <div class="note">
-      <strong>تنويه:</strong> جميع القيم المولّدة في النموذج الأول أعداد صحيحة دقيقة، وفي النموذج الثاني تُحوّل الأعداد إلى حروف أبجد الجُمّل لأغراض الدراسة التراثية والرياضية والبحثية.
+      <strong>تنويه:</strong> حساب الجُمّل وفرز الطبائع يُعرضان هنا كمعطيات عددية وتراثية للمعرفة والاستكشاف الثقافي.
     </div>
   </div>
 
@@ -418,344 +379,188 @@
       'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
     };
 
-    // حروف الجُمّل للآحاد والعشرات والمئات
-    const ONES_MAP = { 1: 'ا', 2: 'ب', 3: 'ج', 4: 'د', 5: 'ه', 6: 'و', 7: 'ز', 8: 'ح', 9: 'ط' };
-    const TENS_MAP = { 10: 'ي', 20: 'ك', 30: 'ل', 40: 'م', 50: 'ن', 60: 'س', 70: 'ع', 80: 'ف', 90: 'ص' };
-    const HUND_MAP = { 100: 'ق', 200: 'ر', 300: 'ش', 400: 'ت', 500: 'ث', 600: 'خ', 700: 'ذ', 800: 'ض', 900: 'ظ', 1000: 'غ' };
-
-    const SIZE_NAMES = {
-      3: 'الثلاثي (3×3)',
-      4: 'الرباعي (4×4)',
-      5: 'الخماسي (5×5)',
-      6: 'السداسي (6×6)',
-      7: 'السباعي (7×7)',
-      8: 'الثماني (8×8)',
-      9: 'التاسع (9×9)',
-      10: 'العشري (10×10)'
+    const ELEMENTS_META = {
+      fire:  { name: 'ناري',  icon: '🔥', color: '#ef4444', chars: new Set(['ا','أ','إ','آ','ء','ه','ة','ط','م','ف','ش','ذ']) },
+      earth: { name: 'ترابي', icon: '🌱', color: '#22c55e', chars: new Set(['ب','و','ؤ','ي','ئ','ن','ص','ت','ض']) },
+      air:   { name: 'هوائي', icon: '🌬️', color: '#38bdf8', chars: new Set(['ج','ز','ك','س','ق','ث','ظ']) },
+      water: { name: 'مائي',  icon: '💧', color: '#6366f1', chars: new Set(['د','ح','ل','ع','ر','خ','غ']) }
     };
 
-    let selectedSize = 3;
-    let isProUnlocked = false; // يمكن تفعيلها مؤقتاً للتجربة من نافذة الاشتراك
-
-    function calcAbjadSum(str) {
-      let sum = 0;
-      for (const ch of str) {
-        if (ABJAD_VALUES[ch]) sum += ABJAD_VALUES[ch];
+    function getElementKey(ch) {
+      for (const [key, meta] of Object.entries(ELEMENTS_META)) {
+        if (meta.chars.has(ch)) return key;
       }
-      return sum;
+      return null;
     }
 
-    function parseTargetInteger(val) {
-      const clean = val.trim();
-      if (/^-?\d+$/.test(clean)) {
-        return Math.max(1, parseInt(clean, 10));
+    function analyzeText(str) {
+      let big = 0;
+      const items = [];
+      const sortedChars = { fire: [], earth: [], air: [], water: [] };
+
+      for (const rawCh of str) {
+        if (!ABJAD_VALUES[rawCh]) continue;
+        const val = ABJAD_VALUES[rawCh];
+        const elKey = getElementKey(rawCh);
+        big += val;
+
+        items.push({
+          ch: rawCh,
+          val,
+          elKey,
+          elName: elKey ? ELEMENTS_META[elKey].name : ''
+        });
+
+        if (elKey) sortedChars[elKey].push(rawCh);
       }
-      const fromText = calcAbjadSum(clean);
-      return fromText > 0 ? fromText : 45;
+
+      const digitalRoot = big === 0 ? 0 : (big % 9 === 0 ? 9 : big % 9);
+      const wasit = big === 0 ? 0 : (big % 12 === 0 ? 12 : big % 12);
+
+      return { big, digitalRoot, wasit, items, sortedChars };
     }
 
-    // توليد مربع سحري صحيح الأعداد للأعداد الفردية (الطريقة السيامية)
-    function generateOddMagicSquare(n) {
-      const grid = Array.from({ length: n }, () => Array(n).fill(0));
-      let r = 0;
-      let c = Math.floor(n / 2);
+    function renderAll() {
+      const text = document.getElementById('textInput').value;
+      const res = analyzeText(text);
 
-      for (let num = 1; num <= n * n; num++) {
-        grid[r][c] = num;
-        const nextR = (r - 1 + n) % n;
-        const nextC = (c + 1) % n;
-        if (grid[nextR][nextC] !== 0) {
-          r = (r + 1) % n;
-        } else {
-          r = nextR;
-          c = nextC;
-        }
+      document.getElementById('bigTotal').textContent = res.big.toLocaleString('ar');
+      document.getElementById('smallTotal').textContent = res.digitalRoot;
+      document.getElementById('wasitTotal').textContent = res.wasit;
+      document.getElementById('lettersCount').textContent = res.items.length;
+
+      // تحديث رابط الانتقال المباشر لصفحة الأوفاق مع تمرير المجموع
+      const targetSum = res.big > 0 ? res.big : 45;
+      const wafqUrl = `wafq.html?sum=${targetSum}&label=${encodeURIComponent(text.trim() || targetSum)}`;
+      document.getElementById('goWafqLink').href = wafqUrl;
+      document.getElementById('sendToWafqBtn').href = wafqUrl;
+
+      const totalEl = res.items.length || 1;
+      const pct = (n) => Math.round((n / totalEl) * 100);
+
+      const counts = {
+        fire: res.sortedChars.fire.length,
+        earth: res.sortedChars.earth.length,
+        air: res.sortedChars.air.length,
+        water: res.sortedChars.water.length
+      };
+
+      const pcts = {
+        fire: pct(counts.fire),
+        earth: pct(counts.earth),
+        air: pct(counts.air),
+        water: pct(counts.water)
+      };
+
+      document.getElementById('fireBar').style.width = pcts.fire + '%';
+      document.getElementById('earthBar').style.width = pcts.earth + '%';
+      document.getElementById('airBar').style.width = pcts.air + '%';
+      document.getElementById('waterBar').style.width = pcts.water + '%';
+
+      document.getElementById('firePct').textContent = pcts.fire + '%';
+      document.getElementById('earthPct').textContent = pcts.earth + '%';
+      document.getElementById('airPct').textContent = pcts.air + '%';
+      document.getElementById('waterPct').textContent = pcts.water + '%';
+
+      // تحديد الطبع الغالب
+      let topKey = 'fire';
+      for (const k of ['earth', 'air', 'water']) {
+        if (counts[k] > counts[topKey]) topKey = k;
       }
-      return grid;
+
+      document.getElementById('dominantBanner').innerHTML = res.items.length
+        ? `<span>الطبع الغالب في النص: <strong style="color:${ELEMENTS_META[topKey].color};">${ELEMENTS_META[topKey].name} ${ELEMENTS_META[topKey].icon}</strong> (${counts[topKey]} حروف)</span>
+           <span>الرمز الرقمي للجُمّل: <strong>${res.big}</strong></span>`
+        : `<span>أدخل نصاً عربياً لعرض الطبع الغالب وتحليل الحروف.</span>`;
+
+      // عرض مجموعات الحروف المفروزة حسب الطبع
+      document.getElementById('sortedGroups').innerHTML = Object.entries(ELEMENTS_META).map(([key, meta]) => `
+        <div class="group-box">
+          <h4>
+            <span style="color:${meta.color};">${meta.name} ${meta.icon}</span>
+            <span>${res.sortedChars[key].length}</span>
+          </h4>
+          <div class="chars-list">${res.sortedChars[key].length ? res.sortedChars[key].join(' ، ') : '—'}</div>
+        </div>
+      `).join('');
+
+      // تفصيل كل حرف
+      document.getElementById('lettersBreakdown').innerHTML = res.items.map(item => `
+        <div class="letter-chip">
+          <span class="ch">${item.ch}</span>
+          <span class="val">${item.val}</span>
+          <span class="el">${item.elName}</span>
+        </div>
+      `).join('');
     }
 
-    // توليد مربع سحري صحيح الأعداد للأعداد الزوجية (4, 6, 8, 10)
-    function generateEvenMagicSquare(n) {
-      if (n % 4 === 0) {
-        // طريقة التبادل القطري لمضاعفات 4 (4x4, 8x8)
-        const grid = Array.from({ length: n }, (_, r) =>
-          Array.from({ length: n }, (_, c) => r * n + c + 1)
-        );
-        for (let r = 0; r < n; r++) {
-          for (let c = 0; c < n; c++) {
-            const inBlock = ((r % 4 === c % 4) || ((r % 4) + (c % 4) === 3));
-            if (inBlock) {
-              grid[r][c] = n * n + 1 - grid[r][c];
-            }
-          }
-        }
-        return grid;
-      } else {
-        // طريقة Strachey للأعداد الزوجية غير القابلة للقسمة على 4 (6x6, 10x10)
-        const half = n / 2;
-        const subSquare = generateOddMagicSquare(half);
-        const grid = Array.from({ length: n }, () => Array(n).fill(0));
-        const blockSize = half * half;
-
-        for (let r = 0; r < half; r++) {
-          for (let c = 0; c < half; c++) {
-            const base = subSquare[r][c];
-            grid[r][c] = base;
-            grid[r + half][c + half] = base + blockSize;
-            grid[r][c + half] = base + 2 * blockSize;
-            grid[r + half][c] = base + 3 * blockSize;
-          }
-        }
-
-        const k = (n - 2) / 4;
-        for (let r = 0; r < half; r++) {
-          for (let c = 0; c < k; c++) {
-            const col = (r === Math.floor(half / 2)) ? c + k : c;
-            const tmp = grid[r][col];
-            grid[r][col] = grid[r + half][col];
-            grid[r + half][col] = tmp;
-          }
-          for (let c = 0; c < k - 1; c++) {
-            const col = n - 1 - c;
-            const tmp = grid[r][col];
-            grid[r][col] = grid[r + half][col];
-            grid[r + half][col] = tmp;
-          }
-        }
-        return grid;
+    async function exportCard() {
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
       }
-    }
+      const text = document.getElementById('textInput').value.trim() || 'نتيجة الجُمّل';
+      const res = analyzeText(text);
 
-    function generateBaseMagic(n) {
-      return (n % 2 === 1) ? generateOddMagicSquare(n) : generateEvenMagicSquare(n);
-    }
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1350;
+      const ctx = canvas.getContext('2d');
 
-    // ضبط الشبكة على مجموع مستهدف بأعداد صحيحة 100% دون أي كسور
-    function buildIntegerWafq(n, rawInput, mode) {
-      const base = generateBaseMagic(n);
-      const totalCells = n * n;
-      const canonicalSum = (totalCells * (totalCells + 1)) / 2;
+      const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      grad.addColorStop(0, '#121826');
+      grad.addColorStop(1, '#080b10');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      if (mode === 'canonical') {
-        return {
-          grid: base,
-          actualSum: canonicalSum,
-          rowMagic: canonicalSum / n,
-          adjustedNote: null
-        };
-      }
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.45)';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(48, 48, canvas.width - 96, canvas.height - 96);
 
-      const desiredSum = parseTargetInteger(rawInput);
+      ctx.fillStyle = '#d4af37';
+      ctx.textAlign = 'center';
+      ctx.font = 'bold 52px Cairo, sans-serif';
+      ctx.fillText('حاسبة الجُمّل وفرز الطبائع', canvas.width / 2, 165);
 
-      // لتجنب الكسور: نبحث عن خطوة صحيحة (step >= 1) وإزاحة صحيحة (offset)
-      // بحيث يكون مجموع المصفوفة = desiredSum أو أقرب مجموع صحيح ممكن
-      let bestStep = 1;
-      let bestOffset = 0;
-      let bestDiff = Infinity;
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 74px Cairo, sans-serif';
+      ctx.fillText(text, canvas.width / 2, 330);
 
-      for (let step = 1; step <= 20; step++) {
-        const scaledSum = canonicalSum * step;
-        const rawOffset = Math.round((desiredSum - scaledSum) / totalCells);
-        const resultingSum = scaledSum + rawOffset * totalCells;
-        const diff = Math.abs(resultingSum - desiredSum);
+      ctx.fillStyle = '#9aa5b8';
+      ctx.font = '600 34px Cairo, sans-serif';
+      ctx.fillText('قيمة الجُمّل الكبير', canvas.width / 2, 465);
 
-        if (diff < bestDiff) {
-          bestDiff = diff;
-          bestStep = step;
-          bestOffset = rawOffset;
-        }
-        if (diff === 0) break;
-      }
+      ctx.fillStyle = '#f0cf65';
+      ctx.font = 'bold 118px Cairo, sans-serif';
+      ctx.fillText(String(res.big), canvas.width / 2, 605);
 
-      const grid = base.map(row =>
-        row.map(val => Math.max(1, val * bestStep + bestOffset))
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = '600 35px Cairo, sans-serif';
+      ctx.fillText(`الجُمّل الصغير: ${res.digitalRoot}   |   الوسيط: ${res.wasit}`, canvas.width / 2, 735);
+
+      const totalEl = res.items.length || 1;
+      const pct = (n) => Math.round((n / totalEl) * 100);
+      ctx.font = '600 30px Cairo, sans-serif';
+      ctx.fillText(
+        `ناري ${pct(res.sortedChars.fire.length)}% • ترابي ${pct(res.sortedChars.earth.length)}% • هوائي ${pct(res.sortedChars.air.length)}% • مائي ${pct(res.sortedChars.water.length)}%`,
+        canvas.width / 2,
+        850
       );
 
-      const actualSum = grid.flat().reduce((a, b) => a + b, 0);
-      const rowMagic = actualSum / n;
+      ctx.fillStyle = 'rgba(212, 175, 55, 0.75)';
+      ctx.font = '600 28px Cairo, sans-serif';
+      ctx.fillText('حسابات عددية وتراثية', canvas.width / 2, 1230);
 
-      let adjustedNote = null;
-      if (actualSum !== desiredSum) {
-        adjustedNote = `تم ضبط المجموع تلقائياً إلى ${actualSum} (بدلاً من ${desiredSum}) لضمان بقاء جميع الأرقام صحيحة بدون كسور.`;
-      }
-
-      return { grid, actualSum, rowMagic, adjustedNote };
+      const link = document.createElement('a');
+      link.download = `abjad-${text.replace(/\s+/g, '-')}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
     }
 
-    // تحويل رقم صحيح إلى حروف أبجدية (نموذج الحروف والكلمات)
-    function numberToAbjadLetters(num, mode) {
-      if (num <= 0) return 'ـ';
-      let n = Math.floor(num);
-      const parts = [];
+    document.getElementById('calcBtn').addEventListener('click', renderAll);
+    document.getElementById('textInput').addEventListener('input', renderAll);
+    document.getElementById('exportBtn').addEventListener('click', exportCard);
 
-      if (mode === 'direct') {
-        if (HUND_MAP[n]) return HUND_MAP[n];
-        if (TENS_MAP[n]) return TENS_MAP[n];
-        if (ONES_MAP[n]) return ONES_MAP[n];
-      }
-
-      // تفكيك هرمي (ألف، مئات، عشرات، آحاد)
-      while (n >= 1000) {
-        parts.push('غ');
-        n -= 1000;
-      }
-
-      const hundreds = Math.floor(n / 100) * 100;
-      if (hundreds > 0 && HUND_MAP[hundreds]) {
-        parts.push(HUND_MAP[hundreds]);
-        n %= 100;
-      }
-
-      const tens = Math.floor(n / 10) * 10;
-      if (tens > 0 && TENS_MAP[tens]) {
-        parts.push(TENS_MAP[tens]);
-        n %= 10;
-      }
-
-      if (n > 0 && ONES_MAP[n]) {
-        parts.push(ONES_MAP[n]);
-      }
-
-      return parts.length ? parts.join(' ') : String(num);
-    }
-
-    function renderSizeButtons() {
-      const container = document.getElementById('sizesGrid');
-      container.innerHTML = '';
-
-      for (let n = 3; n <= 10; n++) {
-        const isFree = n <= 5;
-        const btn = document.createElement('button');
-        btn.className = `size-btn ${isFree ? 'free-btn' : 'pro-btn'} ${selectedSize === n ? 'active' : ''}`;
-        btn.innerHTML = `
-          <span>${n}×${n}</span>
-          <span class="tag">${isFree ? 'مجاني' : (isProUnlocked ? 'مفتوح' : 'اشتراك')}</span>
-        `;
-        btn.addEventListener('click', () => {
-          selectedSize = n;
-          renderSizeButtons();
-          renderWorkspace();
-        });
-        container.appendChild(btn);
-      }
-    }
-
-    function renderPaywall() {
-      document.getElementById('controlsSection').style.display = 'none';
-      document.getElementById('outputArea').innerHTML = `
-        <div class="paywall-card">
-          <h2>الوفق ${SIZE_NAMES[selectedSize]} متاح ضمن باقة الاشتراك</h2>
-          <p>الأحجام من 3×3 إلى 5×5 مجانية بالكامل، بينما الأوفاق الكبيرة من 6×6 حتى 10×10 مخصصة للمشتركين نظراً لتعقيد المصفوفات وتوليد النماذج الحرفية الكاملة.</p>
-          <ul class="paywall-features">
-            <li>توليد أوفاق صحيحة الأعداد من 6×6 حتى 10×10 (حتى 100 خانة)</li>
-            <li>تحويل تلقائي كامل لجميع الخلايا إلى حروف وكلمات أبجدية</li>
-            <li>تصدير ونسخ النموذجين الرقمي والحرفي بضغطة واحدة</li>
-          </ul>
-          <div class="paywall-actions">
-            <button class="btn" onclick="alert('سيتم ربط بوابة الدفع / الاشتراك هنا قريباً.')">اشترك لفتح 6×6 – 10×10</button>
-            <button class="btn btn-outline" id="unlockDemoBtn">تفعيل وضع المعاينة للتجربة الآن</button>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('unlockDemoBtn').addEventListener('click', () => {
-        isProUnlocked = true;
-        renderSizeButtons();
-        renderWorkspace();
-      });
-    }
-
-    function renderWorkspace() {
-      const isAllowed = selectedSize <= 5 || isProUnlocked;
-      if (!isAllowed) {
-        renderPaywall();
-        return;
-      }
-
-      document.getElementById('controlsSection').style.display = 'block';
-      const rawInput = document.getElementById('targetInput').value;
-      const mode = document.getElementById('modeSelect').value;
-      const letterMode = document.getElementById('letterMode').value;
-
-      const { grid, actualSum, rowMagic, adjustedNote } = buildIntegerWafq(selectedSize, rawInput, mode);
-      const n = selectedSize;
-
-      const rowSums = grid.map(r => r.reduce((a, b) => a + b, 0));
-      const colSums = Array.from({ length: n }, (_, c) => grid.reduce((acc, r) => acc + r[c], 0));
-
-      document.getElementById('metaBar').innerHTML = `
-        <span>الوفق: <strong>${SIZE_NAMES[n]}</strong></span>
-        <span>المجموع الكلي: <strong>${actualSum}</strong></span>
-        <span>مجموع الصف/العمود: <strong>${Number(rowMagic.toFixed(2))}</strong></span>
-        ${adjustedNote ? `<span style="color:#fbbf24;">${adjustedNote}</span>` : ''}
-      `;
-
-      // النموذج الأول: الأرقام الصحيحة
-      let numTable = '<table class="grid-table"><tbody>';
-      for (let r = 0; r < n; r++) {
-        numTable += '<tr>';
-        for (let c = 0; c < n; c++) {
-          numTable += `<td>${grid[r][c]}</td>`;
-        }
-        numTable += `<td class="sum-cell">=${rowSums[r]}</td></tr>`;
-      }
-      numTable += '<tr>';
-      for (let c = 0; c < n; c++) {
-        numTable += `<td class="sum-cell">=${colSums[c]}</td>`;
-      }
-      numTable += '<td class="sum-cell">مجموع</td></tr></tbody></table>';
-
-      // النموذج الثاني: تحويل الأرقام إلى حروف وكلمات
-      const letterGrid = grid.map(row => row.map(val => numberToAbjadLetters(val, letterMode)));
-      let txtTable = '<table class="grid-table"><tbody>';
-      for (let r = 0; r < n; r++) {
-        txtTable += '<tr>';
-        for (let c = 0; c < n; c++) {
-          txtTable += `<td class="letters-cell" title="الرقم: ${grid[r][c]}">${letterGrid[r][c]}</td>`;
-        }
-        txtTable += '</tr>';
-      }
-      txtTable += '</tbody></table>';
-
-      document.getElementById('outputArea').innerHTML = `
-        <div class="models-grid">
-          <div class="model-card">
-            <div class="model-header">
-              <h2>النموذج الأول: الأرقام الصحيحة</h2>
-              <button class="copy-btn" id="copyNumBtn">نسخ الأرقام</button>
-            </div>
-            ${numTable}
-          </div>
-
-          <div class="model-card">
-            <div class="model-header">
-              <h2>النموذج الثاني: الحروف والكلمات</h2>
-              <button class="copy-btn" id="copyLettersBtn">نسخ الحروف</button>
-            </div>
-            ${txtTable}
-          </div>
-        </div>
-      `;
-
-      document.getElementById('copyNumBtn').addEventListener('click', () => {
-        const text = grid.map(r => r.join('\t')).join('\n');
-        navigator.clipboard.writeText(text);
-        alert('تم نسخ النموذج الرقمي.');
-      });
-
-      document.getElementById('copyLettersBtn').addEventListener('click', () => {
-        const text = letterGrid.map(r => r.join('\t')).join('\n');
-        navigator.clipboard.writeText(text);
-        alert('تم نسخ نموذج الحروف والكلمات.');
-      });
-    }
-
-    document.getElementById('generateBtn').addEventListener('click', renderWorkspace);
-    document.getElementById('modeSelect').addEventListener('change', renderWorkspace);
-    document.getElementById('letterMode').addEventListener('change', renderWorkspace);
-
-    renderSizeButtons();
-    renderWorkspace();
+    renderAll();
   </script>
 </body>
 </html>
