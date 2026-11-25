@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مختبر الأوفاق (3×3 حتى 10×10) | أرقام وحروف</title>
+  <title>مختبر الأوفاق (3×3 حتى 10×10) | أرقام وأسماء الله الحسنى</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +18,6 @@
       --gold-border: rgba(212, 175, 55, 0.35);
       --text: #f3f5f8;
       --muted: #9aa5b8;
-      --success: #22c55e;
       --radius: 16px;
     }
 
@@ -34,8 +33,45 @@
     }
 
     .container {
-      max-width: 1080px;
+      max-width: 1100px;
       margin: 0 auto;
+    }
+
+    .nav-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--muted);
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 7px 14px;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .nav-link.active, .nav-link:hover {
+      color: var(--gold-bright);
+      border-color: var(--gold-border);
+      background: var(--gold-soft);
     }
 
     header {
@@ -57,11 +93,11 @@
     header p {
       color: var(--muted);
       font-size: 0.95rem;
-      max-width: 720px;
+      max-width: 740px;
       margin: 0 auto;
     }
 
-    .size-selector-card {
+    .size-selector-card, .controls-card {
       background: var(--surface);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: var(--radius);
@@ -105,7 +141,6 @@
     }
 
     .size-btn {
-      position: relative;
       background: var(--surface-2);
       color: var(--text);
       border: 1px solid rgba(255,255,255,0.1);
@@ -146,14 +181,6 @@
     .size-btn.pro-btn .tag {
       background: rgba(212, 175, 55, 0.16);
       color: var(--gold-bright);
-    }
-
-    .controls-card {
-      background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius);
-      padding: 22px;
-      margin-bottom: 22px;
     }
 
     .controls-row {
@@ -282,11 +309,20 @@
       font-size: 0.92rem;
     }
 
-    table.grid-table td.letters-cell {
+    table.grid-table td.names-cell {
       font-family: 'Amiri', serif;
-      font-size: 1.05rem;
+      font-size: 0.98rem;
       color: var(--gold-bright);
-      min-width: 58px;
+      min-width: 72px;
+      padding: 6px 8px;
+    }
+
+    table.grid-table td.names-cell small {
+      display: block;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-weight: 600;
     }
 
     table.grid-table td.sum-cell {
@@ -298,7 +334,6 @@
       min-width: 44px;
     }
 
-    /* نافذة الاشتراك / الدفع للأحجام 6x6 إلى 10x10 */
     .paywall-card {
       background: linear-gradient(145deg, rgba(212,175,55,0.11), rgba(18,23,34,0.95));
       border: 1px solid var(--gold);
@@ -324,7 +359,7 @@
     .paywall-features {
       list-style: none;
       text-align: right;
-      max-width: 440px;
+      max-width: 460px;
       margin: 0 auto 22px;
       display: grid;
       gap: 8px;
@@ -357,12 +392,19 @@
 </head>
 <body>
   <div class="container">
+    <nav class="nav-bar">
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">← العودة إلى صفحة الحساب والطبائع</a>
+        <a href="wafq.html" class="nav-link active">صفحة الأوفاق (3×3 – 10×10)</a>
+      </div>
+      <span style="font-size: 0.82rem; color: var(--muted);">النموذج الرقمي + أسماء الله الحسنى</span>
+    </nav>
+
     <header>
-      <h1>مختبر الأوفاق العددية والحرفية</h1>
-      <p>توليد أوفاق صحيحة الأعداد بدون كسور من الثلاثي (3×3) إلى العشري (10×10)، مع تحويل الأرقام إلى حروف وكلمات وعرضها بنموذجين متكاملين.</p>
+      <h1>مختبر الأوفاق العددية وأسماء الله الحسنى</h1>
+      <p>توليد أوفاق صحيحة الأعداد بدون كسور من الثلاثي (3×3) إلى العشري (10×10)، وعرض النموذج المقابل من أسماء الله الحسنى بحسب قيمتها في الجُمّل.</p>
     </header>
 
-    <!-- اختيار حجم الوفق -->
     <section class="size-selector-card">
       <div class="section-title">
         <span>اختر رتبة الوفق (حجم الشبكة)</span>
@@ -374,7 +416,6 @@
       <div class="sizes-grid" id="sizesGrid"></div>
     </section>
 
-    <!-- منطقة الإدخال والتحكم -->
     <section class="controls-card" id="controlsSection">
       <div class="controls-row">
         <div class="field">
@@ -389,10 +430,10 @@
           </select>
         </div>
         <div class="field">
-          <label for="letterMode">طريقة تحويل الرقم إلى حروف</label>
-          <select id="letterMode">
-            <option value="compound">تركيب أبجدي (مئات + عشرات + آحاد مثل: ي ج = 13)</option>
-            <option value="direct">قيمة حرفية مباشرة / تفصيلية</option>
+          <label for="matchMode">مطابقة الأسماء عند كبر الرقم</label>
+          <select id="matchMode">
+            <option value="nearest">أقرب اسم من حيث قيمة الجُمّل</option>
+            <option value="combo">دمج اسمين لتقريب القيمة إذا زاد الرقم</option>
           </select>
         </div>
         <button class="btn" id="generateBtn">توليد النموذجين</button>
@@ -400,11 +441,10 @@
       <div class="meta-bar" id="metaBar"></div>
     </section>
 
-    <!-- عرض النموذجين أو بوابة الاشتراك -->
     <div id="outputArea"></div>
 
     <div class="note">
-      <strong>تنويه:</strong> جميع القيم المولّدة في النموذج الأول أعداد صحيحة دقيقة، وفي النموذج الثاني تُحوّل الأعداد إلى حروف أبجد الجُمّل لأغراض الدراسة التراثية والرياضية والبحثية.
+      <strong>تنويه:</strong> تُحسب قيم الأسماء وفق ترتيب أبجد هوز وتُعرض كإسقاط عددي واستكشافي إلى جانب المصفوفة الرقمية الصحيحة.
     </div>
   </div>
 
@@ -418,10 +458,35 @@
       'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
     };
 
-    // حروف الجُمّل للآحاد والعشرات والمئات
-    const ONES_MAP = { 1: 'ا', 2: 'ب', 3: 'ج', 4: 'د', 5: 'ه', 6: 'و', 7: 'ز', 8: 'ح', 9: 'ط' };
-    const TENS_MAP = { 10: 'ي', 20: 'ك', 30: 'ل', 40: 'م', 50: 'ن', 60: 'س', 70: 'ع', 80: 'ف', 90: 'ص' };
-    const HUND_MAP = { 100: 'ق', 200: 'ر', 300: 'ش', 400: 'ت', 500: 'ث', 600: 'خ', 700: 'ذ', 800: 'ض', 900: 'ظ', 1000: 'غ' };
+    // قائمة مختارة من أسماء الله الحسنى مع حساب قيمة كل اسم وفق أبجد هوز
+    const RAW_ASMA = [
+      'الرحمن', 'الرحيم', 'الملك', 'القدوس', 'السلام', 'المؤمن', 'المهيمن', 'العزيز',
+      'الجبار', 'المتكبر', 'الخالق', 'البارئ', 'المصور', 'الغفار', 'القهار', 'الوهاب',
+      'الرزاق', 'الفتاح', 'العليم', 'القابض', 'الباسط', 'الخافض', 'الرافع', 'المعز',
+      'المذل', 'السميع', 'البصير', 'الحكم', 'العدل', 'اللطيف', 'الخبير', 'الحليم',
+      'العظيم', 'الغفور', 'الشكور', 'العلي', 'الكبير', 'الحفيظ', 'المقيت', 'الحسيب',
+      'الجليل', 'الكريم', 'الرقيب', 'المجيب', 'الواسع', 'الحكيم', 'الودود', 'المجيد',
+      'الباعث', 'الشهيد', 'الحق', 'الوكيل', 'القوي', 'المتين', 'الولي', 'الحميد',
+      'المحصي', 'المبدئ', 'المعيد', 'المحيي', 'المميت', 'الحي', 'القيوم', 'الواجد',
+      'الماجد', 'الواحد', 'الأحد', 'الصمد', 'القادر', 'المقتدر', 'المقدم', 'المؤخر',
+      'الأول', 'الآخر', 'الظاهر', 'الباطن', 'الوالي', 'المتعالي', 'البر', 'التواب',
+      'المنتقم', 'العفو', 'الرؤوف', 'مالك الملك', 'ذو الجلال والإكرام', 'المقسط',
+      'الجامع', 'الغني', 'المغني', 'المانع', 'الضار', 'النافع', 'النور', 'الهادي',
+      'البديع', 'الباقي', 'الوارث', 'الرشيد', 'الصبور'
+    ];
+
+    function calcAbjadSum(str) {
+      let sum = 0;
+      for (const ch of str) {
+        if (ABJAD_VALUES[ch]) sum += ABJAD_VALUES[ch];
+      }
+      return sum;
+    }
+
+    const ASMA_WITH_VAL = RAW_ASMA.map(name => ({
+      name,
+      val: calcAbjadSum(name)
+    }));
 
     const SIZE_NAMES = {
       3: 'الثلاثي (3×3)',
@@ -435,15 +500,7 @@
     };
 
     let selectedSize = 3;
-    let isProUnlocked = false; // يمكن تفعيلها مؤقتاً للتجربة من نافذة الاشتراك
-
-    function calcAbjadSum(str) {
-      let sum = 0;
-      for (const ch of str) {
-        if (ABJAD_VALUES[ch]) sum += ABJAD_VALUES[ch];
-      }
-      return sum;
-    }
+    let isProUnlocked = false;
 
     function parseTargetInteger(val) {
       const clean = val.trim();
@@ -454,7 +511,6 @@
       return fromText > 0 ? fromText : 45;
     }
 
-    // توليد مربع سحري صحيح الأعداد للأعداد الفردية (الطريقة السيامية)
     function generateOddMagicSquare(n) {
       const grid = Array.from({ length: n }, () => Array(n).fill(0));
       let r = 0;
@@ -474,10 +530,8 @@
       return grid;
     }
 
-    // توليد مربع سحري صحيح الأعداد للأعداد الزوجية (4, 6, 8, 10)
     function generateEvenMagicSquare(n) {
       if (n % 4 === 0) {
-        // طريقة التبادل القطري لمضاعفات 4 (4x4, 8x8)
         const grid = Array.from({ length: n }, (_, r) =>
           Array.from({ length: n }, (_, c) => r * n + c + 1)
         );
@@ -491,7 +545,6 @@
         }
         return grid;
       } else {
-        // طريقة Strachey للأعداد الزوجية غير القابلة للقسمة على 4 (6x6, 10x10)
         const half = n / 2;
         const subSquare = generateOddMagicSquare(half);
         const grid = Array.from({ length: n }, () => Array(n).fill(0));
@@ -530,7 +583,6 @@
       return (n % 2 === 1) ? generateOddMagicSquare(n) : generateEvenMagicSquare(n);
     }
 
-    // ضبط الشبكة على مجموع مستهدف بأعداد صحيحة 100% دون أي كسور
     function buildIntegerWafq(n, rawInput, mode) {
       const base = generateBaseMagic(n);
       const totalCells = n * n;
@@ -546,9 +598,6 @@
       }
 
       const desiredSum = parseTargetInteger(rawInput);
-
-      // لتجنب الكسور: نبحث عن خطوة صحيحة (step >= 1) وإزاحة صحيحة (offset)
-      // بحيث يكون مجموع المصفوفة = desiredSum أو أقرب مجموع صحيح ممكن
       let bestStep = 1;
       let bestOffset = 0;
       let bestDiff = Infinity;
@@ -582,41 +631,55 @@
       return { grid, actualSum, rowMagic, adjustedNote };
     }
 
-    // تحويل رقم صحيح إلى حروف أبجدية (نموذج الحروف والكلمات)
-    function numberToAbjadLetters(num, mode) {
-      if (num <= 0) return 'ـ';
-      let n = Math.floor(num);
-      const parts = [];
-
-      if (mode === 'direct') {
-        if (HUND_MAP[n]) return HUND_MAP[n];
-        if (TENS_MAP[n]) return TENS_MAP[n];
-        if (ONES_MAP[n]) return ONES_MAP[n];
+    // إيجاد الاسم المقابل أو الأقرب من أسماء الله الحسنى
+    function mapNumberToAsma(num, matchMode) {
+      // مطابقة مباشرة أولاً
+      const exact = ASMA_WITH_VAL.find(item => item.val === num);
+      if (exact) {
+        return { label: exact.name, sub: `${exact.val}` };
       }
 
-      // تفكيك هرمي (ألف، مئات، عشرات، آحاد)
-      while (n >= 1000) {
-        parts.push('غ');
-        n -= 1000;
+      if (matchMode === 'combo') {
+        let bestPair = null;
+        let bestDiff = Infinity;
+
+        for (let i = 0; i < ASMA_WITH_VAL.length; i++) {
+          for (let j = i; j < ASMA_WITH_VAL.length; j++) {
+            const sum = ASMA_WITH_VAL[i].val + ASMA_WITH_VAL[j].val;
+            const diff = Math.abs(sum - num);
+            if (diff < bestDiff) {
+              bestDiff = diff;
+              bestPair = [ASMA_WITH_VAL[i], ASMA_WITH_VAL[j], sum];
+              if (diff === 0) break;
+            }
+          }
+          if (bestDiff === 0) break;
+        }
+
+        if (bestPair) {
+          const [a, b, sum] = bestPair;
+          return {
+            label: a.name === b.name ? a.name : `${a.name} • ${b.name}`,
+            sub: `قيمة: ${sum}`
+          };
+        }
       }
 
-      const hundreds = Math.floor(n / 100) * 100;
-      if (hundreds > 0 && HUND_MAP[hundreds]) {
-        parts.push(HUND_MAP[hundreds]);
-        n %= 100;
+      // أقرب اسم منفرد في القيمة
+      let nearest = ASMA_WITH_VAL[0];
+      let minDiff = Math.abs(nearest.val - num);
+      for (const item of ASMA_WITH_VAL) {
+        const diff = Math.abs(item.val - num);
+        if (diff < minDiff) {
+          minDiff = diff;
+          nearest = item;
+        }
       }
 
-      const tens = Math.floor(n / 10) * 10;
-      if (tens > 0 && TENS_MAP[tens]) {
-        parts.push(TENS_MAP[tens]);
-        n %= 10;
-      }
-
-      if (n > 0 && ONES_MAP[n]) {
-        parts.push(ONES_MAP[n]);
-      }
-
-      return parts.length ? parts.join(' ') : String(num);
+      return {
+        label: nearest.name,
+        sub: `قيمة الاسم: ${nearest.val}`
+      };
     }
 
     function renderSizeButtons() {
@@ -645,11 +708,11 @@
       document.getElementById('outputArea').innerHTML = `
         <div class="paywall-card">
           <h2>الوفق ${SIZE_NAMES[selectedSize]} متاح ضمن باقة الاشتراك</h2>
-          <p>الأحجام من 3×3 إلى 5×5 مجانية بالكامل، بينما الأوفاق الكبيرة من 6×6 حتى 10×10 مخصصة للمشتركين نظراً لتعقيد المصفوفات وتوليد النماذج الحرفية الكاملة.</p>
+          <p>الأحجام من 3×3 إلى 5×5 مجانية بالكامل، بينما الأوفاق الكبيرة من 6×6 حتى 10×10 مخصصة للمشتركين.</p>
           <ul class="paywall-features">
-            <li>توليد أوفاق صحيحة الأعداد من 6×6 حتى 10×10 (حتى 100 خانة)</li>
-            <li>تحويل تلقائي كامل لجميع الخلايا إلى حروف وكلمات أبجدية</li>
-            <li>تصدير ونسخ النموذجين الرقمي والحرفي بضغطة واحدة</li>
+            <li>توليد أوفاق صحيحة الأعداد من 6×6 حتى 10×10</li>
+            <li>النموذج المقابل من أسماء الله الحسنى لكل خانة</li>
+            <li>نسخ سريع للنموذجين الرقمي والاسمي</li>
           </ul>
           <div class="paywall-actions">
             <button class="btn" onclick="alert('سيتم ربط بوابة الدفع / الاشتراك هنا قريباً.')">اشترك لفتح 6×6 – 10×10</button>
@@ -675,7 +738,7 @@
       document.getElementById('controlsSection').style.display = 'block';
       const rawInput = document.getElementById('targetInput').value;
       const mode = document.getElementById('modeSelect').value;
-      const letterMode = document.getElementById('letterMode').value;
+      const matchMode = document.getElementById('matchMode').value;
 
       const { grid, actualSum, rowMagic, adjustedNote } = buildIntegerWafq(selectedSize, rawInput, mode);
       const n = selectedSize;
@@ -705,23 +768,24 @@
       }
       numTable += '<td class="sum-cell">مجموع</td></tr></tbody></table>';
 
-      // النموذج الثاني: تحويل الأرقام إلى حروف وكلمات
-      const letterGrid = grid.map(row => row.map(val => numberToAbjadLetters(val, letterMode)));
-      let txtTable = '<table class="grid-table"><tbody>';
+      // النموذج الثاني: أسماء الله الحسنى المقابلة للرقم
+      const asmaGrid = grid.map(row => row.map(val => mapNumberToAsma(val, matchMode)));
+      let namesTable = '<table class="grid-table"><tbody>';
       for (let r = 0; r < n; r++) {
-        txtTable += '<tr>';
+        namesTable += '<tr>';
         for (let c = 0; c < n; c++) {
-          txtTable += `<td class="letters-cell" title="الرقم: ${grid[r][c]}">${letterGrid[r][c]}</td>`;
+          const cell = asmaGrid[r][c];
+          namesTable += `<td class="names-cell" title="الرقم في الوفق: ${grid[r][c]}">${cell.label}<small>${cell.sub}</small></td>`;
         }
-        txtTable += '</tr>';
+        namesTable += '</tr>';
       }
-      txtTable += '</tbody></table>';
+      namesTable += '</tbody></table>';
 
       document.getElementById('outputArea').innerHTML = `
         <div class="models-grid">
           <div class="model-card">
             <div class="model-header">
-              <h2>النموذج الأول: الأرقام الصحيحة</h2>
+              <h2>النموذج الأول: المصفوفة الرقمية</h2>
               <button class="copy-btn" id="copyNumBtn">نسخ الأرقام</button>
             </div>
             ${numTable}
@@ -729,10 +793,10 @@
 
           <div class="model-card">
             <div class="model-header">
-              <h2>النموذج الثاني: الحروف والكلمات</h2>
-              <button class="copy-btn" id="copyLettersBtn">نسخ الحروف</button>
+              <h2>النموذج الثاني: أسماء الله الحسنى المقابلة</h2>
+              <button class="copy-btn" id="copyNamesBtn">نسخ الأسماء</button>
             </div>
-            ${txtTable}
+            ${namesTable}
           </div>
         </div>
       `;
@@ -743,16 +807,22 @@
         alert('تم نسخ النموذج الرقمي.');
       });
 
-      document.getElementById('copyLettersBtn').addEventListener('click', () => {
-        const text = letterGrid.map(r => r.join('\t')).join('\n');
+      document.getElementById('copyNamesBtn').addEventListener('click', () => {
+        const text = asmaGrid.map(r => r.map(x => x.label).join('\t')).join('\n');
         navigator.clipboard.writeText(text);
-        alert('تم نسخ نموذج الحروف والكلمات.');
+        alert('تم نسخ نموذج أسماء الله الحسنى.');
       });
+    }
+
+    // قراءة القيمة المرسلة من صفحة الحساب عبر الرابط (?sum=...)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('sum')) {
+      document.getElementById('targetInput').value = params.get('sum');
     }
 
     document.getElementById('generateBtn').addEventListener('click', renderWorkspace);
     document.getElementById('modeSelect').addEventListener('change', renderWorkspace);
-    document.getElementById('letterMode').addEventListener('change', renderWorkspace);
+    document.getElementById('matchMode').addEventListener('change', renderWorkspace);
 
     renderSizeButtons();
     renderWorkspace();
