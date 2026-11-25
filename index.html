@@ -1,1 +1,716 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مختبر الجُمّل والأوفاق | حساب الجُمّل والمثلث والمربع</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --surface: #121722;
+      --surface-2: #182030;
+      --gold: #d4af37;
+      --gold-soft: rgba(212, 175, 55, 0.14);
+      --gold-border: rgba(212, 175, 55, 0.35);
+      --text: #f3f5f8;
+      --muted: #9aa5b8;
+      --fire: #ef4444;
+      --earth: #22c55e;
+      --air: #38bdf8;
+      --water: #6366f1;
+      --radius: 16px;
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(circle at top, #171f30 0%, var(--bg) 60%);
+      color: var(--text);
+      font-family: 'Cairo', sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding: 24px 18px;
+      background: linear-gradient(180deg, rgba(212,175,55,0.08), rgba(18,23,34,0.6));
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius);
+    }
+
+    header h1 {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.96rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .tab-btn {
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 13px 10px;
+      font-family: inherit;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      border-color: var(--gold-border);
+    }
+
+    .tab-btn.active {
+      background: var(--gold-soft);
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .panel {
+      display: none;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.35);
+    }
+
+    .panel.active { display: block; }
+
+    .input-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .field {
+      flex: 1 1 240px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    input[type="text"], input[type="number"], select {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--gold);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #e5c158, var(--gold));
+      color: #111;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 22px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.98rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+      align-self: flex-end;
+    }
+
+    .btn:hover { transform: translateY(-1px); opacity: 0.95; }
+
+    .btn-secondary {
+      background: var(--surface-2);
+      color: var(--gold);
+      border: 1px solid var(--gold-border);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin: 18px 0 24px;
+    }
+
+    .stat-card {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-card .label { font-size: 0.85rem; color: var(--muted); }
+    .stat-card .value {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--gold);
+      margin-top: 2px;
+    }
+
+    .elements-box {
+      background: var(--surface-2);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .elements-box h3 { font-size: 1rem; margin-bottom: 12px; color: var(--text); }
+
+    .el-row {
+      display: grid;
+      grid-template-columns: 95px 1fr 52px;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .bar-wrap {
+      height: 10px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill { height: 100%; border-radius: 999px; transition: width 0.35s ease; }
+
+    .letters-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .letter-chip {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px;
+      padding: 8px 12px;
+      text-align: center;
+      min-width: 62px;
+    }
+
+    .letter-chip .ch { font-size: 1.2rem; font-weight: 700; display: block; }
+    .letter-chip .val { font-size: 0.82rem; color: var(--gold); }
+
+    .wafq-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin: 22px 0;
+    }
+
+    .wafq-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .wafq-meta span strong { color: var(--gold); }
+
+    table.wafq-table {
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+
+    table.wafq-table td {
+      width: 66px;
+      height: 66px;
+      text-align: center;
+      vertical-align: middle;
+      border: 1px solid var(--gold-border);
+      background: var(--surface-2);
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    table.wafq-table td.sum-cell {
+      background: transparent;
+      border: none;
+      color: var(--gold);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .note {
+      margin-top: 22px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(212, 175, 55, 0.06);
+      border-right: 3px solid var(--gold);
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .share-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .tabs { grid-template-columns: 1fr; }
+      table.wafq-table td { width: 52px; height: 52px; font-size: 0.92rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>مختبر الجُمّل والأوفاق</h1>
+      <p>حساب الجُمّل وفق ترتيب أبجد هوز، تحليل الطبائع الأربع، وتوليد الأوفاق المثلثة والمربعة بتوازن رياضي واضح.</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="abjad">حاسبة الجُمّل والطبائع</button>
+      <button class="tab-btn" data-tab="wafq3">الوفق المثلث (3×3)</button>
+      <button class="tab-btn" data-tab="wafq4">الوفق المربع (4×4)</button>
+    </div>
+
+    <!-- القسم الأول: حساب الجمل والطبائع -->
+    <section id="abjad" class="panel active">
+      <div class="input-row">
+        <div class="field">
+          <label for="textInput">أدخل اسماً أو كلمة أو عبارة</label>
+          <input type="text" id="textInput" value="سعد خليل" placeholder="مثال: محمد، نور، سعد..." />
+        </div>
+        <button class="btn" id="calcAbjadBtn">احسب الآن</button>
+        <button class="btn btn-secondary" id="exportCardBtn">حفظ بطاقة صورة</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="label">الجُمّل الكبير</div>
+          <div class="value" id="bigTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">الجُمّل الصغير (جذري 9)</div>
+          <div class="value" id="smallTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">الوسيط (الباقي على 12)</div>
+          <div class="value" id="wasitTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">عدد الحروف المحتسبة</div>
+          <div class="value" id="lettersCount">0</div>
+        </div>
+      </div>
+
+      <div class="elements-box">
+        <h3>توزيع الطبائع الأربع للحروف</h3>
+        <div class="el-row">
+          <span>ناري 🔥</span>
+          <div class="bar-wrap"><div class="bar-fill" id="fireBar" style="background: var(--fire); width: 0%;"></div></div>
+          <span id="firePct">0%</span>
+        </div>
+        <div class="el-row">
+          <span>ترابي 🌱</span>
+          <div class="bar-wrap"><div class="bar-fill" id="earthBar" style="background: var(--earth); width: 0%;"></div></div>
+          <span id="earthPct">0%</span>
+        </div>
+        <div class="el-row">
+          <span>هوائي 🌬️</span>
+          <div class="bar-wrap"><div class="bar-fill" id="airBar" style="background: var(--air); width: 0%;"></div></div>
+          <span id="airPct">0%</span>
+        </div>
+        <div class="el-row">
+          <span>مائي 💧</span>
+          <div class="bar-wrap"><div class="bar-fill" id="waterBar" style="background: var(--water); width: 0%;"></div></div>
+          <span id="waterPct">0%</span>
+        </div>
+      </div>
+
+      <h3 style="font-size: 1rem; margin-bottom: 6px;">تفصيل قيمة كل حرف</h3>
+      <div class="letters-wrap" id="lettersBreakdown"></div>
+    </section>
+
+    <!-- القسم الثاني: الوفق المثلث 3x3 -->
+    <section id="wafq3" class="panel">
+      <div class="input-row">
+        <div class="field">
+          <label for="w3Input">أدخل مجموعاً عددياً أو اسماً / نصاً</label>
+          <input type="text" id="w3Input" value="45" placeholder="مثال: 45 أو اسم..." />
+        </div>
+        <div class="field">
+          <label for="w3Mode">طريقة التوليد</label>
+          <select id="w3Mode">
+            <option value="balanced">متوازن حول المفتاح (مجموع الصف = المجموع ÷ 3)</option>
+            <option value="sequential">متسلسل ابتداءً من 1 (المجموع القياسي 45)</option>
+          </select>
+        </div>
+        <button class="btn" id="genWafq3Btn">ولّد الوفق المثلث</button>
+      </div>
+
+      <div class="wafq-wrapper">
+        <div class="wafq-meta" id="w3Meta"></div>
+        <div id="w3GridContainer"></div>
+      </div>
+    </section>
+
+    <!-- القسم الثالث: الوفق المربع 4x4 -->
+    <section id="wafq4" class="panel">
+      <div class="input-row">
+        <div class="field">
+          <label for="w4Input">أدخل مجموعاً عددياً أو اسماً / نصاً</label>
+          <input type="text" id="w4Input" value="136" placeholder="مثال: 136 أو اسم..." />
+        </div>
+        <div class="field">
+          <label for="w4Mode">طريقة التوليد</label>
+          <select id="w4Mode">
+            <option value="balanced">متوازن حول الثابت (مجموع الصف = المجموع ÷ 4)</option>
+            <option value="sequential">متسلسل ابتداءً من 1 (المجموع القياسي 136)</option>
+          </select>
+        </div>
+        <button class="btn" id="genWafq4Btn">ولّد الوفق المربع</button>
+      </div>
+
+      <div class="wafq-wrapper">
+        <div class="wafq-meta" id="w4Meta"></div>
+        <div id="w4GridContainer"></div>
+      </div>
+    </section>
+
+    <div class="note">
+      <strong>تنويه:</strong> تُعرض النتائج والأوفاق هنا كحسابات عددية وتراثية مبنية على قواعد حساب الجُمّل وتوازن المصفوفات لأغراض البحث والمعرفة والتسلية الثقافية.
+    </div>
+  </div>
+
+  <script>
+    // قيم حساب الجُمّل (أبجد هوز)
+    const ABJAD_VALUES = {
+      'ا': 1, 'أ': 1, 'إ': 1, 'آ': 1, 'ى': 1, 'ء': 1,
+      'ب': 2,
+      'ج': 3,
+      'د': 4,
+      'ه': 5, 'ة': 5,
+      'و': 6, 'ؤ': 6,
+      'ز': 7,
+      'ح': 8,
+      'ط': 9,
+      'ي': 10, 'ئ': 10,
+      'ك': 20,
+      'ل': 30,
+      'م': 40,
+      'ن': 50,
+      'س': 60,
+      'ع': 70,
+      'ف': 80,
+      'ص': 90,
+      'ق': 100,
+      'ر': 200,
+      'ش': 300,
+      'ت': 400,
+      'ث': 500,
+      'خ': 600,
+      'ذ': 700,
+      'ض': 800,
+      'ظ': 900,
+      'غ': 1000
+    };
+
+    // تصنيف الطبائع الأربع (ناري، ترابي، هوائي، مائي)
+    const ELEMENTS_MAP = {
+      fire:  new Set(['ا','أ','إ','آ','ء','ه','ة','ط','م','ف','ش','ذ']),
+      earth: new Set(['ب','و','ؤ','ي','ئ','ن','ص','ت','ض']),
+      air:   new Set(['ج','ز','ك','س','ق','ث','ظ']),
+      water: new Set(['د','ح','ل','ع','ر','خ','غ'])
+    };
+
+    function normalizeArabicChar(ch) {
+      return ABJAD_VALUES[ch] ? ch : null;
+    }
+
+    function calculateAbjad(str) {
+      let big = 0;
+      const items = [];
+      const counts = { fire: 0, earth: 0, air: 0, water: 0 };
+
+      for (const rawCh of str) {
+        const ch = normalizeArabicChar(rawCh);
+        if (!ch) continue;
+        const val = ABJAD_VALUES[ch];
+        big += val;
+        items.push({ ch: rawCh, val });
+
+        if (ELEMENTS_MAP.fire.has(ch)) counts.fire++;
+        else if (ELEMENTS_MAP.earth.has(ch)) counts.earth++;
+        else if (ELEMENTS_MAP.air.has(ch)) counts.air++;
+        else if (ELEMENTS_MAP.water.has(ch)) counts.water++;
+      }
+
+      const digitalRoot = big === 0 ? 0 : (big % 9 === 0 ? 9 : big % 9);
+      const wasit = big === 0 ? 0 : (big % 12 === 0 ? 12 : big % 12);
+
+      return { big, digitalRoot, wasit, items, counts };
+    }
+
+    function parseNumberOrText(inputVal) {
+      const trimmed = inputVal.trim();
+      if (/^\d+(\.\d+)?$/.test(trimmed)) {
+        return Number(trimmed);
+      }
+      return calculateAbjad(trimmed).big;
+    }
+
+    function renderAbjad() {
+      const text = document.getElementById('textInput').value;
+      const res = calculateAbjad(text);
+
+      document.getElementById('bigTotal').textContent = res.big.toLocaleString('ar');
+      document.getElementById('smallTotal').textContent = res.digitalRoot;
+      document.getElementById('wasitTotal').textContent = res.wasit;
+      document.getElementById('lettersCount').textContent = res.items.length;
+
+      const totalEl = res.items.length || 1;
+      const pct = (n) => Math.round((n / totalEl) * 100);
+
+      const f = pct(res.counts.fire);
+      const e = pct(res.counts.earth);
+      const a = pct(res.counts.air);
+      const w = pct(res.counts.water);
+
+      document.getElementById('fireBar').style.width = f + '%';
+      document.getElementById('earthBar').style.width = e + '%';
+      document.getElementById('airBar').style.width = a + '%';
+      document.getElementById('waterBar').style.width = w + '%';
+
+      document.getElementById('firePct').textContent = f + '%';
+      document.getElementById('earthPct').textContent = e + '%';
+      document.getElementById('airPct').textContent = a + '%';
+      document.getElementById('waterPct').textContent = w + '%';
+
+      const container = document.getElementById('lettersBreakdown');
+      container.innerHTML = res.items.map(item => `
+        <div class="letter-chip">
+          <span class="ch">${item.ch}</span>
+          <span class="val">${item.val}</span>
+        </div>
+      `).join('');
+    }
+
+    // توليد الوفق المثلث 3x3 القياسي (مجموعه 15) ثم تحجيمه أو ضبطه
+    function buildWafq3(targetSum, mode) {
+      const base = [
+        [4, 9, 2],
+        [3, 5, 7],
+        [8, 1, 6]
+      ];
+      if (mode === 'sequential') return base;
+
+      const rowSum = targetSum / 3;
+      const center = rowSum / 3;
+      const step = rowSum / 15; // يطابق 1 عندما يكون المجموع 45
+
+      return base.map(row =>
+        row.map(num => {
+          const val = (num - 5) * step + center;
+          return Number.isInteger(val) ? val : Number(val.toFixed(2));
+        })
+      );
+    }
+
+    // توليد الوفق المربع 4x4 القياسي (مجموعه 136) ثم تحجيمه أو ضبطه
+    function buildWafq4(targetSum, mode) {
+      const base = [
+        [16, 2, 3, 13],
+        [5, 11, 10, 8],
+        [9, 7, 6, 12],
+        [4, 14, 15, 1]
+      ];
+      if (mode === 'sequential') return base;
+
+      const rowSum = targetSum / 4;
+      const scale = targetSum / 136;
+
+      return base.map(row =>
+        row.map(num => {
+          const val = num * scale;
+          return Number.isInteger(val) ? val : Number(val.toFixed(2));
+        })
+      );
+    }
+
+    function renderGridWithSums(matrix) {
+      const n = matrix.length;
+      const fmt = (v) => Number.isInteger(v) ? v : v.toFixed(2);
+
+      const rowSums = matrix.map(r => r.reduce((a, b) => a + b, 0));
+      const colSums = Array.from({ length: n }, (_, c) =>
+        matrix.reduce((acc, r) => acc + r[c], 0)
+      );
+      const mainDiag = matrix.reduce((acc, r, i) => acc + r[i], 0);
+
+      let html = '<table class="wafq-table"><tbody>';
+      for (let r = 0; r < n; r++) {
+        html += '<tr>';
+        for (let c = 0; c < n; c++) {
+          html += `<td>${fmt(matrix[r][c])}</td>`;
+        }
+        html += `<td class="sum-cell" title="مجموع الصف">=${fmt(rowSums[r])}</td>`;
+        html += '</tr>';
+      }
+
+      html += '<tr>';
+      for (let c = 0; c < n; c++) {
+        html += `<td class="sum-cell" title="مجموع العمود">=${fmt(colSums[c])}</td>`;
+      }
+      html += `<td class="sum-cell" title="القطر الرئيسي">قطر=${fmt(mainDiag)}</td>`;
+      html += '</tr></tbody></table>';
+      return html;
+    }
+
+    function renderWafq3() {
+      const raw = document.getElementById('w3Input').value;
+      const mode = document.getElementById('w3Mode').value;
+      const sum = mode === 'sequential' ? 45 : parseNumberOrText(raw);
+      const grid = buildWafq3(sum, mode);
+
+      document.getElementById('w3Meta').innerHTML = `
+        <span>المجموع الكلي: <strong>${sum}</strong></span>
+        <span>مفتاح الصف/العمود: <strong>${Number((sum / 3).toFixed(2))}</strong></span>
+        <span>المركز: <strong>${Number((sum / 9).toFixed(2))}</strong></span>
+      `;
+      document.getElementById('w3GridContainer').innerHTML = renderGridWithSums(grid);
+    }
+
+    function renderWafq4() {
+      const raw = document.getElementById('w4Input').value;
+      const mode = document.getElementById('w4Mode').value;
+      const sum = mode === 'sequential' ? 136 : parseNumberOrText(raw);
+      const grid = buildWafq4(sum, mode);
+
+      document.getElementById('w4Meta').innerHTML = `
+        <span>المجموع الكلي: <strong>${sum}</strong></span>
+        <span>ثابت الصف/العمود/القطر: <strong>${Number((sum / 4).toFixed(2))}</strong></span>
+      `;
+      document.getElementById('w4GridContainer').innerHTML = renderGridWithSums(grid);
+    }
+
+    // تصدير بطاقة صورة للستوري (1080x1920 أو 1080x1080)
+    function exportStoryCard() {
+      const text = document.getElementById('textInput').value.trim() || 'نتيجة الجُمّل';
+      const res = calculateAbjad(text);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1350;
+      const ctx = canvas.getContext('2d');
+
+      const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      grad.addColorStop(0, '#121826');
+      grad.addColorStop(1, '#080b10');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.45)';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(48, 48, canvas.width - 96, canvas.height - 96);
+
+      ctx.fillStyle = '#d4af37';
+      ctx.textAlign = 'center';
+      ctx.font = 'bold 54px Cairo, sans-serif';
+      ctx.fillText('مختبر الجُمّل والأوفاق', canvas.width / 2, 170);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 76px Cairo, sans-serif';
+      ctx.fillText(text, canvas.width / 2, 340);
+
+      ctx.fillStyle = '#9aa5b8';
+      ctx.font = '600 34px Cairo, sans-serif';
+      ctx.fillText('قيمة الجُمّل الكبير', canvas.width / 2, 470);
+
+      ctx.fillStyle = '#e5c158';
+      ctx.font = 'bold 120px Cairo, sans-serif';
+      ctx.fillText(String(res.big), canvas.width / 2, 610);
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = '600 36px Cairo, sans-serif';
+      ctx.fillText(`الجُمّل الصغير: ${res.digitalRoot}   |   الوسيط: ${res.wasit}`, canvas.width / 2, 740);
+
+      const totalEl = res.items.length || 1;
+      const pct = (n) => Math.round((n / totalEl) * 100);
+      ctx.font = '600 32px Cairo, sans-serif';
+      ctx.fillText(
+        `ناري ${pct(res.counts.fire)}% • ترابي ${pct(res.counts.earth)}% • هوائي ${pct(res.counts.air)}% • مائي ${pct(res.counts.water)}%`,
+        canvas.width / 2,
+        850
+      );
+
+      ctx.fillStyle = 'rgba(212, 175, 55, 0.75)';
+      ctx.font = '600 28px Cairo, sans-serif';
+      ctx.fillText('حسابات عددية وتراثية — مشاركة سريعة', canvas.width / 2, 1230);
+
+      const link = document.createElement('a');
+      link.download = `abjad-${text.replace(/\s+/g, '-')}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // التبديل بين التبويبات
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    document.getElementById('calcAbjadBtn').addEventListener('click', renderAbjad);
+    document.getElementById('textInput').addEventListener('input', renderAbjad);
+    document.getElementById('exportCardBtn').addEventListener('click', exportStoryCard);
+    document.getElementById('genWafq3Btn').addEventListener('click', renderWafq3);
+    document.getElementById('genWafq4Btn').addEventListener('click', renderWafq4);
+
+    // تشغيل أولي
+    renderAbjad();
+    renderWafq3();
+    renderWafq4();
+  </script>
+</body>
+</html>
