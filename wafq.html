@@ -311,9 +311,9 @@
 
     table.grid-table td.names-cell {
       font-family: 'Amiri', serif;
-      font-size: 0.98rem;
+      font-size: 1rem;
       color: var(--gold-bright);
-      min-width: 72px;
+      min-width: 78px;
       padding: 6px 8px;
     }
 
@@ -430,10 +430,10 @@
           </select>
         </div>
         <div class="field">
-          <label for="matchMode">مطابقة الأسماء عند كبر الرقم</label>
+          <label for="matchMode">آلية عرض الأسماء المقابلة</label>
           <select id="matchMode">
             <option value="nearest">أقرب اسم من حيث قيمة الجُمّل</option>
-            <option value="combo">دمج اسمين لتقريب القيمة إذا زاد الرقم</option>
+            <option value="ordered">توزيع متسلسل من أسماء الله الحسنى</option>
           </select>
         </div>
         <button class="btn" id="generateBtn">توليد النموذجين</button>
@@ -458,7 +458,6 @@
       'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
     };
 
-    // قائمة مختارة من أسماء الله الحسنى مع حساب قيمة كل اسم وفق أبجد هوز
     const RAW_ASMA = [
       'الرحمن', 'الرحيم', 'الملك', 'القدوس', 'السلام', 'المؤمن', 'المهيمن', 'العزيز',
       'الجبار', 'المتكبر', 'الخالق', 'البارئ', 'المصور', 'الغفار', 'القهار', 'الوهاب',
@@ -631,41 +630,20 @@
       return { grid, actualSum, rowMagic, adjustedNote };
     }
 
-    // إيجاد الاسم المقابل أو الأقرب من أسماء الله الحسنى
-    function mapNumberToAsma(num, matchMode) {
-      // مطابقة مباشرة أولاً
+    function mapNumberToAsma(num, matchMode, index) {
+      if (matchMode === 'ordered') {
+        const item = ASMA_WITH_VAL[index % ASMA_WITH_VAL.length];
+        return {
+          label: item.name,
+          sub: `قيمة: ${item.val}`
+        };
+      }
+
       const exact = ASMA_WITH_VAL.find(item => item.val === num);
       if (exact) {
-        return { label: exact.name, sub: `${exact.val}` };
+        return { label: exact.name, sub: `مطابق: ${exact.val}` };
       }
 
-      if (matchMode === 'combo') {
-        let bestPair = null;
-        let bestDiff = Infinity;
-
-        for (let i = 0; i < ASMA_WITH_VAL.length; i++) {
-          for (let j = i; j < ASMA_WITH_VAL.length; j++) {
-            const sum = ASMA_WITH_VAL[i].val + ASMA_WITH_VAL[j].val;
-            const diff = Math.abs(sum - num);
-            if (diff < bestDiff) {
-              bestDiff = diff;
-              bestPair = [ASMA_WITH_VAL[i], ASMA_WITH_VAL[j], sum];
-              if (diff === 0) break;
-            }
-          }
-          if (bestDiff === 0) break;
-        }
-
-        if (bestPair) {
-          const [a, b, sum] = bestPair;
-          return {
-            label: a.name === b.name ? a.name : `${a.name} • ${b.name}`,
-            sub: `قيمة: ${sum}`
-          };
-        }
-      }
-
-      // أقرب اسم منفرد في القيمة
       let nearest = ASMA_WITH_VAL[0];
       let minDiff = Math.abs(nearest.val - num);
       for (const item of ASMA_WITH_VAL) {
@@ -678,7 +656,7 @@
 
       return {
         label: nearest.name,
-        sub: `قيمة الاسم: ${nearest.val}`
+        sub: `قيمة: ${nearest.val}`
       };
     }
 
@@ -715,11 +693,15 @@
             <li>نسخ سريع للنموذجين الرقمي والاسمي</li>
           </ul>
           <div class="paywall-actions">
-            <button class="btn" onclick="alert('سيتم ربط بوابة الدفع / الاشتراك هنا قريباً.')">اشترك لفتح 6×6 – 10×10</button>
+            <button class="btn" id="payAlertBtn">اشترك لفتح 6×6 – 10×10</button>
             <button class="btn btn-outline" id="unlockDemoBtn">تفعيل وضع المعاينة للتجربة الآن</button>
           </div>
         </div>
       `;
+
+      document.getElementById('payAlertBtn').addEventListener('click', () => {
+        alert('سيتم ربط بوابة الدفع / الاشتراك هنا قريباً.');
+      });
 
       document.getElementById('unlockDemoBtn').addEventListener('click', () => {
         isProUnlocked = true;
@@ -753,7 +735,6 @@
         ${adjustedNote ? `<span style="color:#fbbf24;">${adjustedNote}</span>` : ''}
       `;
 
-      // النموذج الأول: الأرقام الصحيحة
       let numTable = '<table class="grid-table"><tbody>';
       for (let r = 0; r < n; r++) {
         numTable += '<tr>';
@@ -768,8 +749,11 @@
       }
       numTable += '<td class="sum-cell">مجموع</td></tr></tbody></table>';
 
-      // النموذج الثاني: أسماء الله الحسنى المقابلة للرقم
-      const asmaGrid = grid.map(row => row.map(val => mapNumberToAsma(val, matchMode)));
+      let cellIndex = 0;
+      const asmaGrid = grid.map(row =>
+        row.map(val => mapNumberToAsma(val, matchMode, cellIndex++))
+      );
+
       let namesTable = '<table class="grid-table"><tbody>';
       for (let r = 0; r < n; r++) {
         namesTable += '<tr>';
@@ -814,7 +798,6 @@
       });
     }
 
-    // قراءة القيمة المرسلة من صفحة الحساب عبر الرابط (?sum=...)
     const params = new URLSearchParams(window.location.search);
     if (params.get('sum')) {
       document.getElementById('targetInput').value = params.get('sum');
