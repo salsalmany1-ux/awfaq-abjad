@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مختبر الأوفاق (3×3 حتى 10×10) | أرقام وحروف</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --surface: #121722;
+      --surface-2: #182030;
+      --gold: #d4af37;
+      --gold-bright: #f0cf65;
+      --gold-soft: rgba(212, 175, 55, 0.14);
+      --gold-border: rgba(212, 175, 55, 0.35);
+      --text: #f3f5f8;
+      --muted: #9aa5b8;
+      --success: #22c55e;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(circle at top, #171f30 0%, var(--bg) 62%);
+      color: var(--text);
+      font-family: 'Cairo', sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+      padding: 24px 16px 70px;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 24px 18px;
+      margin-bottom: 22px;
+      background: linear-gradient(180deg, rgba(212,175,55,0.09), rgba(18,23,34,0.65));
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius);
+    }
+
+    header h1 {
+      font-family: 'Amiri', serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .size-selector-card {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge-free {
+      font-size: 0.78rem;
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+
+    .badge-pro {
+      font-size: 0.78rem;
+      background: var(--gold-soft);
+      color: var(--gold-bright);
+      border: 1px solid var(--gold-border);
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+
+    .sizes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 10px;
+    }
+
+    .size-btn {
+      position: relative;
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 12px 8px;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .size-btn:hover {
+      border-color: var(--gold-border);
+      transform: translateY(-1px);
+    }
+
+    .size-btn.active {
+      background: var(--gold-soft);
+      border-color: var(--gold);
+      color: var(--gold-bright);
+    }
+
+    .size-btn .tag {
+      font-size: 0.72rem;
+      padding: 1px 7px;
+      border-radius: 999px;
+    }
+
+    .size-btn.free-btn .tag {
+      background: rgba(34, 197, 94, 0.14);
+      color: #86efac;
+    }
+
+    .size-btn.pro-btn .tag {
+      background: rgba(212, 175, 55, 0.16);
+      color: var(--gold-bright);
+    }
+
+    .controls-card {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 22px;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .field {
+      flex: 1 1 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    input[type="text"], select {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-family: inherit;
+      font-size: 0.98rem;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--gold);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+      color: #111;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 20px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-outline {
+      background: var(--surface-2);
+      color: var(--gold);
+      border: 1px solid var(--gold-border);
+    }
+
+    .meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .meta-bar span strong { color: var(--gold-bright); }
+
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .model-card {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 20px;
+      overflow-x: auto;
+    }
+
+    .model-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .model-header h2 {
+      font-size: 1.08rem;
+      color: var(--gold);
+    }
+
+    .copy-btn {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    table.grid-table {
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+
+    table.grid-table td {
+      min-width: 48px;
+      height: 46px;
+      padding: 4px 6px;
+      text-align: center;
+      vertical-align: middle;
+      border: 1px solid var(--gold-border);
+      background: var(--surface-2);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    table.grid-table td.letters-cell {
+      font-family: 'Amiri', serif;
+      font-size: 1.05rem;
+      color: var(--gold-bright);
+      min-width: 58px;
+    }
+
+    table.grid-table td.sum-cell {
+      background: transparent;
+      border: none;
+      color: var(--gold);
+      font-size: 0.8rem;
+      font-weight: 700;
+      min-width: 44px;
+    }
+
+    /* نافذة الاشتراك / الدفع للأحجام 6x6 إلى 10x10 */
+    .paywall-card {
+      background: linear-gradient(145deg, rgba(212,175,55,0.11), rgba(18,23,34,0.95));
+      border: 1px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+      max-width: 660px;
+      margin: 24px auto;
+    }
+
+    .paywall-card h2 {
+      color: var(--gold-bright);
+      font-size: 1.45rem;
+      margin-bottom: 10px;
+    }
+
+    .paywall-card p {
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-size: 0.96rem;
+    }
+
+    .paywall-features {
+      list-style: none;
+      text-align: right;
+      max-width: 440px;
+      margin: 0 auto 22px;
+      display: grid;
+      gap: 8px;
+      font-size: 0.92rem;
+    }
+
+    .paywall-features li::before {
+      content: "✦ ";
+      color: var(--gold);
+      font-weight: bold;
+    }
+
+    .paywall-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .note {
+      margin-top: 24px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(212, 175, 55, 0.06);
+      border-right: 3px solid var(--gold);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>مختبر الأوفاق العددية والحرفية</h1>
+      <p>توليد أوفاق صحيحة الأعداد بدون كسور من الثلاثي (3×3) إلى العشري (10×10)، مع تحويل الأرقام إلى حروف وكلمات وعرضها بنموذجين متكاملين.</p>
+    </header>
+
+    <!-- اختيار حجم الوفق -->
+    <section class="size-selector-card">
+      <div class="section-title">
+        <span>اختر رتبة الوفق (حجم الشبكة)</span>
+        <div>
+          <span class="badge-free">3×3 حتى 5×5: مجاني</span>
+          <span class="badge-pro">6×6 حتى 10×10: باقة الاشتراك</span>
+        </div>
+      </div>
+      <div class="sizes-grid" id="sizesGrid"></div>
+    </section>
+
+    <!-- منطقة الإدخال والتحكم -->
+    <section class="controls-card" id="controlsSection">
+      <div class="controls-row">
+        <div class="field">
+          <label for="targetInput">أدخل عدداً صحيحاً أو اسماً / عبارة</label>
+          <input type="text" id="targetInput" value="45" placeholder="مثال: 45 أو اسم..." />
+        </div>
+        <div class="field">
+          <label for="modeSelect">النمط الحسابي</label>
+          <select id="modeSelect">
+            <option value="balanced">متوازن صحيح الأعداد (توزيع المجموع)</option>
+            <option value="canonical">الوفق القياسي المتسلسل (من 1 إلى N²)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="letterMode">طريقة تحويل الرقم إلى حروف</label>
+          <select id="letterMode">
+            <option value="compound">تركيب أبجدي (مئات + عشرات + آحاد مثل: ي ج = 13)</option>
+            <option value="direct">قيمة حرفية مباشرة / تفصيلية</option>
+          </select>
+        </div>
+        <button class="btn" id="generateBtn">توليد النموذجين</button>
+      </div>
+      <div class="meta-bar" id="metaBar"></div>
+    </section>
+
+    <!-- عرض النموذجين أو بوابة الاشتراك -->
+    <div id="outputArea"></div>
+
+    <div class="note">
+      <strong>تنويه:</strong> جميع القيم المولّدة في النموذج الأول أعداد صحيحة دقيقة، وفي النموذج الثاني تُحوّل الأعداد إلى حروف أبجد الجُمّل لأغراض الدراسة التراثية والرياضية والبحثية.
+    </div>
+  </div>
+
+  <script>
+    const ABJAD_VALUES = {
+      'ا': 1, 'أ': 1, 'إ': 1, 'آ': 1, 'ى': 1, 'ء': 1,
+      'ب': 2, 'ج': 3, 'د': 4, 'ه': 5, 'ة': 5, 'و': 6, 'ؤ': 6,
+      'ز': 7, 'ح': 8, 'ط': 9, 'ي': 10, 'ئ': 10, 'ك': 20, 'ل': 30,
+      'م': 40, 'ن': 50, 'س': 60, 'ع': 70, 'ف': 80, 'ص': 90,
+      'ق': 100, 'ر': 200, 'ش': 300, 'ت': 400, 'ث': 500, 'خ': 600,
+      'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
+    };
+
+    // حروف الجُمّل للآحاد والعشرات والمئات
+    const ONES_MAP = { 1: 'ا', 2: 'ب', 3: 'ج', 4: 'د', 5: 'ه', 6: 'و', 7: 'ز', 8: 'ح', 9: 'ط' };
+    const TENS_MAP = { 10: 'ي', 20: 'ك', 30: 'ل', 40: 'م', 50: 'ن', 60: 'س', 70: 'ع', 80: 'ف', 90: 'ص' };
+    const HUND_MAP = { 100: 'ق', 200: 'ر', 300: 'ش', 400: 'ت', 500: 'ث', 600: 'خ', 700: 'ذ', 800: 'ض', 900: 'ظ', 1000: 'غ' };
+
+    const SIZE_NAMES = {
+      3: 'الثلاثي (3×3)',
+      4: 'الرباعي (4×4)',
+      5: 'الخماسي (5×5)',
+      6: 'السداسي (6×6)',
+      7: 'السباعي (7×7)',
+      8: 'الثماني (8×8)',
+      9: 'التاسع (9×9)',
+      10: 'العشري (10×10)'
+    };
+
+    let selectedSize = 3;
+    let isProUnlocked = false; // يمكن تفعيلها مؤقتاً للتجربة من نافذة الاشتراك
+
+    function calcAbjadSum(str) {
+      let sum = 0;
+      for (const ch of str) {
+        if (ABJAD_VALUES[ch]) sum += ABJAD_VALUES[ch];
+      }
+      return sum;
+    }
+
+    function parseTargetInteger(val) {
+      const clean = val.trim();
+      if (/^-?\d+$/.test(clean)) {
+        return Math.max(1, parseInt(clean, 10));
+      }
+      const fromText = calcAbjadSum(clean);
+      return fromText > 0 ? fromText : 45;
+    }
+
+    // توليد مربع سحري صحيح الأعداد للأعداد الفردية (الطريقة السيامية)
+    function generateOddMagicSquare(n) {
+      const grid = Array.from({ length: n }, () => Array(n).fill(0));
+      let r = 0;
+      let c = Math.floor(n / 2);
+
+      for (let num = 1; num <= n * n; num++) {
+        grid[r][c] = num;
+        const nextR = (r - 1 + n) % n;
+        const nextC = (c + 1) % n;
+        if (grid[nextR][nextC] !== 0) {
+          r = (r + 1) % n;
+        } else {
+          r = nextR;
+          c = nextC;
+        }
+      }
+      return grid;
+    }
+
+    // توليد مربع سحري صحيح الأعداد للأعداد الزوجية (4, 6, 8, 10)
+    function generateEvenMagicSquare(n) {
+      if (n % 4 === 0) {
+        // طريقة التبادل القطري لمضاعفات 4 (4x4, 8x8)
+        const grid = Array.from({ length: n }, (_, r) =>
+          Array.from({ length: n }, (_, c) => r * n + c + 1)
+        );
+        for (let r = 0; r < n; r++) {
+          for (let c = 0; c < n; c++) {
+            const inBlock = ((r % 4 === c % 4) || ((r % 4) + (c % 4) === 3));
+            if (inBlock) {
+              grid[r][c] = n * n + 1 - grid[r][c];
+            }
+          }
+        }
+        return grid;
+      } else {
+        // طريقة Strachey للأعداد الزوجية غير القابلة للقسمة على 4 (6x6, 10x10)
+        const half = n / 2;
+        const subSquare = generateOddMagicSquare(half);
+        const grid = Array.from({ length: n }, () => Array(n).fill(0));
+        const blockSize = half * half;
+
+        for (let r = 0; r < half; r++) {
+          for (let c = 0; c < half; c++) {
+            const base = subSquare[r][c];
+            grid[r][c] = base;
+            grid[r + half][c + half] = base + blockSize;
+            grid[r][c + half] = base + 2 * blockSize;
+            grid[r + half][c] = base + 3 * blockSize;
+          }
+        }
+
+        const k = (n - 2) / 4;
+        for (let r = 0; r < half; r++) {
+          for (let c = 0; c < k; c++) {
+            const col = (r === Math.floor(half / 2)) ? c + k : c;
+            const tmp = grid[r][col];
+            grid[r][col] = grid[r + half][col];
+            grid[r + half][col] = tmp;
+          }
+          for (let c = 0; c < k - 1; c++) {
+            const col = n - 1 - c;
+            const tmp = grid[r][col];
+            grid[r][col] = grid[r + half][col];
+            grid[r + half][col] = tmp;
+          }
+        }
+        return grid;
+      }
+    }
+
+    function generateBaseMagic(n) {
+      return (n % 2 === 1) ? generateOddMagicSquare(n) : generateEvenMagicSquare(n);
+    }
+
+    // ضبط الشبكة على مجموع مستهدف بأعداد صحيحة 100% دون أي كسور
+    function buildIntegerWafq(n, rawInput, mode) {
+      const base = generateBaseMagic(n);
+      const totalCells = n * n;
+      const canonicalSum = (totalCells * (totalCells + 1)) / 2;
+
+      if (mode === 'canonical') {
+        return {
+          grid: base,
+          actualSum: canonicalSum,
+          rowMagic: canonicalSum / n,
+          adjustedNote: null
+        };
+      }
+
+      const desiredSum = parseTargetInteger(rawInput);
+
+      // لتجنب الكسور: نبحث عن خطوة صحيحة (step >= 1) وإزاحة صحيحة (offset)
+      // بحيث يكون مجموع المصفوفة = desiredSum أو أقرب مجموع صحيح ممكن
+      let bestStep = 1;
+      let bestOffset = 0;
+      let bestDiff = Infinity;
+
+      for (let step = 1; step <= 20; step++) {
+        const scaledSum = canonicalSum * step;
+        const rawOffset = Math.round((desiredSum - scaledSum) / totalCells);
+        const resultingSum = scaledSum + rawOffset * totalCells;
+        const diff = Math.abs(resultingSum - desiredSum);
+
+        if (diff < bestDiff) {
+          bestDiff = diff;
+          bestStep = step;
+          bestOffset = rawOffset;
+        }
+        if (diff === 0) break;
+      }
+
+      const grid = base.map(row =>
+        row.map(val => Math.max(1, val * bestStep + bestOffset))
+      );
+
+      const actualSum = grid.flat().reduce((a, b) => a + b, 0);
+      const rowMagic = actualSum / n;
+
+      let adjustedNote = null;
+      if (actualSum !== desiredSum) {
+        adjustedNote = `تم ضبط المجموع تلقائياً إلى ${actualSum} (بدلاً من ${desiredSum}) لضمان بقاء جميع الأرقام صحيحة بدون كسور.`;
+      }
+
+      return { grid, actualSum, rowMagic, adjustedNote };
+    }
+
+    // تحويل رقم صحيح إلى حروف أبجدية (نموذج الحروف والكلمات)
+    function numberToAbjadLetters(num, mode) {
+      if (num <= 0) return 'ـ';
+      let n = Math.floor(num);
+      const parts = [];
+
+      if (mode === 'direct') {
+        if (HUND_MAP[n]) return HUND_MAP[n];
+        if (TENS_MAP[n]) return TENS_MAP[n];
+        if (ONES_MAP[n]) return ONES_MAP[n];
+      }
+
+      // تفكيك هرمي (ألف، مئات، عشرات، آحاد)
+      while (n >= 1000) {
+        parts.push('غ');
+        n -= 1000;
+      }
+
+      const hundreds = Math.floor(n / 100) * 100;
+      if (hundreds > 0 && HUND_MAP[hundreds]) {
+        parts.push(HUND_MAP[hundreds]);
+        n %= 100;
+      }
+
+      const tens = Math.floor(n / 10) * 10;
+      if (tens > 0 && TENS_MAP[tens]) {
+        parts.push(TENS_MAP[tens]);
+        n %= 10;
+      }
+
+      if (n > 0 && ONES_MAP[n]) {
+        parts.push(ONES_MAP[n]);
+      }
+
+      return parts.length ? parts.join(' ') : String(num);
+    }
+
+    function renderSizeButtons() {
+      const container = document.getElementById('sizesGrid');
+      container.innerHTML = '';
+
+      for (let n = 3; n <= 10; n++) {
+        const isFree = n <= 5;
+        const btn = document.createElement('button');
+        btn.className = `size-btn ${isFree ? 'free-btn' : 'pro-btn'} ${selectedSize === n ? 'active' : ''}`;
+        btn.innerHTML = `
+          <span>${n}×${n}</span>
+          <span class="tag">${isFree ? 'مجاني' : (isProUnlocked ? 'مفتوح' : 'اشتراك')}</span>
+        `;
+        btn.addEventListener('click', () => {
+          selectedSize = n;
+          renderSizeButtons();
+          renderWorkspace();
+        });
+        container.appendChild(btn);
+      }
+    }
+
+    function renderPaywall() {
+      document.getElementById('controlsSection').style.display = 'none';
+      document.getElementById('outputArea').innerHTML = `
+        <div class="paywall-card">
+          <h2>الوفق ${SIZE_NAMES[selectedSize]} متاح ضمن باقة الاشتراك</h2>
+          <p>الأحجام من 3×3 إلى 5×5 مجانية بالكامل، بينما الأوفاق الكبيرة من 6×6 حتى 10×10 مخصصة للمشتركين نظراً لتعقيد المصفوفات وتوليد النماذج الحرفية الكاملة.</p>
+          <ul class="paywall-features">
+            <li>توليد أوفاق صحيحة الأعداد من 6×6 حتى 10×10 (حتى 100 خانة)</li>
+            <li>تحويل تلقائي كامل لجميع الخلايا إلى حروف وكلمات أبجدية</li>
+            <li>تصدير ونسخ النموذجين الرقمي والحرفي بضغطة واحدة</li>
+          </ul>
+          <div class="paywall-actions">
+            <button class="btn" onclick="alert('سيتم ربط بوابة الدفع / الاشتراك هنا قريباً.')">اشترك لفتح 6×6 – 10×10</button>
+            <button class="btn btn-outline" id="unlockDemoBtn">تفعيل وضع المعاينة للتجربة الآن</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('unlockDemoBtn').addEventListener('click', () => {
+        isProUnlocked = true;
+        renderSizeButtons();
+        renderWorkspace();
+      });
+    }
+
+    function renderWorkspace() {
+      const isAllowed = selectedSize <= 5 || isProUnlocked;
+      if (!isAllowed) {
+        renderPaywall();
+        return;
+      }
+
+      document.getElementById('controlsSection').style.display = 'block';
+      const rawInput = document.getElementById('targetInput').value;
+      const mode = document.getElementById('modeSelect').value;
+      const letterMode = document.getElementById('letterMode').value;
+
+      const { grid, actualSum, rowMagic, adjustedNote } = buildIntegerWafq(selectedSize, rawInput, mode);
+      const n = selectedSize;
+
+      const rowSums = grid.map(r => r.reduce((a, b) => a + b, 0));
+      const colSums = Array.from({ length: n }, (_, c) => grid.reduce((acc, r) => acc + r[c], 0));
+
+      document.getElementById('metaBar').innerHTML = `
+        <span>الوفق: <strong>${SIZE_NAMES[n]}</strong></span>
+        <span>المجموع الكلي: <strong>${actualSum}</strong></span>
+        <span>مجموع الصف/العمود: <strong>${Number(rowMagic.toFixed(2))}</strong></span>
+        ${adjustedNote ? `<span style="color:#fbbf24;">${adjustedNote}</span>` : ''}
+      `;
+
+      // النموذج الأول: الأرقام الصحيحة
+      let numTable = '<table class="grid-table"><tbody>';
+      for (let r = 0; r < n; r++) {
+        numTable += '<tr>';
+        for (let c = 0; c < n; c++) {
+          numTable += `<td>${grid[r][c]}</td>`;
+        }
+        numTable += `<td class="sum-cell">=${rowSums[r]}</td></tr>`;
+      }
+      numTable += '<tr>';
+      for (let c = 0; c < n; c++) {
+        numTable += `<td class="sum-cell">=${colSums[c]}</td>`;
+      }
+      numTable += '<td class="sum-cell">مجموع</td></tr></tbody></table>';
+
+      // النموذج الثاني: تحويل الأرقام إلى حروف وكلمات
+      const letterGrid = grid.map(row => row.map(val => numberToAbjadLetters(val, letterMode)));
+      let txtTable = '<table class="grid-table"><tbody>';
+      for (let r = 0; r < n; r++) {
+        txtTable += '<tr>';
+        for (let c = 0; c < n; c++) {
+          txtTable += `<td class="letters-cell" title="الرقم: ${grid[r][c]}">${letterGrid[r][c]}</td>`;
+        }
+        txtTable += '</tr>';
+      }
+      txtTable += '</tbody></table>';
+
+      document.getElementById('outputArea').innerHTML = `
+        <div class="models-grid">
+          <div class="model-card">
+            <div class="model-header">
+              <h2>النموذج الأول: الأرقام الصحيحة</h2>
+              <button class="copy-btn" id="copyNumBtn">نسخ الأرقام</button>
+            </div>
+            ${numTable}
+          </div>
+
+          <div class="model-card">
+            <div class="model-header">
+              <h2>النموذج الثاني: الحروف والكلمات</h2>
+              <button class="copy-btn" id="copyLettersBtn">نسخ الحروف</button>
+            </div>
+            ${txtTable}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('copyNumBtn').addEventListener('click', () => {
+        const text = grid.map(r => r.join('\t')).join('\n');
+        navigator.clipboard.writeText(text);
+        alert('تم نسخ النموذج الرقمي.');
+      });
+
+      document.getElementById('copyLettersBtn').addEventListener('click', () => {
+        const text = letterGrid.map(r => r.join('\t')).join('\n');
+        navigator.clipboard.writeText(text);
+        alert('تم نسخ نموذج الحروف والكلمات.');
+      });
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', renderWorkspace);
+    document.getElementById('modeSelect').addEventListener('change', renderWorkspace);
+    document.getElementById('letterMode').addEventListener('change', renderWorkspace);
+
+    renderSizeButtons();
+    renderWorkspace();
+  </script>
+</body>
+</html>
