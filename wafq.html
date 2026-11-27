@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مولّد الأوفاق العددية</title>
+  <title>مولّد الأوفاق العددية وأسماء الله الحسنى</title>
   <style>
     :root {
       --bg: #0b0e14;
@@ -130,6 +130,7 @@
     h1 {
       font-size: 1.8rem;
       margin-bottom: 6px;
+      color: #fff;
     }
 
     .subtitle {
@@ -182,6 +183,12 @@
       gap: 14px;
     }
 
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
     label {
       display: block;
       font-size: 0.9rem;
@@ -198,6 +205,31 @@
       padding: 11px 12px;
       border-radius: 10px;
       font-size: 0.95rem;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .radio-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      padding: 9px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .radio-pill input {
+      accent-color: var(--accent);
+      cursor: pointer;
     }
 
     .btn {
@@ -228,33 +260,77 @@
 
     .cost-info {
       margin-top: 10px;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: var(--accent-2);
       font-weight: 700;
     }
 
+    .sum-preview {
+      margin-top: 8px;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    /* الشكل الكلاسيكي لجدول الأوفاق مع المجاميع */
     .matrix-wrap {
       overflow-x: auto;
       margin-top: 16px;
       padding-bottom: 8px;
     }
 
-    table.wafq-grid {
-      border-collapse: collapse;
+    table.classic-wafq {
+      border-collapse: separate;
+      border-spacing: 5px;
       margin: 0 auto;
-      background: var(--card-2);
-      border-radius: 12px;
-      overflow: hidden;
+      background: #0f141e;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 106, 0, 0.35);
     }
 
-    table.wafq-grid td {
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      padding: 10px 12px;
+    table.classic-wafq td,
+    table.classic-wafq th {
+      min-width: 58px;
+      height: 46px;
+      padding: 6px 10px;
       text-align: center;
-      font-weight: 700;
+      border-radius: 8px;
       font-size: 0.95rem;
-      min-width: 56px;
-      color: #fff;
+    }
+
+    table.classic-wafq td.cell-num {
+      background: #1b2334;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    table.classic-wafq td.cell-diag {
+      background: rgba(255, 106, 0, 0.16);
+      border: 1px solid rgba(255, 106, 0, 0.45);
+      color: var(--accent-2);
+      font-weight: 800;
+    }
+
+    table.classic-wafq th.sum-head,
+    table.classic-wafq td.sum-cell {
+      background: rgba(148, 163, 184, 0.1);
+      border: 1px dashed rgba(148, 163, 184, 0.35);
+      color: #cbd5e1;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    table.classic-wafq td.diag-summary {
+      background: rgba(255, 148, 71, 0.14);
+      border: 1px solid rgba(255, 148, 71, 0.4);
+      color: var(--accent-2);
+      font-weight: 800;
+      font-size: 0.84rem;
     }
 
     .meta-box {
@@ -300,7 +376,6 @@
   </aside>
 
   <div class="page-shell">
-    <!-- عمود الإعلانات الجانبي الأيمن (160x600 و 160x300) -->
     <aside class="side-ads" aria-label="إعلانات جانبية">
       <div class="banner-slot" data-ad-key="2c097ab44a64c6c0606b2fb1836488bd" data-ad-w="160" data-ad-h="600"></div>
       <div class="banner-slot" data-ad-key="3dcfa0e5cf63449c449860c04792b50a" data-ad-w="160" data-ad-h="300"></div>
@@ -308,15 +383,14 @@
 
     <main class="container">
       <header>
-        <h1>مولّد الأوفاق العددية</h1>
-        <p class="subtitle">توليد مصفوفات أوفاق بأعداد صحيحة فريدة — تُخصم النقاط بمجرد التوليد حسب حجم الوفق</p>
+        <h1>مولّد الأوفاق العددية وأسماء الله الحسنى</h1>
+        <p class="subtitle">توليد مصفوفات الأوفاق بالشكل الكلاسيكي وبحساب أسماء الله الحسنى بـ «ال» أو بدونها</p>
         <div class="nav-links">
           <a class="nav-btn" href="index.html">الحاسبة والأبراج</a>
           <a class="nav-btn primary" href="wafq.html">مولّد الأوفاق</a>
         </div>
       </header>
 
-      <!-- بانر علوي للشاشات العريضة (728x90) وللهواتف (320x50) -->
       <div class="banner-slot desktop-only-banner" data-ad-key="43c6a2cdb89df92f1d10bf50c7cc3af0" data-ad-w="728" data-ad-h="90"></div>
       <div class="banner-slot mobile-only-banner" data-ad-key="9cea9f341703cacbcc9254423d8e316f" data-ad-w="320" data-ad-h="50"></div>
 
@@ -330,16 +404,28 @@
         <div class="toast" id="systemToast"></div>
       </section>
 
-      <!-- بانر متوسط (468x60) -->
-      <div class="banner-slot" data-ad-key="d18f65e3e3e650c995bfae571ec658e4" data-ad-w="468" data-ad-h="60"></div>
-
       <section class="card">
-        <div class="card-title">إعدادات توليد الوفق</div>
-        <div class="grid-2">
+        <div class="card-title">إعدادات توليد الوفق (رقمي أو بأسماء الله الحسنى)</div>
+
+        <div class="grid-3">
           <div>
+            <label for="sourceModeSelect">مصدر المجموع</label>
+            <select id="sourceModeSelect">
+              <option value="asma">من أسماء الله الحسنى</option>
+              <option value="number">إدخال مجموع رقمي مباشر</option>
+            </select>
+          </div>
+
+          <div id="asmaPickerBox">
+            <label for="asmaSelect">اختر اسم من أسماء الله الحسنى</label>
+            <select id="asmaSelect"></select>
+          </div>
+
+          <div id="manualSumBox" style="display:none;">
             <label for="targetSumInput">المجموع المطلوب (عدد صحيح موجب)</label>
             <input type="number" id="targetSumInput" min="10" step="1" placeholder="مثال: 150" />
           </div>
+
           <div>
             <label for="sizeSelect">حجم الوفق (المصفوفة)</label>
             <select id="sizeSelect">
@@ -355,16 +441,32 @@
           </div>
         </div>
 
+        <div id="alModeRow" style="margin-top:12px;">
+          <label>حساب الاسم في الجُمّل:</label>
+          <div class="radio-group">
+            <label class="radio-pill">
+              <input type="radio" name="alMode" value="with_al" checked />
+              <span>بـ «ال» التعريف (مثال: الرحمن)</span>
+            </label>
+            <label class="radio-pill">
+              <input type="radio" name="alMode" value="without_al" />
+              <span>بدون «ال» التعريف (مثال: رحمن)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="sum-preview" id="sumPreviewBox">جاري حساب المجموع...</div>
         <div class="cost-info" id="wafqCostLabel">تكلفة توليد وفق 3×3: 10 نقاط</div>
 
         <div class="actions-row">
           <button class="btn" id="generateWafqBtn" type="button">توليد الوفق الآن</button>
+          <button class="btn secondary" id="copyMatrixBtn" type="button" style="display:none;">نسخ جدول الوفق</button>
         </div>
 
         <div id="wafqResultArea"></div>
       </section>
 
-      <!-- بانر سفلي مربع (300x250) -->
+      <div class="banner-slot" data-ad-key="d18f65e3e3e650c995bfae571ec658e4" data-ad-w="468" data-ad-h="60"></div>
       <div class="banner-slot" data-ad-key="297dd0dec9845987bf6e7f08ee8f028e" data-ad-w="300" data-ad-h="250"></div>
     </main>
 
@@ -376,6 +478,112 @@
     const AD_SCRIPT_BASE = "https://bicea.org/22";
     const STORAGE_KEY = "abjad_wafq_points_state_v1";
     const REF_CLAIMED_KEY = "abjad_wafq_ref_claimed_v1";
+
+    const ASMA_AL_HUSNA = [
+      "الله", "الرحمن", "الرحيم", "الملك", "القدوس", "السلام", "المؤمن", "المهيمن",
+      "العزيز", "الجبار", "المتكبر", "الخالق", "البارئ", "المصور", "الغفار", "القهار",
+      "الوهاب", "الرزاق", "الفتاح", "العليم", "القابض", "الباسط", "الخافض", "الرافع",
+      "المعز", "المذل", "السميع", "البصير", "الحكم", "العدل", "اللطيف", "الخبير",
+      "الحليم", "العظيم", "الغفور", "الشكور", "العلي", "الكبير", "الحفيظ", "المقيت",
+      "الحسيب", "الجليل", "الكريم", "الرقيب", "المجيب", "الواسع", "الحكيم", "الودود",
+      "المجيد", "الباعث", "الشهيد", "الحق", "الوكيل", "القوي", "المتين", "الولي",
+      "الحميد", "المحصي", "المبدئ", "المعيد", "المحيي", "المميت", "الحي", "القيوم",
+      "الواجد", "الماجد", "الواحد", "الأحد", "الصمد", "القادر", "المقتدر", "المقدم",
+      "المؤخر", "الأول", "الآخر", "الظاهر", "الباطن", "الوالي", "المتعالي", "البر",
+      "التواب", "المنتقم", "العفو", "الرؤوف", "مالك الملك", "ذو الجلال والإكرام",
+      "المقسط", "الجامع", "الغني", "المغني", "المانع", "الضار", "النافع", "النور",
+      "الهادي", "البديع", "الباقي", "الوارث", "الرشيد", "الصبور"
+    ];
+
+    const ABJAD_MAP = {
+      "أ": 1, "ا": 1, "إ": 1, "آ": 1,
+      "ب": 2, "ج": 3, "د": 4,
+      "ه": 5, "ة": 5, "و": 6, "ز": 7, "ح": 8, "ط": 9,
+      "ي": 10, "ى": 10, "ك": 20, "ل": 30, "م": 40, "ن": 50,
+      "س": 60, "ع": 70, "ف": 80, "ص": 90,
+      "ق": 100, "ر": 200, "ش": 300, "ت": 400, "ث": 500,
+      "خ": 600, "ذ": 700, "ض": 800, "ظ": 900, "غ": 1000
+    };
+
+    function stripAl(name) {
+      return name
+        .split(" ")
+        .map((word) => {
+          if (word.startsWith("ال") && word.length > 2) {
+            return word.slice(2);
+          }
+          return word;
+        })
+        .join(" ")
+        .trim();
+    }
+
+    function calcAbjadValue(text) {
+      let sum = 0;
+      for (const ch of text) {
+        if (Object.prototype.hasOwnProperty.call(ABJAD_MAP, ch)) {
+          sum += ABJAD_MAP[ch];
+        }
+      }
+      return sum;
+    }
+
+    function populateAsmaSelect() {
+      const sel = document.getElementById("asmaSelect");
+      sel.innerHTML = ASMA_AL_HUSNA.map((name, idx) =>
+        `<option value="${idx}">${idx + 1}. ${name}</option>`
+      ).join("");
+    }
+
+    function getSelectedAlMode() {
+      const checked = document.querySelector('input[name="alMode"]:checked');
+      return checked ? checked.value : "with_al";
+    }
+
+    function getActiveSumAndLabel() {
+      const mode = document.getElementById("sourceModeSelect").value;
+      if (mode === "number") {
+        const val = parseInt(document.getElementById("targetSumInput").value, 10);
+        return {
+          valid: Number.isInteger(val) && val > 0,
+          sum: val,
+          label: Number.isInteger(val) && val > 0 ? `مجموع رقمي (${val})` : "أدخل رقماً صحيحاً موجباً"
+        };
+      }
+
+      const idx = parseInt(document.getElementById("asmaSelect").value, 10) || 0;
+      const baseName = ASMA_AL_HUSNA[idx] || ASMA_AL_HUSNA[0];
+      const alMode = getSelectedAlMode();
+      const effectiveName = alMode === "without_al" ? stripAl(baseName) : baseName;
+      const sum = calcAbjadValue(effectiveName);
+      const modeText = alMode === "without_al" ? "بدون «ال»" : "بـ «ال»";
+
+      return {
+        valid: sum > 0,
+        sum,
+        label: `الاسم: ${effectiveName} (${modeText}) — الجُمّل: ${sum}`
+      };
+    }
+
+    function refreshSourceUI() {
+      const mode = document.getElementById("sourceModeSelect").value;
+      const asmaBox = document.getElementById("asmaPickerBox");
+      const manualBox = document.getElementById("manualSumBox");
+      const alRow = document.getElementById("alModeRow");
+
+      if (mode === "asma") {
+        asmaBox.style.display = "block";
+        manualBox.style.display = "none";
+        alRow.style.display = "block";
+      } else {
+        asmaBox.style.display = "none";
+        manualBox.style.display = "block";
+        alRow.style.display = "none";
+      }
+
+      const info = getActiveSumAndLabel();
+      document.getElementById("sumPreviewBox").textContent = `المجموع المعتمد: ${info.label}`;
+    }
 
     function mountIsolatedBanners() {
       document.querySelectorAll(".banner-slot[data-ad-key]").forEach((slot) => {
@@ -490,6 +698,7 @@
     let state = loadState();
     let adCooldownTimer = null;
     let adRemainingSeconds = 0;
+    let lastGeneratedMatrix = null;
 
     function showToast(msg, type = "ok") {
       const el = document.getElementById("systemToast");
@@ -702,15 +911,74 @@
       return matrix;
     }
 
-    function handleGenerateWafq() {
-      const rawSum = parseInt(document.getElementById("targetSumInput").value, 10);
-      const n = parseInt(document.getElementById("sizeSelect").value, 10);
-      const cost = getWafqCost(n);
+    function renderClassicWafqTable(matrix, labelText) {
+      const n = matrix.length;
+      const colSums = Array(n).fill(0);
+      let mainDiagSum = 0;
+      let antiDiagSum = 0;
 
-      if (!Number.isInteger(rawSum) || rawSum <= 0) {
-        showToast("يرجى إدخال مجموع صحيح موجب (مثال: 150).", "err");
+      const bodyRowsHtml = matrix.map((row, r) => {
+        let rowSum = 0;
+        const cellsHtml = row.map((val, c) => {
+          rowSum += val;
+          colSums[c] += val;
+          if (r === c) mainDiagSum += val;
+          if (r + c === n - 1) antiDiagSum += val;
+          const isDiag = r === c || r + c === n - 1;
+          return `<td class="${isDiag ? "cell-diag" : "cell-num"}">${val}</td>`;
+        }).join("");
+
+        return `<tr>${cellsHtml}<td class="sum-cell" title="مجموع الصف ${r + 1}">${rowSum}</td></tr>`;
+      }).join("");
+
+      const colSumsRowHtml = `
+        <tr>
+          ${colSums.map((s, c) => `<td class="sum-cell" title="مجموع العمود ${c + 1}">${s}</td>`).join("")}
+          <td class="diag-summary" title="قطر رئيسي / قطر معاكس">ق: ${mainDiagSum} / ${antiDiagSum}</td>
+        </tr>
+      `;
+
+      const actualTotal = matrix.flat().reduce((a, b) => a + b, 0);
+
+      document.getElementById("wafqResultArea").innerHTML = `
+        <div class="meta-box">
+          <div><strong>البيان:</strong> ${labelText}</div>
+          <div><strong>الحجم:</strong> ${n}×${n} (${n * n} خانة بأعداد صحيحة فريدة) • <strong>المجموع الكلي:</strong> ${actualTotal}</div>
+          <div><strong>مجموع القطر الرئيسي:</strong> ${mainDiagSum} • <strong>مجموع القطر المعاكس:</strong> ${antiDiagSum}</div>
+        </div>
+        <div class="matrix-wrap">
+          <table class="classic-wafq">
+            <tbody>
+              ${bodyRowsHtml}
+              ${colSumsRowHtml}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      document.getElementById("copyMatrixBtn").style.display = "inline-block";
+    }
+
+    async function handleCopyMatrix() {
+      if (!lastGeneratedMatrix) return;
+      const text = lastGeneratedMatrix.map((row) => row.join("\t")).join("\n");
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("تم نسخ جدول الوفق بنجاح.", "ok");
+      } catch {
+        prompt("انسخ الجدول:", text);
+      }
+    }
+
+    function handleGenerateWafq() {
+      const info = getActiveSumAndLabel();
+      if (!info.valid) {
+        showToast("يرجى اختيار اسم صحيح أو إدخال مجموع صحيح موجب.", "err");
         return;
       }
+
+      const n = parseInt(document.getElementById("sizeSelect").value, 10);
+      const cost = getWafqCost(n);
 
       if (state.points < cost) {
         showToast(`رصيدك الحالي (${state.points}) غير كافٍ لتوليد وفق ${n}×${n} (المطلوب: ${cost} نقاط).`, "err");
@@ -718,31 +986,24 @@
       }
 
       state.points -= cost;
-      const matrix = buildUniqueIntegerMatrix(n, rawSum);
-      const actualSum = matrix.flat().reduce((a, b) => a + b, 0);
+      const matrix = buildUniqueIntegerMatrix(n, info.sum);
+      lastGeneratedMatrix = matrix;
 
-      state.lastResultSummary = `وفق ${n}×${n} بمجموع ${actualSum}`;
+      state.lastResultSummary = `${info.label} — وفق ${n}×${n}`;
       saveState(state);
       renderHUD();
 
-      const rowsHtml = matrix
-        .map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`)
-        .join("");
-
-      document.getElementById("wafqResultArea").innerHTML = `
-        <div class="meta-box">
-          <div><strong>حجم المصفوفة:</strong> ${n}×${n} (${n * n} خانة بأعداد صحيحة فريدة)</div>
-          <div><strong>المجموع الكلي للمصفوفة:</strong> ${actualSum} • <strong>النقاط المخصومة:</strong> ${cost} نقاط</div>
-        </div>
-        <div class="matrix-wrap">
-          <table class="wafq-grid">
-            <tbody>${rowsHtml}</tbody>
-          </table>
-        </div>
-      `;
-
+      renderClassicWafqTable(matrix, info.label);
       showToast(`تم توليد الوفق ${n}×${n} وخصم ${cost} نقاط من رصيدك.`, "ok");
     }
+
+    populateAsmaSelect();
+    document.getElementById("sourceModeSelect").addEventListener("change", refreshSourceUI);
+    document.getElementById("asmaSelect").addEventListener("change", refreshSourceUI);
+    document.getElementById("targetSumInput").addEventListener("input", refreshSourceUI);
+    document.querySelectorAll('input[name="alMode"]').forEach((r) => {
+      r.addEventListener("change", refreshSourceUI);
+    });
 
     document.getElementById("sizeSelect").addEventListener("change", updateWafqCostUI);
     document.getElementById("watchAdBtn").addEventListener("click", handleWatchAd);
@@ -750,13 +1011,16 @@
     document.getElementById("shareResultBtn").addEventListener("click", handleShareResult);
     document.getElementById("copyInviteBtn").addEventListener("click", handleCopyInvite);
     document.getElementById("generateWafqBtn").addEventListener("click", handleGenerateWafq);
+    document.getElementById("copyMatrixBtn").addEventListener("click", handleCopyMatrix);
 
     const urlParams = new URLSearchParams(window.location.search);
     const sumParam = parseInt(urlParams.get("sum") || "", 10);
     if (Number.isInteger(sumParam) && sumParam > 0) {
+      document.getElementById("sourceModeSelect").value = "number";
       document.getElementById("targetSumInput").value = sumParam;
     }
 
+    refreshSourceUI();
     mountIsolatedBanners();
     handleIncomingReferral();
     renderHUD();
