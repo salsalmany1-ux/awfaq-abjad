@@ -517,7 +517,7 @@
     ];
 
     let activeZodiacType = 'monthly';
-    let lastTotal = null;
+    let lastCalculated = false;
 
     function populateDays() {
       const daySel = document.getElementById('birthDay');
@@ -576,7 +576,7 @@
       }
 
       const percentages = { 'ناري': 0, 'ترابي': 0, 'هوائي': 0, 'مائي': 0 };
-      let dominant = ELEMENTS_ORDER[(fallbackTotal - 1) % 4];
+      let dominant = ELEMENTS_ORDER[(Math.max(1, fallbackTotal) - 1) % 4];
 
       if (totalLetters > 0) {
         let maxCount = -1;
@@ -675,8 +675,8 @@
       const dobSum = day + month + year;
       const total = textSum + dobSum;
 
-      if (total <= 0) {
-        lastTotal = null;
+      if (textSum <= 0 && dobSum <= 0) {
+        lastCalculated = false;
         updateWafqLinks(null);
         updateElementCards(null, null);
         document.getElementById('resultContent').style.display = 'none';
@@ -684,10 +684,10 @@
         return;
       }
 
-      lastTotal = total;
+      lastCalculated = true;
       updateWafqLinks(total);
 
-      const simpleNum = simplifyWithMaster(total);
+      const simpleNum = textSum > 0 ? simplifyWithMaster(textSum) : simplifyWithMaster(dobSum);
       const { percentages, dominant } = calcElementPercentages(text, total);
       const zodiac = getZodiacLabel(total, day, month, year);
       const meta = ELEMENTS_META[dominant];
@@ -713,7 +713,7 @@
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         activeZodiacType = btn.dataset.zodiac;
-        if (lastTotal !== null) {
+        if (lastCalculated) {
           runCalculation();
         }
       });
