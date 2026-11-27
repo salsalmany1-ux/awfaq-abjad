@@ -74,9 +74,52 @@
       padding-top: 6px;
     }
 
-    .container {
-      max-width: 960px;
+    .page-shell {
+      max-width: 1280px;
       margin: 56px auto 0;
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr) 160px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .side-ads {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .banner-slot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 14px auto;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .banner-slot iframe {
+      border: 0;
+      background: transparent;
+      display: block;
+    }
+
+    .desktop-only-banner { display: flex; }
+    .mobile-only-banner { display: none; }
+
+    @media (max-width: 1024px) {
+      .page-shell {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .side-ads {
+        display: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .desktop-only-banner { display: none; }
+      .mobile-only-banner { display: flex; }
     }
 
     header {
@@ -256,62 +299,123 @@
     <div class="status-bar" id="statusBar">جاري تحميل حالة النقاط...</div>
   </aside>
 
-  <div class="container">
-    <header>
-      <h1>مولّد الأوفاق العددية</h1>
-      <p class="subtitle">توليد مصفوفات أوفاق بأعداد صحيحة فريدة — تُخصم النقاط بمجرد التوليد حسب حجم الوفق</p>
-      <div class="nav-links">
-        <a class="nav-btn" href="index.html">الحاسبة والأبراج</a>
-        <a class="nav-btn primary" href="wafq.html">مولّد الأوفاق</a>
-      </div>
-    </header>
+  <div class="page-shell">
+    <!-- عمود الإعلانات الجانبي الأيمن (160x600 و 160x300) -->
+    <aside class="side-ads" aria-label="إعلانات جانبية">
+      <div class="banner-slot" data-ad-key="2c097ab44a64c6c0606b2fb1836488bd" data-ad-w="160" data-ad-h="600"></div>
+      <div class="banner-slot" data-ad-key="3dcfa0e5cf63449c449860c04792b50a" data-ad-w="160" data-ad-h="300"></div>
+    </aside>
 
-    <section class="card">
-      <div class="card-title">المكافآت السريعة</div>
-      <div class="actions-row">
-        <button class="btn secondary" id="dailyBonusBtn" type="button">مكافأة الدخول اليومي</button>
-        <button class="btn secondary" id="shareResultBtn" type="button">مشاركة النتيجة (+40 نقطة)</button>
-        <button class="btn secondary" id="copyInviteBtn" type="button">نسخ رابط دعوة صديق (+50 نقطة)</button>
-      </div>
-      <div class="toast" id="systemToast"></div>
-    </section>
-
-    <section class="card">
-      <div class="card-title">إعدادات توليد الوفق</div>
-      <div class="grid-2">
-        <div>
-          <label for="targetSumInput">المجموع المطلوب (عدد صحيح موجب)</label>
-          <input type="number" id="targetSumInput" min="10" step="1" placeholder="مثال: 150" />
+    <main class="container">
+      <header>
+        <h1>مولّد الأوفاق العددية</h1>
+        <p class="subtitle">توليد مصفوفات أوفاق بأعداد صحيحة فريدة — تُخصم النقاط بمجرد التوليد حسب حجم الوفق</p>
+        <div class="nav-links">
+          <a class="nav-btn" href="index.html">الحاسبة والأبراج</a>
+          <a class="nav-btn primary" href="wafq.html">مولّد الأوفاق</a>
         </div>
-        <div>
-          <label for="sizeSelect">حجم الوفق (المصفوفة)</label>
-          <select id="sizeSelect">
-            <option value="3">3×3 (ثلاثي — 10 نقاط)</option>
-            <option value="4">4×4 (رباعي — 10 نقاط)</option>
-            <option value="5">5×5 (خماسي — 15 نقطة)</option>
-            <option value="6">6×6 (سداسي — 15 نقطة)</option>
-            <option value="7">7×7 (سباعي — 20 نقطة)</option>
-            <option value="8">8×8 (ثماني — 20 نقطة)</option>
-            <option value="9">9×9 (تساعي — 25 نقطة)</option>
-            <option value="10">10×10 (عشاري — 25 نقطة)</option>
-          </select>
+      </header>
+
+      <!-- بانر علوي للشاشات العريضة (728x90) وللهواتف (320x50) -->
+      <div class="banner-slot desktop-only-banner" data-ad-key="43c6a2cdb89df92f1d10bf50c7cc3af0" data-ad-w="728" data-ad-h="90"></div>
+      <div class="banner-slot mobile-only-banner" data-ad-key="9cea9f341703cacbcc9254423d8e316f" data-ad-w="320" data-ad-h="50"></div>
+
+      <section class="card">
+        <div class="card-title">المكافآت السريعة</div>
+        <div class="actions-row">
+          <button class="btn secondary" id="dailyBonusBtn" type="button">مكافأة الدخول اليومي</button>
+          <button class="btn secondary" id="shareResultBtn" type="button">مشاركة النتيجة (+40 نقطة)</button>
+          <button class="btn secondary" id="copyInviteBtn" type="button">نسخ رابط دعوة صديق (+50 نقطة)</button>
         </div>
-      </div>
+        <div class="toast" id="systemToast"></div>
+      </section>
 
-      <div class="cost-info" id="wafqCostLabel">تكلفة توليد وفق 3×3: 10 نقاط</div>
+      <!-- بانر متوسط (468x60) -->
+      <div class="banner-slot" data-ad-key="d18f65e3e3e650c995bfae571ec658e4" data-ad-w="468" data-ad-h="60"></div>
 
-      <div class="actions-row">
-        <button class="btn" id="generateWafqBtn" type="button">توليد الوفق الآن</button>
-      </div>
+      <section class="card">
+        <div class="card-title">إعدادات توليد الوفق</div>
+        <div class="grid-2">
+          <div>
+            <label for="targetSumInput">المجموع المطلوب (عدد صحيح موجب)</label>
+            <input type="number" id="targetSumInput" min="10" step="1" placeholder="مثال: 150" />
+          </div>
+          <div>
+            <label for="sizeSelect">حجم الوفق (المصفوفة)</label>
+            <select id="sizeSelect">
+              <option value="3">3×3 (ثلاثي — 10 نقاط)</option>
+              <option value="4">4×4 (رباعي — 10 نقاط)</option>
+              <option value="5">5×5 (خماسي — 15 نقطة)</option>
+              <option value="6">6×6 (سداسي — 15 نقطة)</option>
+              <option value="7">7×7 (سباعي — 20 نقطة)</option>
+              <option value="8">8×8 (ثماني — 20 نقطة)</option>
+              <option value="9">9×9 (تساعي — 25 نقطة)</option>
+              <option value="10">10×10 (عشاري — 25 نقطة)</option>
+            </select>
+          </div>
+        </div>
 
-      <div id="wafqResultArea"></div>
-    </section>
+        <div class="cost-info" id="wafqCostLabel">تكلفة توليد وفق 3×3: 10 نقاط</div>
+
+        <div class="actions-row">
+          <button class="btn" id="generateWafqBtn" type="button">توليد الوفق الآن</button>
+        </div>
+
+        <div id="wafqResultArea"></div>
+      </section>
+
+      <!-- بانر سفلي مربع (300x250) -->
+      <div class="banner-slot" data-ad-key="297dd0dec9845987bf6e7f08ee8f028e" data-ad-w="300" data-ad-h="250"></div>
+    </main>
+
+    <aside class="side-ads" aria-hidden="true"></aside>
   </div>
 
   <script>
     const SMART_LINK_URL = "https://asiafilm.org/4/56aaa9153709df41930060678aa64610";
+    const AD_SCRIPT_BASE = "https://bicea.org/22";
     const STORAGE_KEY = "abjad_wafq_points_state_v1";
     const REF_CLAIMED_KEY = "abjad_wafq_ref_claimed_v1";
+
+    function mountIsolatedBanners() {
+      document.querySelectorAll(".banner-slot[data-ad-key]").forEach((slot) => {
+        const key = slot.getAttribute("data-ad-key");
+        const w = parseInt(slot.getAttribute("data-ad-w"), 10);
+        const h = parseInt(slot.getAttribute("data-ad-h"), 10);
+        if (!key || !w || !h) return;
+
+        const iframe = document.createElement("iframe");
+        iframe.width = String(w);
+        iframe.height = String(h);
+        iframe.style.width = `${w}px`;
+        iframe.style.height = `${h}px`;
+        iframe.style.border = "0";
+        iframe.style.overflow = "hidden";
+        iframe.loading = "lazy";
+        iframe.scrolling = "no";
+
+        slot.innerHTML = "";
+        slot.appendChild(iframe);
+
+        const doc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (doc) {
+          doc.open();
+          doc.write(`<!DOCTYPE html><html><head><style>html,body{margin:0;padding:0;background:transparent;overflow:hidden;}</style></head><body>
+            <script>
+              atOptions = {
+                'key' : '${key}',
+                'format' : 'iframe',
+                'height' : ${h},
+                'width' : ${w},
+                'params' : {}
+              };
+            <\/script>
+            <script data-cfasync="false" src="${AD_SCRIPT_BASE}/${key}"><\/script>
+          </body></html>`);
+          doc.close();
+        }
+      });
+    }
 
     const CONFIG = {
       WELCOME_BONUS: 25,
@@ -653,6 +757,7 @@
       document.getElementById("targetSumInput").value = sumParam;
     }
 
+    mountIsolatedBanners();
     handleIncomingReferral();
     renderHUD();
   </script>
