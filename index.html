@@ -124,24 +124,31 @@
       gap: 6px;
     }
 
+    .date-selects {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
     label {
       font-size: 0.9rem;
       color: var(--muted);
       font-weight: 600;
     }
 
-    input[type="text"], input[type="date"] {
+    input[type="text"], select {
       background: var(--surface-2);
       border: 1px solid rgba(255,255,255,0.12);
       color: var(--text);
       border-radius: 10px;
-      padding: 12px 14px;
+      padding: 12px 10px;
       font-family: inherit;
-      font-size: 1rem;
+      font-size: 0.96rem;
       outline: none;
+      width: 100%;
     }
 
-    input:focus {
+    input:focus, select:focus {
       border-color: var(--gold);
     }
 
@@ -350,9 +357,31 @@
           <label for="textInput">أدخل اسماً أو كلمة أو عبارة</label>
           <input type="text" id="textInput" value="" placeholder="اكتب اسماً أو نصاً عربياً..." />
         </div>
-        <div class="field">
-          <label for="birthInput">تاريخ الميلاد</label>
-          <input type="date" id="birthInput" />
+        <div class="field" style="flex: 1.4 1 280px;">
+          <label>تاريخ الميلاد</label>
+          <div class="date-selects">
+            <select id="birthDay" aria-label="اليوم">
+              <option value="">اليوم</option>
+            </select>
+            <select id="birthMonth" aria-label="الشهر">
+              <option value="">الشهر</option>
+              <option value="1">يناير (1)</option>
+              <option value="2">فبراير (2)</option>
+              <option value="3">مارس (3)</option>
+              <option value="4">أبريل (4)</option>
+              <option value="5">مايو (5)</option>
+              <option value="6">يونيو (6)</option>
+              <option value="7">يوليو (7)</option>
+              <option value="8">أغسطس (8)</option>
+              <option value="9">سبتمبر (9)</option>
+              <option value="10">أكتوبر (10)</option>
+              <option value="11">نوفمبر (11)</option>
+              <option value="12">ديسمبر (12)</option>
+            </select>
+            <select id="birthYear" aria-label="السنة">
+              <option value="">السنة</option>
+            </select>
+          </div>
         </div>
         <button class="btn" id="calcBtn">احسب</button>
         <button class="btn btn-secondary" id="exportBtn">حفظ بطاقة صورة</button>
@@ -475,6 +504,41 @@
     let lastBirthDate = null;
     let activeZodiacType = 'monthly';
 
+    function populateDateSelects() {
+      const yearSel = document.getElementById('birthYear');
+      const currentYear = new Date().getFullYear();
+      for (let y = currentYear; y >= 1920; y--) {
+        const opt = document.createElement('option');
+        opt.value = String(y);
+        opt.textContent = String(y);
+        yearSel.appendChild(opt);
+      }
+      populateDays();
+    }
+
+    function getDaysInMonth(year, month) {
+      if (!month) return 31;
+      const y = year ? parseInt(year, 10) : 2000;
+      return new Date(y, parseInt(month, 10), 0).getDate();
+    }
+
+    function populateDays() {
+      const daySel = document.getElementById('birthDay');
+      const monthVal = document.getElementById('birthMonth').value;
+      const yearVal = document.getElementById('birthYear').value;
+      const prevDay = parseInt(daySel.value, 10);
+      const maxDays = getDaysInMonth(yearVal, monthVal);
+
+      daySel.innerHTML = '<option value="">اليوم</option>';
+      for (let d = 1; d <= maxDays; d++) {
+        const opt = document.createElement('option');
+        opt.value = String(d);
+        opt.textContent = String(d);
+        if (prevDay === d) opt.selected = true;
+        daySel.appendChild(opt);
+      }
+    }
+
     function getElementKey(ch) {
       for (const [key, meta] of Object.entries(ELEMENTS_META)) {
         if (meta.chars.has(ch)) return key;
@@ -542,8 +606,8 @@
       const box = document.getElementById('zodiacResult');
       if (!lastBirthDate) {
         box.innerHTML = `
-          <div class="zodiac-title">لم يتم إدخال تاريخ ميلاد بعد</div>
-          <div class="zodiac-meta">اختر تاريخ الميلاد ثم اضغط «احسب» لعرض البرج.</div>
+          <div class="zodiac-title">لم يتم اختيار تاريخ ميلاد مكتمل بعد</div>
+          <div class="zodiac-meta">اختر اليوم والشهر والسنة ثم اضغط «احسب» لعرض البرج.</div>
         `;
         return;
       }
@@ -575,10 +639,16 @@
 
     function renderAll() {
       const text = document.getElementById('textInput').value;
-      const birthVal = document.getElementById('birthInput').value;
+      const dVal = document.getElementById('birthDay').value;
+      const mVal = document.getElementById('birthMonth').value;
+      const yVal = document.getElementById('birthYear').value;
 
       lastText = text.trim();
-      lastBirthDate = birthVal ? new Date(birthVal + 'T00:00:00') : null;
+      if (dVal && mVal && yVal) {
+        lastBirthDate = new Date(parseInt(yVal, 10), parseInt(mVal, 10) - 1, parseInt(dVal, 10));
+      } else {
+        lastBirthDate = null;
+      }
 
       const res = analyzeText(text);
       lastResult = res;
@@ -715,6 +785,9 @@
       link.click();
     }
 
+    document.getElementById('birthMonth').addEventListener('change', populateDays);
+    document.getElementById('birthYear').addEventListener('change', populateDays);
+
     document.querySelectorAll('.zodiac-tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.zodiac-tab-btn').forEach(b => b.classList.remove('active'));
@@ -726,6 +799,8 @@
 
     document.getElementById('calcBtn').addEventListener('click', renderAll);
     document.getElementById('exportBtn').addEventListener('click', exportCard);
+
+    populateDateSelects();
   </script>
 </body>
 </html>
