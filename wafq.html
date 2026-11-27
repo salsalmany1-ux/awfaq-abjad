@@ -201,31 +201,6 @@
       font-size: 0.95rem;
     }
 
-    .radio-group {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-
-    .radio-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--card-2);
-      border: 1px solid var(--border);
-      padding: 9px 14px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: var(--text);
-    }
-
-    .radio-pill input {
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-
     .btn {
       background: var(--accent);
       color: #0b0e14;
@@ -260,7 +235,7 @@
     }
 
     .sum-preview {
-      margin-top: 8px;
+      margin-top: 10px;
       font-size: 0.88rem;
       color: #cbd5e1;
       background: var(--card-2);
@@ -376,7 +351,7 @@
     <main class="container">
       <header>
         <h1>مولّد الأوفاق العددية وأسماء الله الحسنى</h1>
-        <p class="subtitle">توليد مصفوفات الأوفاق بالشكل الكلاسيكي وبحساب أسماء الله الحسنى بـ «ال» أو بدونها</p>
+        <p class="subtitle">توليد الأوفاق رقمياً أو بأسماء الله الحسنى بـ «ال» أو بدونها</p>
         <div class="nav-links">
           <a class="nav-btn" href="index.html">الحاسبة والأبراج</a>
           <a class="nav-btn primary" href="wafq.html">مولّد الأوفاق</a>
@@ -397,25 +372,26 @@
       </section>
 
       <section class="card">
-        <div class="card-title">إعدادات توليد الوفق (رقمي أو بأسماء الله الحسنى)</div>
+        <div class="card-title">إعدادات توليد الوفق</div>
 
         <div class="grid-3">
           <div>
-            <label for="sourceModeSelect">مصدر المجموع</label>
-            <select id="sourceModeSelect">
-              <option value="asma">من أسماء الله الحسنى</option>
-              <option value="number">إدخال مجموع رقمي مباشر</option>
+            <label for="genOptionSelect">نوع التوليد</label>
+            <select id="genOptionSelect">
+              <option value="number">رقمي</option>
+              <option value="asma_with_al">أسماء الله الحسنى</option>
+              <option value="asma_without_al">أسماء الله الحسنى بدون ال</option>
             </select>
           </div>
 
-          <div id="asmaPickerBox">
-            <label for="asmaSelect">اختر اسم من أسماء الله الحسنى</label>
-            <select id="asmaSelect"></select>
+          <div id="numberInputBox">
+            <label for="targetSumInput">مصدر المجموع (الأرقام)</label>
+            <input type="number" id="targetSumInput" min="1" step="1" placeholder="أدخل الرقم" />
           </div>
 
-          <div id="manualSumBox" style="display:none;">
-            <label for="targetSumInput">المجموع المطلوب (عدد صحيح موجب)</label>
-            <input type="number" id="targetSumInput" min="10" step="1" placeholder="مثال: 150" />
+          <div id="asmaInputBox" style="display:none;">
+            <label for="asmaSelect">اختر الاسم</label>
+            <select id="asmaSelect"></select>
           </div>
 
           <div>
@@ -433,21 +409,7 @@
           </div>
         </div>
 
-        <div id="alModeRow" style="margin-top:12px;">
-          <label>حساب الاسم في الجُمّل:</label>
-          <div class="radio-group">
-            <label class="radio-pill">
-              <input type="radio" name="alMode" value="with_al" checked />
-              <span>بـ «ال» التعريف (مثال: الرحمن)</span>
-            </label>
-            <label class="radio-pill">
-              <input type="radio" name="alMode" value="without_al" />
-              <span>بدون «ال» التعريف (مثال: رحمن)</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="sum-preview" id="sumPreviewBox">جاري حساب المجموع...</div>
+        <div class="sum-preview" id="sumPreviewBox">المجموع المعتمد: أدخل رقماً صحيحاً موجباً</div>
         <div class="cost-info" id="wafqCostLabel">تكلفة توليد وفق 3×3: 10 نقاط</div>
 
         <div class="actions-row">
@@ -532,50 +494,42 @@
       ).join("");
     }
 
-    function getSelectedAlMode() {
-      const checked = document.querySelector('input[name="alMode"]:checked');
-      return checked ? checked.value : "with_al";
-    }
-
     function getActiveSumAndLabel() {
-      const mode = document.getElementById("sourceModeSelect").value;
+      const mode = document.getElementById("genOptionSelect").value;
       if (mode === "number") {
         const val = parseInt(document.getElementById("targetSumInput").value, 10);
         return {
           valid: Number.isInteger(val) && val > 0,
           sum: val,
-          label: Number.isInteger(val) && val > 0 ? `مجموع رقمي (${val})` : "أدخل رقماً صحيحاً موجباً"
+          label: Number.isInteger(val) && val > 0 ? `رقمي (${val})` : "أدخل رقماً صحيحاً موجباً"
         };
       }
 
       const idx = parseInt(document.getElementById("asmaSelect").value, 10) || 0;
       const baseName = ASMA_AL_HUSNA[idx] || ASMA_AL_HUSNA[0];
-      const alMode = getSelectedAlMode();
-      const effectiveName = alMode === "without_al" ? stripAl(baseName) : baseName;
+      const withoutAl = mode === "asma_without_al";
+      const effectiveName = withoutAl ? stripAl(baseName) : baseName;
       const sum = calcAbjadValue(effectiveName);
-      const modeText = alMode === "without_al" ? "بدون «ال»" : "بـ «ال»";
+      const modeText = withoutAl ? "بدون ال" : "أسماء الله الحسنى";
 
       return {
         valid: sum > 0,
         sum,
-        label: `الاسم: ${effectiveName} (${modeText}) — الجُمّل: ${sum}`
+        label: `${modeText}: ${effectiveName} — المجموع: ${sum}`
       };
     }
 
     function refreshSourceUI() {
-      const mode = document.getElementById("sourceModeSelect").value;
-      const asmaBox = document.getElementById("asmaPickerBox");
-      const manualBox = document.getElementById("manualSumBox");
-      const alRow = document.getElementById("alModeRow");
+      const mode = document.getElementById("genOptionSelect").value;
+      const numBox = document.getElementById("numberInputBox");
+      const asmaBox = document.getElementById("asmaInputBox");
 
-      if (mode === "asma") {
-        asmaBox.style.display = "block";
-        manualBox.style.display = "none";
-        alRow.style.display = "block";
-      } else {
+      if (mode === "number") {
+        numBox.style.display = "block";
         asmaBox.style.display = "none";
-        manualBox.style.display = "block";
-        alRow.style.display = "none";
+      } else {
+        numBox.style.display = "none";
+        asmaBox.style.display = "block";
       }
 
       const info = getActiveSumAndLabel();
@@ -1034,7 +988,7 @@
     function handleGenerateWafq() {
       const info = getActiveSumAndLabel();
       if (!info.valid) {
-        showToast("يرجى اختيار اسم صحيح أو إدخال مجموع صحيح موجب.", "err");
+        showToast("يرجى اختيار اسم صحيح أو إدخال رقم صحيح موجب.", "err");
         return;
       }
 
@@ -1059,12 +1013,9 @@
     }
 
     populateAsmaSelect();
-    document.getElementById("sourceModeSelect").addEventListener("change", refreshSourceUI);
+    document.getElementById("genOptionSelect").addEventListener("change", refreshSourceUI);
     document.getElementById("asmaSelect").addEventListener("change", refreshSourceUI);
     document.getElementById("targetSumInput").addEventListener("input", refreshSourceUI);
-    document.querySelectorAll('input[name="alMode"]').forEach((r) => {
-      r.addEventListener("change", refreshSourceUI);
-    });
 
     document.getElementById("sizeSelect").addEventListener("change", updateWafqCostUI);
     document.getElementById("watchAdBtn").addEventListener("click", handleWatchAd);
@@ -1077,7 +1028,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const sumParam = parseInt(urlParams.get("sum") || "", 10);
     if (Number.isInteger(sumParam) && sumParam > 0) {
-      document.getElementById("sourceModeSelect").value = "number";
+      document.getElementById("genOptionSelect").value = "number";
       document.getElementById("targetSumInput").value = sumParam;
     }
 
