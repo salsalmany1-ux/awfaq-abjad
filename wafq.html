@@ -139,6 +139,7 @@
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 16px;
+      align-items: center;
     }
 
     .btn {
@@ -146,7 +147,7 @@
       color: #111;
       border: none;
       border-radius: 10px;
-      padding: 11px 18px;
+      padding: 11px 20px;
       font-family: inherit;
       font-weight: 800;
       font-size: 0.92rem;
@@ -194,6 +195,15 @@
     .wafq-wrapper {
       overflow-x: auto;
       padding: 10px 0;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .empty-hint {
+      color: var(--muted);
+      font-size: 0.95rem;
     }
 
     .wafq-grid {
@@ -204,7 +214,7 @@
     }
 
     .wafq-cell {
-      min-width: 88px;
+      min-width: 90px;
       min-height: 76px;
       padding: 8px 6px;
       background: var(--surface-2);
@@ -243,7 +253,7 @@
       <div class="controls-row">
         <div class="field">
           <label for="targetSum">الرقم المستهدف (المجموع)</label>
-          <input type="number" id="targetSum" min="1" placeholder="أدخل رقماً..." />
+          <input type="number" id="targetSum" min="1" step="1" placeholder="أدخل رقماً..." />
         </div>
         <div class="field">
           <label for="gridSize">مرتبة الوفق</label>
@@ -261,6 +271,7 @@
       </div>
 
       <div class="mode-btns">
+        <button class="btn" id="generateBtn">توليد</button>
         <button class="btn btn-mode active" id="btnNumeric" data-mode="numeric">وفق رقمي</button>
         <button class="btn btn-mode" id="btnWithAl" data-mode="withAl">وفق اسمي (بالـ التعريف)</button>
         <button class="btn btn-mode" id="btnWithoutAl" data-mode="withoutAl">وفق اسمي (بدون الـ التعريف)</button>
@@ -283,7 +294,9 @@
     </section>
 
     <section class="card">
-      <div class="wafq-wrapper" id="wafqOutput"></div>
+      <div class="wafq-wrapper" id="wafqOutput">
+        <div class="empty-hint">اختر البيانات واضغط «توليد»</div>
+      </div>
     </section>
   </div>
 
@@ -339,6 +352,7 @@
     });
 
     let currentMode = 'numeric';
+    let lastGeneratedState = null;
 
     function getUnitOrderMatrix(n) {
       const total = n * n;
@@ -399,8 +413,7 @@
       const k = (n - 2) / 4;
       for (let r = 0; r < half; r++) {
         for (let c = 0; c < k; c++) {
-          const col = (r === half - 1 && c === 0) ? c : c;
-          const actualC = (r === Math.floor(half / 2)) ? c + 1 : col;
+          const actualC = (r === Math.floor(half / 2)) ? c + 1 : c;
           const tmp = m[r][actualC];
           m[r][actualC] = m[r + half][actualC];
           m[r + half][actualC] = tmp;
@@ -418,19 +431,39 @@
       return m;
     }
 
-    function buildBalancedMagicMatrix(n, targetSum) {
+    function buildIntegerMagicMatrix(n, targetSum) {
       const total = n * n;
-      const step = 1;
       const base = getUnitOrderMatrix(n);
       const avgUnitSum = (total + 1) / 2;
-      const key = (targetSum - (n - 1) * avgUnitSum * step) / n;
 
-      return base.map(row =>
-        row.map(rank => {
-          const val = key + (rank - 1) * step;
-          return Number.isInteger(val) ? val : Number(val.toFixed(2));
-        })
-      );
+      let step = 1;
+      const rawKey = (targetSum - (n - 1) * avgUnitSum) / n;
+      let key = Math.floor(rawKey);
+      if (key < 1) key = 1;
+
+      const remainder = targetSum - (n * key + (n - 1) * avgUnitSum * step);
+      const extraPerCell = Math.round(remainder / (n * avgUnitSum));
+      if (extraPerCell !== 0) {
+        step = Math.max(1, step + extraPerCell);
+        key = Math.max(1, Math.floor((targetSum - (n - 1) * avgUnitSum * step) / n));
+      }
+
+      const matrix = Array.from({ length: n }, () => Array(n).fill(0));
+      const used = new Set();
+
+      for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+          let val = Math.round(key + (base[r][c] - 1) * step);
+          if (val < 1) val = 1;
+          while (used.has(val)) {
+            val += 1;
+          }
+          used.add(val);
+          matrix[r][c] = val;
+        }
+      }
+
+      return matrix;
     }
 
     function getTraversalOrderFromCenter(n) {
@@ -472,14 +505,14 @@
       return order;
     }
 
-    function findExactTensMatch(cellValue, namesList, usedNames) {
-      if (!Number.isFinite(cellValue) || cellValue <= 0) return null;
+    function findNameMatchByTens(cellValue, namesList, usedNames) {
+      if (!Number.isSafeInteger(cellValue) || cellValue <= 0) return null;
 
-      const MAX_EXP = 10;
+      const MAX_EXP = 9;
       const cellScaled = [];
       for (let k = 0; k <= MAX_EXP; k++) {
         const v = cellValue * Math.pow(10, k);
-        if (!Number.isFinite(v) || v > Number.MAX_SAFE_INTEGER) break;
+        if (!Number.isSafeInteger(v)) break;
         cellScaled.push(v);
       }
 
@@ -489,23 +522,10 @@
 
         for (let m = 0; m <= MAX_EXP; m++) {
           const nameVal = candidate.value * Math.pow(10, m);
-          if (!Number.isFinite(nameVal) || nameVal > Number.MAX_SAFE_INTEGER) break;
+          if (!Number.isSafeInteger(nameVal)) break;
 
           for (const cVal of cellScaled) {
-            if (Math.abs(cVal - nameVal) < 1e-6) {
-              return candidate.display;
-            }
-          }
-        }
-      }
-
-      for (const candidate of namesList) {
-        if (!candidate.value || candidate.value <= 0) continue;
-        for (let m = 0; m <= MAX_EXP; m++) {
-          const nameVal = candidate.value * Math.pow(10, m);
-          if (!Number.isFinite(nameVal) || nameVal > Number.MAX_SAFE_INTEGER) break;
-          for (const cVal of cellScaled) {
-            if (Math.abs(cVal - nameVal) < 1e-6) {
+            if (cVal === nameVal) {
               return candidate.display;
             }
           }
@@ -515,15 +535,9 @@
       return null;
     }
 
-    function formatCellNumber(val) {
-      return Number.isInteger(val) ? val.toLocaleString('ar') : String(val);
-    }
-
-    function renderWafq() {
-      const n = parseInt(document.getElementById('gridSize').value, 10);
-      const rawSum = parseFloat(document.getElementById('targetSum').value);
-      const defaultSum = (n * (n * n + 1)) / 2;
-      const targetSum = Number.isFinite(rawSum) && rawSum > 0 ? rawSum : defaultSum;
+    function renderFromState(state) {
+      if (!state) return;
+      const { n, targetSum, matrix } = state;
 
       const modeNames = {
         numeric: 'وفق رقمي',
@@ -532,10 +546,9 @@
       };
 
       document.getElementById('metaSize').textContent = `${n} × ${n}`;
-      document.getElementById('metaSum').textContent = formatCellNumber(targetSum);
+      document.getElementById('metaSum').textContent = targetSum.toLocaleString('ar');
       document.getElementById('metaMode').textContent = modeNames[currentMode];
 
-      const matrix = buildBalancedMagicMatrix(n, targetSum);
       const traversal = getTraversalOrderFromCenter(n);
       const displayGrid = Array.from({ length: n }, () => Array(n).fill(''));
       const usedNames = new Set();
@@ -544,21 +557,21 @@
       for (const { r, c } of traversal) {
         const val = matrix[r][c];
         if (currentMode === 'numeric') {
-          displayGrid[r][c] = formatCellNumber(val);
+          displayGrid[r][c] = val.toLocaleString('ar');
         } else {
-          const matched = findExactTensMatch(val, activeNames, usedNames);
+          const matched = findNameMatchByTens(val, activeNames, usedNames);
           if (matched) {
             usedNames.add(matched);
             displayGrid[r][c] = matched;
           } else {
-            displayGrid[r][c] = formatCellNumber(val);
+            displayGrid[r][c] = val.toLocaleString('ar');
           }
         }
       }
 
       const gridEl = document.createElement('div');
       gridEl.className = 'wafq-grid';
-      gridEl.style.gridTemplateColumns = `repeat(${n}, minmax(88px, 1fr))`;
+      gridEl.style.gridTemplateColumns = `repeat(${n}, minmax(90px, 1fr))`;
 
       const centerR = Math.floor((n - 1) / 2);
       const centerC = Math.floor((n - 1) / 2);
@@ -578,25 +591,42 @@
       out.appendChild(gridEl);
     }
 
+    function generateWafq() {
+      const n = parseInt(document.getElementById('gridSize').value, 10);
+      const rawSum = parseInt(document.getElementById('targetSum').value, 10);
+      const defaultSum = (n * (n * n + 1)) / 2;
+      const targetSum = Number.isFinite(rawSum) && rawSum > 0 ? rawSum : defaultSum;
+
+      const matrix = buildIntegerMagicMatrix(n, targetSum);
+      lastGeneratedState = { n, targetSum, matrix };
+      renderFromState(lastGeneratedState);
+    }
+
     document.querySelectorAll('.btn-mode').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.btn-mode').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentMode = btn.dataset.mode;
-        renderWafq();
+        if (lastGeneratedState) {
+          renderFromState(lastGeneratedState);
+        } else {
+          const modeNames = {
+            numeric: 'وفق رقمي',
+            withAl: 'وفق اسمي (بالـ التعريف)',
+            withoutAl: 'وفق اسمي (بدون الـ التعريف)'
+          };
+          document.getElementById('metaMode').textContent = modeNames[currentMode];
+        }
       });
     });
 
-    document.getElementById('gridSize').addEventListener('change', renderWafq);
-    document.getElementById('targetSum').addEventListener('input', renderWafq);
+    document.getElementById('generateBtn').addEventListener('click', generateWafq);
 
     const params = new URLSearchParams(window.location.search);
-    const paramSum = parseFloat(params.get('sum'));
+    const paramSum = parseInt(params.get('sum'), 10);
     if (Number.isFinite(paramSum) && paramSum > 0) {
       document.getElementById('targetSum').value = String(paramSum);
     }
-
-    renderWafq();
   </script>
 </body>
 </html>
