@@ -13,8 +13,6 @@
       --muted: #9aa4b8;
       --accent: #ff6a00;
       --accent-2: #ff9447;
-      --success: #22c55e;
-      --danger: #ef4444;
       --border: rgba(255, 255, 255, 0.09);
     }
 
@@ -28,7 +26,6 @@
       line-height: 1.6;
     }
 
-    /* عداد النقاط في أعلى يسار الصفحة */
     .points-hud {
       position: fixed;
       top: 14px;
@@ -65,10 +62,8 @@
       font-weight: 700;
       font-size: 0.8rem;
       cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.15s ease;
     }
 
-    .ad-quick-btn:hover:not(:disabled) { transform: translateY(-1px); }
     .ad-quick-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
     .status-bar {
@@ -139,10 +134,10 @@
       color: var(--accent-2);
     }
 
-    .grid-2 {
+    .grid-3 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
     }
 
     label {
@@ -153,7 +148,6 @@
     }
 
     input[type="text"],
-    input[type="date"],
     select {
       width: 100%;
       background: var(--card-2);
@@ -262,7 +256,6 @@
 </head>
 <body>
 
-  <!-- عداد النقاط وشريط الحالة في أعلى اليسار -->
   <aside class="points-hud" aria-live="polite">
     <div class="points-top">
       <div class="points-badge" id="pointsDisplay">النقاط: 0</div>
@@ -274,14 +267,13 @@
   <div class="container">
     <header>
       <h1>حاسبة الجُمّل والحروف والأبراج</h1>
-      <p class="subtitle">حساب الجُمّل بالأبجدية، تحليل نسب طبائع الحروف، واستخراج البرج الفلكي وطبعه (تكلفة المهمة: 10 نقاط)</p>
+      <p class="subtitle">حساب الجُمّل بالأبجدية، تحليل نسب طبائع الحروف، واستخراج البرج الفلكي وطبعه</p>
       <div class="nav-links">
         <a class="nav-btn primary" href="index.html">الحاسبة والأبراج</a>
         <a class="nav-btn" href="wafq.html">مولّد الأوفاق</a>
       </div>
     </header>
 
-    <!-- المكافآت السريعة: دخول يومي متدرج أسبوعي + مشاركة + دعوة صديق -->
     <section class="card">
       <div class="card-title">مركز النقاط والمكافآت</div>
       <div class="actions-row">
@@ -293,7 +285,6 @@
       <div class="toast" id="systemToast"></div>
     </section>
 
-    <!-- 1. حاسبة الجُمّل وتحليل الحروف -->
     <section class="card">
       <div class="card-title">1. حساب الجُمّل ونسب طبائع الحروف</div>
       <label for="abjadInput">أدخل النص أو الاسم أو العبارة (يتم احتساب الحروف فقط)</label>
@@ -305,28 +296,45 @@
       <div id="abjadOutput"></div>
     </section>
 
-    <!-- 2. البرج الفلكي وطبعه -->
     <section class="card">
       <div class="card-title">2. البرج الفلكي وطبعه حسب تاريخ الميلاد</div>
-      <div class="grid-2">
+      <div class="grid-3">
         <div>
-          <label for="birthDateInput">اختر تاريخ الميلاد</label>
-          <input type="date" id="birthDateInput" />
+          <label for="birthDaySelect">اليوم</label>
+          <select id="birthDaySelect"></select>
         </div>
-        <div style="display:flex;align-items:flex-end;">
-          <button class="btn" id="calcZodiacBtn" type="button">استخراج البرج (10 نقاط)</button>
+        <div>
+          <label for="birthMonthSelect">الشهر</label>
+          <select id="birthMonthSelect">
+            <option value="">اختر الشهر</option>
+            <option value="1">1 - يناير / كانون الثاني</option>
+            <option value="2">2 - فبراير / شباط</option>
+            <option value="3">3 - مارس / آذار</option>
+            <option value="4">4 - أبريل / نيسان</option>
+            <option value="5">5 - مايو / أيار</option>
+            <option value="6">6 - يونيو / حزيران</option>
+            <option value="7">7 - يوليو / تموز</option>
+            <option value="8">8 - أغسطس / آب</option>
+            <option value="9">9 - سبتمبر / أيلول</option>
+            <option value="10">10 - أكتوبر / تشرين الأول</option>
+            <option value="11">11 - نوفمبر / تشرين الثاني</option>
+            <option value="12">12 - ديسمبر / كانون الأول</option>
+          </select>
         </div>
+        <div>
+          <label for="birthYearSelect">السنة</label>
+          <select id="birthYearSelect"></select>
+        </div>
+      </div>
+      <div class="actions-row">
+        <button class="btn" id="calcZodiacBtn" type="button">استخراج البرج (10 نقاط)</button>
       </div>
       <div id="zodiacOutput"></div>
     </section>
   </div>
 
   <script>
-    // =========================================================================
-    // إعدادات النظام والربط
-    // =========================================================================
     const SMART_LINK_URL = "https://asiafilm.org/4/56aaa9153709df41930060678aa64610";
-
     const STORAGE_KEY = "abjad_wafq_points_state_v1";
     const REF_CLAIMED_KEY = "abjad_wafq_ref_claimed_v1";
 
@@ -339,53 +347,27 @@
       AD_COOLDOWN_SECONDS: 12,
       MAX_ADS_PER_HOUR: 12,
       MAX_ADS_PER_DAY: 40,
-      WEEKLY_DAILY_REWARDS: [5, 10, 15, 20, 25, 30, 40] // تتصفّر كل 7 أيام
+      WEEKLY_DAILY_REWARDS: [5, 10, 15, 20, 25, 30, 40]
     };
 
-    // قيم أبجد هوز
     const ABJAD_MAP = {
       "أ": 1, "ا": 1, "إ": 1, "آ": 1,
-      "ب": 2,
-      "ج": 3,
-      "د": 4,
-      "ه": 5, "ة": 5,
-      "و": 6,
-      "ز": 7,
-      "ح": 8,
-      "ط": 9,
-      "ي": 10, "ى": 10,
-      "ك": 20,
-      "ل": 30,
-      "م": 40,
-      "ن": 50,
-      "س": 60,
-      "ع": 70,
-      "ف": 80,
-      "ص": 90,
-      "ق": 100,
-      "ر": 200,
-      "ش": 300,
-      "ت": 400,
-      "ث": 500,
-      "خ": 600,
-      "ذ": 700,
-      "ض": 800,
-      "ظ": 900,
-      "غ": 1000
+      "ب": 2, "ج": 3, "د": 4,
+      "ه": 5, "ة": 5, "و": 6, "ز": 7, "ح": 8, "ط": 9,
+      "ي": 10, "ى": 10, "ك": 20, "ل": 30, "م": 40, "ن": 50,
+      "س": 60, "ع": 70, "ف": 80, "ص": 90,
+      "ق": 100, "ر": 200, "ش": 300, "ت": 400, "ث": 500,
+      "خ": 600, "ذ": 700, "ض": 800, "ظ": 900, "غ": 1000
     };
 
-    // طبائع الحروف (ناري، ترابي، هوائي، مائي)
     const LETTER_ELEMENT = {
       "أ": "ناري", "ا": "ناري", "إ": "ناري", "آ": "ناري",
       "ه": "ناري", "ة": "ناري",
       "ط": "ناري", "م": "ناري", "ف": "ناري", "ش": "ناري", "ذ": "ناري",
-
       "ب": "ترابي", "و": "ترابي", "ي": "ترابي", "ى": "ترابي",
       "ن": "ترابي", "ص": "ترابي", "ت": "ترابي", "ض": "ترابي",
-
       "ج": "هوائي", "ز": "هوائي", "ك": "هوائي", "س": "هوائي",
       "ق": "هوائي", "ث": "هوائي", "ظ": "هوائي",
-
       "د": "مائي", "ح": "مائي", "ل": "مائي", "ع": "مائي",
       "ر": "مائي", "خ": "مائي", "غ": "مائي"
     };
@@ -404,6 +386,22 @@
       { name: "الدلو", element: "هوائي", start: [1, 20], end: [2, 18], traits: "استقلالية، ابتكار، رؤية جماعية وتجديد." },
       { name: "الحوت", element: "مائي", start: [2, 19], end: [3, 20], traits: "خيال واسع، تعاطف، مرونة وإلهام." }
     ];
+
+    function populateBirthSelects() {
+      const daySel = document.getElementById("birthDaySelect");
+      const yearSel = document.getElementById("birthYearSelect");
+
+      daySel.innerHTML = `<option value="">اختر اليوم</option>`;
+      for (let d = 1; d <= 31; d++) {
+        daySel.innerHTML += `<option value="${d}">${d}</option>`;
+      }
+
+      const currentYear = new Date().getFullYear();
+      yearSel.innerHTML = `<option value="">اختر السنة</option>`;
+      for (let y = currentYear; y >= 1920; y--) {
+        yearSel.innerHTML += `<option value="${y}">${y}</option>`;
+      }
+    }
 
     function getTodayKey() {
       const d = new Date();
@@ -424,7 +422,7 @@
         lastShareDate: "",
         adTimestamps: [],
         daily: {
-          streakDay: 0,        // 0 إلى 7؛ يتصفّر بعد اكتمال 7 أيام
+          streakDay: 0,
           lastClaimDate: ""
         }
       };
@@ -453,8 +451,8 @@
       }
     }
 
-    function saveState(state) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    function saveState(s) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
     }
 
     let state = loadState();
@@ -468,8 +466,7 @@
     }
 
     function pruneAdTimestamps() {
-      const now = Date.now();
-      const oneDayAgo = now - 24 * 60 * 60 * 1000;
+      const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
       state.adTimestamps = state.adTimestamps.filter((ts) => ts >= oneDayAgo);
     }
 
@@ -477,15 +474,15 @@
       pruneAdTimestamps();
       const now = Date.now();
       const oneHourAgo = now - 60 * 60 * 1000;
-      const lastHour = state.adTimestamps.filter((ts) => ts >= oneHourAgo).length;
-      const last24h = state.adTimestamps.length;
-      return { lastHour, last24h };
+      return {
+        lastHour: state.adTimestamps.filter((ts) => ts >= oneHourAgo).length,
+        last24h: state.adTimestamps.length
+      };
     }
 
     function getNextDailyRewardInfo() {
       const today = getTodayKey();
       const alreadyClaimedToday = state.daily.lastClaimDate === today;
-      // إذا أكمل 7 أيام في الدورة السابقة يتصفّر إلى اليوم 1
       const nextIndex = state.daily.streakDay >= 7 ? 0 : state.daily.streakDay;
       const reward = CONFIG.WEEKLY_DAILY_REWARDS[nextIndex];
       const dayNumber = nextIndex + 1;
@@ -523,7 +520,7 @@
       }
 
       document.getElementById("dailyCycleInfo").textContent =
-        `دورة المكافأة الأسبوعية (تتصفّر كل 7 أيام): اليوم ${dailyInfo.dayNumber} من 7 بقيمة +${dailyInfo.reward} نقطة | المدعوون: ${state.invitedCount}`;
+        `مكافأة الدخول اليومي: اليوم ${dailyInfo.dayNumber} من 7 بقيمة +${dailyInfo.reward} نقطة | المدعوون: ${state.invitedCount}`;
 
       document.getElementById("statusBar").textContent =
         `إعلانات الساعة: ${lastHour}/${CONFIG.MAX_ADS_PER_HOUR} • اليوم: ${last24h}/${CONFIG.MAX_ADS_PER_DAY}`;
@@ -532,14 +529,10 @@
       openWafqBtn.disabled = !(typeof state.lastCalculatedSum === "number" && state.lastCalculatedSum > 0);
     }
 
-    // معالجة دعوة صديق عبر ?ref=
     function handleIncomingReferral() {
       const params = new URLSearchParams(window.location.search);
       const ref = (params.get("ref") || "").trim();
-      if (!ref) return;
-      if (ref === state.refCode) return;
-      if (localStorage.getItem(REF_CLAIMED_KEY)) return;
-
+      if (!ref || ref === state.refCode || localStorage.getItem(REF_CLAIMED_KEY)) return;
       localStorage.setItem(REF_CLAIMED_KEY, ref);
       state.points += CONFIG.REFERRAL_REWARD;
       state.invitedCount += 1;
@@ -547,7 +540,6 @@
       showToast(`تم تفعيل دعوة الصديق وحصلت على +${CONFIG.REFERRAL_REWARD} نقطة!`, "ok");
     }
 
-    // مشاهدة إعلان عبر السمارت لنك
     function handleWatchAd() {
       const { lastHour, last24h } = getAdCounts();
       if (lastHour >= CONFIG.MAX_ADS_PER_HOUR) {
@@ -583,39 +575,29 @@
       }, 1000);
     }
 
-    // مكافأة الدخول اليومي المتدرجة (تتصفّر كل 7 أيام)
     function handleDailyBonus() {
       const info = getNextDailyRewardInfo();
       if (info.alreadyClaimedToday) {
         showToast("لقد استلمت مكافأة اليوم بالفعل.", "err");
         return;
       }
-
-      if (state.daily.streakDay >= 7) {
-        state.daily.streakDay = 1;
-      } else {
-        state.daily.streakDay += 1;
-      }
-
+      state.daily.streakDay = state.daily.streakDay >= 7 ? 1 : state.daily.streakDay + 1;
       state.daily.lastClaimDate = getTodayKey();
       state.points += info.reward;
       saveState(state);
-      showToast(`مبروك! حصلت على +${info.reward} نقطة (اليوم ${state.daily.streakDay} من الدورة الأسبوعية).`, "ok");
+      showToast(`مبروك! حصلت على +${info.reward} نقطة (اليوم ${state.daily.streakDay}).`, "ok");
       renderHUD();
     }
 
-    // مشاركة النتيجة (+40 نقطة بحد مرة واحدة يومياً بعد وجود نتيجة)
     async function handleShareResult() {
       const today = getTodayKey();
       if (state.lastShareDate === today) {
-        showToast("لقد حصلت على مكافأة المشاركة لليوم (+40 نقطة). يمكنك المشاركة مجدداً غداً.", "err");
+        showToast("لقد حصلت على مكافأة المشاركة لليوم (+40 نقطة).", "err");
         return;
       }
-
       const textToShare = state.lastResultSummary
         ? `${state.lastResultSummary} — عبر حاسبة الجُمّل والأوفاق`
         : "جرّب حاسبة الجُمّل والأبراج ومولّد الأوفاق الآن!";
-
       try {
         if (navigator.share) {
           await navigator.share({ title: "حاسبة الجُمّل والأوفاق", text: textToShare, url: window.location.href });
@@ -623,11 +605,9 @@
           await navigator.clipboard.writeText(`${textToShare} ${window.location.href}`);
         }
       } catch {
-        // لو ألغى المستخدم نافذة المشاركة لا نمنح النقاط
         showToast("لم تكتمل عملية المشاركة.", "err");
         return;
       }
-
       state.lastShareDate = today;
       state.points += CONFIG.SHARE_REWARD;
       saveState(state);
@@ -635,7 +615,6 @@
       renderHUD();
     }
 
-    // نسخ رابط دعوة صديق (+50 نقطة لكل صديق جديد عند دخوله)
     async function handleCopyInvite() {
       const inviteUrl = `${window.location.origin}${window.location.pathname}?ref=${encodeURIComponent(state.refCode)}`;
       try {
@@ -643,12 +622,12 @@
       } catch {
         prompt("انسخ رابط الدعوة:", inviteUrl);
       }
-      showToast(`تم نسخ رابط دعوتك! ستحصل على +${CONFIG.REFERRAL_REWARD} نقطة لكل صديق جديد يدخل عبره.`, "ok");
+      showToast(`تم نسخ رابط دعوتك! ستحصل على +${CONFIG.REFERRAL_REWARD} نقطة لكل صديق جديد.`, "ok");
     }
 
     function spendTaskPoints() {
       if (state.points < CONFIG.TASK_COST) {
-        showToast(`رصيدك الحالي (${state.points}) أقل من تكلفة المهمة (${CONFIG.TASK_COST} نقاط). شاهد إعلاناً أو استلم المكافآت.`, "err");
+        showToast(`رصيدك الحالي (${state.points}) أقل من تكلفة المهمة (${CONFIG.TASK_COST} نقاط).`, "err");
         return false;
       }
       state.points -= CONFIG.TASK_COST;
@@ -657,12 +636,10 @@
       return true;
     }
 
-    // حساب الجُمّل ونسب طبائع الحروف (حروف فقط)
     function calculateAbjad() {
       const raw = document.getElementById("abjadInput").value || "";
       const letters = [];
       let total = 0;
-
       const elementCounts = { "ناري": 0, "ترابي": 0, "هوائي": 0, "مائي": 0 };
 
       for (const ch of raw) {
@@ -683,7 +660,6 @@
 
       const count = letters.length;
       const pct = (k) => Math.round((elementCounts[k] / count) * 100);
-
       const firePct = pct("ناري");
       const earthPct = pct("ترابي");
       const airPct = pct("هوائي");
@@ -734,23 +710,20 @@
         if (sm <= em) {
           return (m > sm || (m === sm && d >= sd)) && (m < em || (m === em && d <= ed));
         }
-        // يعبر نهاية السنة (مثل الجدي 12/22 إلى 1/19)
         return (m > sm || (m === sm && d >= sd)) || (m < em || (m === em && d <= ed));
       };
-
       return ZODIAC_DATA.find((z) => inRange(month, day, z.start, z.end)) || ZODIAC_DATA[0];
     }
 
     function calculateZodiac() {
-      const dateVal = document.getElementById("birthDateInput").value;
-      if (!dateVal) {
-        showToast("يرجى اختيار تاريخ الميلاد أولاً.", "err");
+      const day = parseInt(document.getElementById("birthDaySelect").value, 10);
+      const month = parseInt(document.getElementById("birthMonthSelect").value, 10);
+      const year = parseInt(document.getElementById("birthYearSelect").value, 10);
+
+      if (!day || !month || !year) {
+        showToast("يرجى اختيار اليوم والشهر والسنة من القوائم المنسدلة.", "err");
         return;
       }
-
-      const parts = dateVal.split("-");
-      const month = parseInt(parts[1], 10);
-      const day = parseInt(parts[2], 10);
 
       if (!spendTaskPoints()) return;
 
@@ -769,6 +742,7 @@
       showToast(`تم استخراج البرج وخصم ${CONFIG.TASK_COST} نقاط.`, "ok");
     }
 
+    populateBirthSelects();
     document.getElementById("watchAdBtn").addEventListener("click", handleWatchAd);
     document.getElementById("dailyBonusBtn").addEventListener("click", handleDailyBonus);
     document.getElementById("shareResultBtn").addEventListener("click", handleShareResult);
