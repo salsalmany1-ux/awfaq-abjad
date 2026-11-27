@@ -299,6 +299,30 @@
       color: var(--el-color);
     }
 
+    .element-pct {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--el-color);
+      margin-bottom: 8px;
+    }
+
+    .pct-bar-wrap {
+      width: 100%;
+      height: 7px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .pct-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--el-color);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
     .element-letters {
       font-size: 0.85rem;
       color: var(--muted);
@@ -391,7 +415,7 @@
             <div class="v" id="resSimple">—</div>
           </div>
           <div class="stat-box">
-            <div class="k">الطبع</div>
+            <div class="k">الطبع الغالب</div>
             <div class="v" id="resElement">—</div>
           </div>
           <div class="stat-box">
@@ -411,21 +435,29 @@
       <div class="elements-showcase" id="elementsShowcase">
         <div class="element-card" data-el="ناري" style="--el-color: var(--fire);">
           <div class="element-head"><span>ناري</span><span>حار يابس</span></div>
+          <div class="element-pct" id="pctFire">0%</div>
+          <div class="pct-bar-wrap"><div class="pct-bar-fill" id="barFire"></div></div>
           <div class="element-letters">ا · هـ · ط · م · ف · ش · ذ</div>
           <div class="element-trait">اندفاع، حزم، مبادرة وحضور قيادي</div>
         </div>
         <div class="element-card" data-el="ترابي" style="--el-color: var(--earth);">
           <div class="element-head"><span>ترابي</span><span>بارد يابس</span></div>
+          <div class="element-pct" id="pctEarth">0%</div>
+          <div class="pct-bar-wrap"><div class="pct-bar-fill" id="barEarth"></div></div>
           <div class="element-letters">ب · و · ي · ن · ص · ت · ض</div>
           <div class="element-trait">ثبات، واقعية، صبر وبناء منهجي</div>
         </div>
         <div class="element-card" data-el="هوائي" style="--el-color: var(--air);">
           <div class="element-head"><span>هوائي</span><span>حار رطب</span></div>
+          <div class="element-pct" id="pctAir">0%</div>
+          <div class="pct-bar-wrap"><div class="pct-bar-fill" id="barAir"></div></div>
           <div class="element-letters">ج · ز · ك · س · ق · ث · ظ</div>
           <div class="element-trait">تواصل، سرعة بديهة، تحليل ومرونة</div>
         </div>
         <div class="element-card" data-el="مائي" style="--el-color: var(--water);">
           <div class="element-head"><span>مائي</span><span>بارد رطب</span></div>
+          <div class="element-pct" id="pctWater">0%</div>
+          <div class="pct-bar-wrap"><div class="pct-bar-fill" id="barWater"></div></div>
           <div class="element-letters">د · ح · ل · ع · ر · خ · غ</div>
           <div class="element-trait">حدس، عمق شعوري، احتواء وتأمل</div>
         </div>
@@ -441,6 +473,18 @@
       'م': 40, 'ن': 50, 'س': 60, 'ع': 70, 'ف': 80, 'ص': 90,
       'ق': 100, 'ر': 200, 'ش': 300, 'ت': 400, 'ث': 500, 'خ': 600,
       'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
+    };
+
+    const LETTER_ELEMENT = {
+      'ا': 'ناري', 'أ': 'ناري', 'إ': 'ناري', 'آ': 'ناري', 'ى': 'ناري', 'ء': 'ناري',
+      'ه': 'ناري', 'ة': 'ناري', 'ط': 'ناري', 'م': 'ناري', 'ف': 'ناري', 'ش': 'ناري', 'ذ': 'ناري',
+
+      'ب': 'ترابي', 'و': 'ترابي', 'ؤ': 'ترابي', 'ي': 'ترابي', 'ئ': 'ترابي',
+      'ن': 'ترابي', 'ص': 'ترابي', 'ت': 'ترابي', 'ض': 'ترابي',
+
+      'ج': 'هوائي', 'ز': 'هوائي', 'ك': 'هوائي', 'س': 'هوائي', 'ق': 'هوائي', 'ث': 'هوائي', 'ظ': 'هوائي',
+
+      'د': 'مائي', 'ح': 'مائي', 'ل': 'مائي', 'ع': 'مائي', 'ر': 'مائي', 'خ': 'مائي', 'غ': 'مائي'
     };
 
     const ELEMENTS_META = {
@@ -519,6 +563,37 @@
       return sum;
     }
 
+    function calcElementPercentages(text, fallbackTotal) {
+      const counts = { 'ناري': 0, 'ترابي': 0, 'هوائي': 0, 'مائي': 0 };
+      let totalLetters = 0;
+
+      for (const ch of text) {
+        const el = LETTER_ELEMENT[ch];
+        if (el) {
+          counts[el] += 1;
+          totalLetters += 1;
+        }
+      }
+
+      const percentages = { 'ناري': 0, 'ترابي': 0, 'هوائي': 0, 'مائي': 0 };
+      let dominant = ELEMENTS_ORDER[(fallbackTotal - 1) % 4];
+
+      if (totalLetters > 0) {
+        let maxCount = -1;
+        for (const el of ELEMENTS_ORDER) {
+          percentages[el] = Number(((counts[el] / totalLetters) * 100).toFixed(1));
+          if (counts[el] > maxCount) {
+            maxCount = counts[el];
+            dominant = el;
+          }
+        }
+      } else {
+        percentages[dominant] = 100;
+      }
+
+      return { percentages, dominant };
+    }
+
     function simplifyWithMaster(num) {
       let current = Math.abs(Math.trunc(num));
       if (current === 0) return 0;
@@ -565,9 +640,22 @@
       return ZODIACS[(total - 1 + 12) % 12];
     }
 
-    function highlightElementCard(elementName) {
+    function updateElementCards(percentages, dominantElement) {
+      const map = [
+        { el: 'ناري', pctId: 'pctFire', barId: 'barFire' },
+        { el: 'ترابي', pctId: 'pctEarth', barId: 'barEarth' },
+        { el: 'هوائي', pctId: 'pctAir', barId: 'barAir' },
+        { el: 'مائي', pctId: 'pctWater', barId: 'barWater' }
+      ];
+
+      for (const item of map) {
+        const pct = percentages ? percentages[item.el] : 0;
+        document.getElementById(item.pctId).textContent = `${pct}%`;
+        document.getElementById(item.barId).style.width = `${pct}%`;
+      }
+
       document.querySelectorAll('.element-card').forEach(card => {
-        card.classList.toggle('active-element', card.dataset.el === elementName);
+        card.classList.toggle('active-element', card.dataset.el === dominantElement);
       });
     }
 
@@ -590,7 +678,7 @@
       if (total <= 0) {
         lastTotal = null;
         updateWafqLinks(null);
-        highlightElementCard(null);
+        updateElementCards(null, null);
         document.getElementById('resultContent').style.display = 'none';
         document.getElementById('resultEmpty').style.display = 'block';
         return;
@@ -600,22 +688,22 @@
       updateWafqLinks(total);
 
       const simpleNum = simplifyWithMaster(total);
-      const element = ELEMENTS_ORDER[(total - 1) % 4];
+      const { percentages, dominant } = calcElementPercentages(text, total);
       const zodiac = getZodiacLabel(total, day, month, year);
-      const meta = ELEMENTS_META[element];
+      const meta = ELEMENTS_META[dominant];
 
       document.getElementById('resTotal').textContent = total.toLocaleString('ar');
       document.getElementById('resSimple').textContent = simpleNum.toLocaleString('ar');
-      document.getElementById('resElement').textContent = element;
+      document.getElementById('resElement').textContent = `${dominant} (${percentages[dominant]}%)`;
       document.getElementById('resZodiac').textContent = zodiac;
 
       const banner = document.getElementById('natureBanner');
       banner.style.setProperty('--nature-color', meta.color);
       document.getElementById('natureTitle').textContent =
-        `${text ? `«${text}» — ` : ''}الطبع ${element} · البرج ${zodiac} · الرقم المبسط ${simpleNum.toLocaleString('ar')}`;
+        `${text ? `«${text}» — ` : ''}الطبع الغالب ${dominant} (${percentages[dominant]}%) · البرج ${zodiac} · الرقم المبسط ${simpleNum.toLocaleString('ar')}`;
       document.getElementById('natureDesc').textContent = meta.desc;
 
-      highlightElementCard(element);
+      updateElementCards(percentages, dominant);
       document.getElementById('resultEmpty').style.display = 'none';
       document.getElementById('resultContent').style.display = 'block';
     }
