@@ -864,48 +864,112 @@
       showToast(`تم نسخ رابط الدعوة! ستحصل على +${CONFIG.REFERRAL_REWARD} نقطة لكل صديق جديد.`, "ok");
     }
 
-    function buildUniqueIntegerMatrix(n, targetSum) {
-      const totalCells = n * n;
-      const arr = Array.from({ length: totalCells }, (_, i) => i + 1);
-      const currentBaseSum = (totalCells * (totalCells + 1)) / 2;
-      let diff = targetSum - currentBaseSum;
-      const stepSign = diff >= 0 ? 1 : -1;
-      let absDiff = Math.abs(diff);
-
-      let idx = totalCells - 1;
-      while (absDiff > 0) {
-        const addChunk = Math.min(absDiff, Math.max(1, Math.floor(absDiff / Math.max(1, totalCells))));
-        arr[idx] += stepSign * addChunk;
-        absDiff -= addChunk;
-        idx -= 1;
-        if (idx < 0) idx = totalCells - 1;
-      }
-
-      const seen = new Set();
-      for (let i = 0; i < arr.length; i++) {
-        arr[i] = Math.round(arr[i]);
-        while (seen.has(arr[i])) {
-          arr[i] += 1;
+    function generateOddSiameseSquare(n) {
+      const grid = Array.from({ length: n }, () => Array(n).fill(0));
+      let r = 0;
+      let c = Math.floor(n / 2);
+      for (let num = 1; num <= n * n; num++) {
+        grid[r][c] = num;
+        const nextR = (r - 1 + n) % n;
+        const nextC = (c + 1) % n;
+        if (grid[nextR][nextC] !== 0) {
+          r = (r + 1) % n;
+        } else {
+          r = nextR;
+          c = nextC;
         }
-        seen.add(arr[i]);
       }
+      return grid;
+    }
 
-      const sumWithoutLast = arr.slice(0, -1).reduce((a, b) => a + b, 0);
-      const exactLast = targetSum - sumWithoutLast;
-      if (!seen.has(exactLast)) {
-        arr[arr.length - 1] = exactLast;
-      }
-
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-
-      const matrix = [];
+    function generateDoublyEvenSquare(n) {
+      const grid = Array.from({ length: n }, (_, r) =>
+        Array.from({ length: n }, (_, c) => r * n + c + 1)
+      );
+      const maxVal = n * n + 1;
       for (let r = 0; r < n; r++) {
-        matrix.push(arr.slice(r * n, (r + 1) * n));
+        for (let c = 0; c < n; c++) {
+          const inBlock = ((r % 4 === 0 || r % 4 === 3) && (c % 4 === 0 || c % 4 === 3)) ||
+                          ((r % 4 === 1 || r % 4 === 2) && (c % 4 === 1 || c % 4 === 2));
+          if (inBlock) {
+            grid[r][c] = maxVal - grid[r][c];
+          }
+        }
       }
-      return matrix;
+      return grid;
+    }
+
+    function generateSinglyEvenSquare(n) {
+      const half = n / 2;
+      const subSize = half * half;
+      const subGrid = generateOddSiameseSquare(half);
+      const grid = Array.from({ length: n }, () => Array(n).fill(0));
+
+      const quadrants = [
+        [0, 0, 0],
+        [half, half, subSize],
+        [0, half, 2 * subSize],
+        [half, 0, 3 * subSize]
+      ];
+
+      for (const [rOff, cOff, addVal] of quadrants) {
+        for (let r = 0; r < half; r++) {
+          for (let c = 0; c < half; c++) {
+            grid[r + rOff][c + cOff] = subGrid[r][c] + addVal;
+          }
+        }
+      }
+
+      const k = Math.floor((n - 2) / 4);
+      for (let r = 0; r < half; r++) {
+        for (let c = 0; c < k; c++) {
+          const swapCol = r === Math.floor(half / 2) ? c + k : c;
+          const tmp = grid[r][swapCol];
+          grid[r][swapCol] = grid[r + half][swapCol];
+          grid[r + half][swapCol] = tmp;
+        }
+        for (let c = 0; c < k - 1; c++) {
+          const col = n - 1 - c;
+          const tmp = grid[r][col];
+          grid[r][col] = grid[r + half][col];
+          grid[r + half][col] = tmp;
+        }
+      }
+
+      return grid;
+    }
+
+    function buildWafqMatrix(n, targetSum) {
+      let baseSquare;
+      if (n % 2 === 1) {
+        baseSquare = generateOddSiameseSquare(n);
+      } else if (n % 4 === 0) {
+        baseSquare = generateDoublyEvenSquare(n);
+      } else {
+        baseSquare = generateSinglyEvenSquare(n);
+      }
+
+      const totalCells = n * n;
+      const currentTotal = (totalCells * (totalCells + 1)) / 2;
+      const desiredTotal = targetSum * n;
+      const diff = desiredTotal - currentTotal;
+
+      const baseIncrement = Math.floor(diff / totalCells);
+      let remainder = diff - baseIncrement * totalCells;
+
+      return baseSquare.map((row) =>
+        row.map((val) => {
+          let nextVal = val + baseIncrement;
+          if (remainder > 0) {
+            nextVal += 1;
+            remainder -= 1;
+          } else if (remainder < 0) {
+            nextVal -= 1;
+            remainder += 1;
+          }
+          return nextVal;
+        })
+      );
     }
 
     function renderClassicWafqTable(matrix, labelText) {
@@ -940,7 +1004,7 @@
       document.getElementById("wafqResultArea").innerHTML = `
         <div class="meta-box">
           <div><strong>البيان:</strong> ${labelText}</div>
-          <div><strong>الحجم:</strong> ${n}×${n} (${n * n} خانة بأعداد صحيحة فريدة) • <strong>المجموع الكلي:</strong> ${actualTotal}</div>
+          <div><strong>الحجم:</strong> ${n}×${n} (${n * n} خانة) • <strong>المجموع الكلي:</strong> ${actualTotal}</div>
           <div><strong>مجموع القطر الرئيسي:</strong> ${mainDiagSum} • <strong>مجموع القطر المعاكس:</strong> ${antiDiagSum}</div>
         </div>
         <div class="matrix-wrap">
@@ -983,7 +1047,7 @@
       }
 
       state.points -= cost;
-      const matrix = buildUniqueIntegerMatrix(n, info.sum);
+      const matrix = buildWafqMatrix(n, info.sum);
       lastGeneratedMatrix = matrix;
 
       state.lastResultSummary = `${info.label} — وفق ${n}×${n}`;
