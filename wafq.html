@@ -26,7 +26,6 @@
       line-height: 1.6;
     }
 
-    /* عداد النقاط في أعلى يسار الصفحة */
     .points-hud {
       position: fixed;
       top: 14px;
@@ -245,17 +244,10 @@
       border: 1px solid rgba(239, 68, 68, 0.4);
       color: #fca5a5;
     }
-
-    .muted-note {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-top: 8px;
-    }
   </style>
 </head>
 <body>
 
-  <!-- عداد النقاط وشريط الحالة في أعلى اليسار -->
   <aside class="points-hud" aria-live="polite">
     <div class="points-top">
       <div class="points-badge" id="pointsDisplay">النقاط: 0</div>
@@ -306,14 +298,10 @@
         </div>
       </div>
 
-      <div class="cost-info" id="wafqCostLabel">تكلفة التوليد الحالية: 10 نقاط</div>
+      <div class="cost-info" id="wafqCostLabel">تكلفة توليد وفق 3×3: 10 نقاط</div>
 
       <div class="actions-row">
         <button class="btn" id="generateWafqBtn" type="button">توليد الوفق الآن</button>
-      </div>
-
-      <div class="muted-note">
-        أسعار التوليد: 3×3 و4×4 (10 نقاط) • 5×5 و6×6 (15 نقطة) • 7×7 و8×8 (20 نقطة) • 9×9 و10×10 (25 نقطة).
       </div>
 
       <div id="wafqResultArea"></div>
@@ -340,7 +328,7 @@
       if (n === 3 || n === 4) return 10;
       if (n === 5 || n === 6) return 15;
       if (n === 7 || n === 8) return 20;
-      return 25; // 9 و 10
+      return 25;
     }
 
     function getTodayKey() {
@@ -566,18 +554,14 @@
       showToast(`تم نسخ رابط الدعوة! ستحصل على +${CONFIG.REFERRAL_REWARD} نقطة لكل صديق جديد.`, "ok");
     }
 
-    // توليد مصفوفة أعداد صحيحة فريدة تتطابق مع المجموع المطلوب قدر الإمكان
     function buildUniqueIntegerMatrix(n, targetSum) {
       const totalCells = n * n;
-      // نبدأ من أعداد صحيحة متتالية فريدة ثم نوزع الفارق لبلوغ المجموع المطلوب
       const arr = Array.from({ length: totalCells }, (_, i) => i + 1);
       const currentBaseSum = (totalCells * (totalCells + 1)) / 2;
       let diff = targetSum - currentBaseSum;
-
       const stepSign = diff >= 0 ? 1 : -1;
       let absDiff = Math.abs(diff);
 
-      // نزيد أو ننقص الخلايا من النهاية وبخطوات متدرجة للحفاظ على الفردية والترتيب
       let idx = totalCells - 1;
       while (absDiff > 0) {
         const addChunk = Math.min(absDiff, Math.max(1, Math.floor(absDiff / Math.max(1, totalCells))));
@@ -587,7 +571,6 @@
         if (idx < 0) idx = totalCells - 1;
       }
 
-      // ضمان تفرد القيم كأعداد صحيحة
       const seen = new Set();
       for (let i = 0; i < arr.length; i++) {
         arr[i] = Math.round(arr[i]);
@@ -597,14 +580,12 @@
         seen.add(arr[i]);
       }
 
-      // ضبط آخر عنصر ليطابق المجموع الكلي بدقة دون تكرار
       const sumWithoutLast = arr.slice(0, -1).reduce((a, b) => a + b, 0);
       const exactLast = targetSum - sumWithoutLast;
       if (!seen.has(exactLast)) {
         arr[arr.length - 1] = exactLast;
       }
 
-      // توزيع عشوائي للمواقع داخل المصفوفة
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -632,7 +613,6 @@
         return;
       }
 
-      // خصم النقاط بمجرد التوليد
       state.points -= cost;
       const matrix = buildUniqueIntegerMatrix(n, rawSum);
       const actualSum = matrix.flat().reduce((a, b) => a + b, 0);
@@ -667,7 +647,6 @@
     document.getElementById("copyInviteBtn").addEventListener("click", handleCopyInvite);
     document.getElementById("generateWafqBtn").addEventListener("click", handleGenerateWafq);
 
-    // قراءة ?sum= إذا تم تمريره من index.html
     const urlParams = new URLSearchParams(window.location.search);
     const sumParam = parseInt(urlParams.get("sum") || "", 10);
     if (Number.isInteger(sumParam) && sumParam > 0) {
