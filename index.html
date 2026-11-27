@@ -289,7 +289,7 @@
     <nav class="nav-bar">
       <div class="nav-links">
         <a href="index.html" class="nav-link active">حاسبة الجُمّل والطبائع</a>
-        <a href="wafq.html" class="nav-link" id="goWafqLink">صفحة الأوفاق (3×3 – 10×10)</a>
+        <a href="wafq.html" class="nav-link" id="goWafqLink">الاوفاق</a>
       </div>
       <span style="font-size: 0.82rem; color: var(--muted);">نظام أبجد هوز</span>
     </nav>
@@ -303,9 +303,9 @@
       <div class="input-row">
         <div class="field">
           <label for="textInput">أدخل اسماً أو كلمة أو عبارة</label>
-          <input type="text" id="textInput" value="سعد خليل" placeholder="اكتب اسماً أو نصاً عربياً..." />
+          <input type="text" id="textInput" value="" placeholder="اكتب اسماً أو نصاً عربياً..." />
         </div>
-        <button class="btn" id="calcBtn">تحليل الاسم / النص</button>
+        <button class="btn" id="calcBtn">احسب</button>
         <button class="btn btn-secondary" id="exportBtn">حفظ بطاقة صورة</button>
         <a href="wafq.html" class="btn btn-secondary" id="sendToWafqBtn">توليد وفق للرقم</a>
       </div>
@@ -329,7 +329,7 @@
         </div>
       </div>
 
-      <div class="dominant-banner" id="dominantBanner"></div>
+      <div class="dominant-banner" id="dominantBanner">أدخل نصاً ثم اضغط على زر «احسب» لعرض النتائج.</div>
     </section>
 
     <section class="card">
@@ -386,6 +386,9 @@
       water: { name: 'مائي',  icon: '💧', color: '#6366f1', chars: new Set(['د','ح','ل','ع','ر','خ','غ']) }
     };
 
+    let lastResult = null;
+    let lastText = '';
+
     function getElementKey(ch) {
       for (const [key, meta] of Object.entries(ELEMENTS_META)) {
         if (meta.chars.has(ch)) return key;
@@ -422,18 +425,20 @@
 
     function renderAll() {
       const text = document.getElementById('textInput').value;
+      lastText = text.trim();
       const res = analyzeText(text);
+      lastResult = res;
 
       document.getElementById('bigTotal').textContent = res.big.toLocaleString('ar');
       document.getElementById('smallTotal').textContent = res.digitalRoot;
       document.getElementById('wasitTotal').textContent = res.wasit;
       document.getElementById('lettersCount').textContent = res.items.length;
 
-      // تحديث رابط الانتقال المباشر لصفحة الأوفاق مع تمرير المجموع
-      const targetSum = res.big > 0 ? res.big : 45;
-      const wafqUrl = `wafq.html?sum=${targetSum}&label=${encodeURIComponent(text.trim() || targetSum)}`;
-      document.getElementById('goWafqLink').href = wafqUrl;
-      document.getElementById('sendToWafqBtn').href = wafqUrl;
+      if (res.big > 0) {
+        const wafqUrl = `wafq.html?sum=${res.big}`;
+        document.getElementById('goWafqLink').href = wafqUrl;
+        document.getElementById('sendToWafqBtn').href = wafqUrl;
+      }
 
       const totalEl = res.items.length || 1;
       const pct = (n) => Math.round((n / totalEl) * 100);
@@ -462,7 +467,6 @@
       document.getElementById('airPct').textContent = pcts.air + '%';
       document.getElementById('waterPct').textContent = pcts.water + '%';
 
-      // تحديد الطبع الغالب
       let topKey = 'fire';
       for (const k of ['earth', 'air', 'water']) {
         if (counts[k] > counts[topKey]) topKey = k;
@@ -471,9 +475,8 @@
       document.getElementById('dominantBanner').innerHTML = res.items.length
         ? `<span>الطبع الغالب في النص: <strong style="color:${ELEMENTS_META[topKey].color};">${ELEMENTS_META[topKey].name} ${ELEMENTS_META[topKey].icon}</strong> (${counts[topKey]} حروف)</span>
            <span>الرمز الرقمي للجُمّل: <strong>${res.big}</strong></span>`
-        : `<span>أدخل نصاً عربياً لعرض الطبع الغالب وتحليل الحروف.</span>`;
+        : `<span>لم يتم العثور على حروف عربية محتسبة.</span>`;
 
-      // عرض مجموعات الحروف المفروزة حسب الطبع
       document.getElementById('sortedGroups').innerHTML = Object.entries(ELEMENTS_META).map(([key, meta]) => `
         <div class="group-box">
           <h4>
@@ -484,7 +487,6 @@
         </div>
       `).join('');
 
-      // تفصيل كل حرف
       document.getElementById('lettersBreakdown').innerHTML = res.items.map(item => `
         <div class="letter-chip">
           <span class="ch">${item.ch}</span>
@@ -495,11 +497,12 @@
     }
 
     async function exportCard() {
+      if (!lastResult) return;
       if (document.fonts && document.fonts.ready) {
         await document.fonts.ready;
       }
-      const text = document.getElementById('textInput').value.trim() || 'نتيجة الجُمّل';
-      const res = analyzeText(text);
+      const text = lastText || 'نتيجة الجُمّل';
+      const res = lastResult;
 
       const canvas = document.createElement('canvas');
       canvas.width = 1080;
@@ -551,16 +554,13 @@
       ctx.fillText('حسابات عددية وتراثية', canvas.width / 2, 1230);
 
       const link = document.createElement('a');
-      link.download = `abjad-${text.replace(/\s+/g, '-')}.png`;
+      link.download = `abjad-${text.replace(/\s+/g, '-') || 'result'}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     }
 
     document.getElementById('calcBtn').addEventListener('click', renderAll);
-    document.getElementById('textInput').addEventListener('input', renderAll);
     document.getElementById('exportBtn').addEventListener('click', exportCard);
-
-    renderAll();
   </script>
 </body>
 </html>
