@@ -599,7 +599,7 @@
       return sum;
     }
 
-    function calcElementPercentages(text, fallbackTotal) {
+    function calcElementPercentages(text) {
       const counts = { 'ناري': 0, 'ترابي': 0, 'هوائي': 0, 'مائي': 0 };
       let totalLetters = 0;
 
@@ -612,7 +612,7 @@
       }
 
       const percentages = { 'ناري': 0, 'ترابي': 0, 'هوائي': 0, 'مائي': 0 };
-      let dominant = ELEMENTS_ORDER[(Math.max(1, fallbackTotal) - 1) % 4];
+      let dominant = null;
 
       if (totalLetters > 0) {
         let maxCount = -1;
@@ -623,11 +623,9 @@
             dominant = el;
           }
         }
-      } else {
-        percentages[dominant] = 100;
       }
 
-      return { percentages, dominant };
+      return { percentages, dominant, totalLetters };
     }
 
     function simplifyWithMaster(num) {
@@ -658,9 +656,9 @@
       return 'الحوت';
     }
 
-    function getZodiacInfo(total, day, month, year) {
+    function getZodiacInfo(day, month, year) {
       if (activeZodiacType === 'monthly') {
-        const idx = month ? (month - 1) % 12 : (total - 1 + 12) % 12;
+        const idx = month ? (month - 1) % 12 : 0;
         const name = ZODIACS[idx];
         return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
       }
@@ -671,14 +669,14 @@
           const element = idx === 1 ? 'ترابي' : (ZODIAC_ELEMENT[name] || 'ناري');
           return { name, element };
         }
-        const name = ZODIACS[(total - 1 + 12) % 12];
+        const name = ZODIACS[0];
         return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
       }
       if (day && month) {
         const name = getAstroZodiac(day, month);
         return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
       }
-      const name = ZODIACS[(total - 1 + 12) % 12];
+      const name = ZODIACS[0];
       return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
     }
 
@@ -697,7 +695,7 @@
       }
 
       document.querySelectorAll('.element-card').forEach(card => {
-        card.classList.toggle('active-element', card.dataset.el === dominantElement);
+        card.classList.toggle('active-element', Boolean(dominantElement) && card.dataset.el === dominantElement);
       });
     }
 
@@ -713,11 +711,11 @@
       const month = parseInt(document.getElementById('birthMonth').value, 10) || 0;
       const year = parseInt(document.getElementById('birthYear').value, 10) || 0;
 
-      const textSum = calcAbjadSum(text);
-      const dobSum = day + month + year;
-      const total = textSum + dobSum;
+      const lettersSum = calcAbjadSum(text);
+      const { percentages, dominant, totalLetters } = calcElementPercentages(text);
+      const hasDob = Boolean(day || month || year);
 
-      if (textSum <= 0 && dobSum <= 0) {
+      if (lettersSum <= 0 && !hasDob) {
         lastCalculated = false;
         updateWafqLinks(null);
         updateElementCards(null, null);
@@ -727,33 +725,49 @@
       }
 
       lastCalculated = true;
-      updateWafqLinks(total);
+      updateWafqLinks(lettersSum > 0 ? lettersSum : null);
 
-      const simpleNum = textSum > 0 ? simplifyWithMaster(textSum) : simplifyWithMaster(dobSum);
-      const { percentages, dominant } = calcElementPercentages(text, total);
-      const zodiac = getZodiacInfo(total, day, month, year);
-
+      const simpleNum = lettersSum > 0 ? simplifyWithMaster(lettersSum) : 0;
+      const zodiac = getZodiacInfo(day, month, year);
       const zodiacMeta = ELEMENTS_META[zodiac.element];
-      const nameMeta = ELEMENTS_META[dominant];
 
-      document.getElementById('resTotal').textContent = total.toLocaleString('ar');
-      document.getElementById('resSimple').textContent = simpleNum.toLocaleString('ar');
-      document.getElementById('resZodiac').textContent = zodiac.name;
-      document.getElementById('resZodiacElement').textContent = `طبع البرج: ${zodiac.element} (${zodiacMeta.short})`;
-      document.getElementById('resNameElement').textContent = dominant;
-      document.getElementById('resNamePct').textContent = `${percentages[dominant]}% · ${nameMeta.short}`;
+      document.getElementById('resTotal').textContent =
+        lettersSum > 0 ? lettersSum.toLocaleString('ar') : '—';
+      document.getElementById('resSimple').textContent =
+        lettersSum > 0 ? simpleNum.toLocaleString('ar') : '—';
+      document.getElementById('resZodiac').textContent = hasDob ? zodiac.name : '—';
+      document.getElementById('resZodiacElement').textContent =
+        hasDob ? `طبع البرج: ${zodiac.element} (${zodiacMeta.short})` : 'اختر تاريخ الميلاد';
+
+      if (totalLetters > 0 && dominant) {
+        const nameMeta = ELEMENTS_META[dominant];
+        document.getElementById('resNameElement').textContent = dominant;
+        document.getElementById('resNamePct').textContent = `${percentages[dominant]}% · ${nameMeta.short}`;
+
+        const nameBanner = document.getElementById('nameBanner');
+        nameBanner.style.setProperty('--nature-color', nameMeta.color);
+        document.getElementById('nameNatureTitle').textContent =
+          `${text ? `حروف «${text}»` : 'الحروف'} — طبع حروف الاسم: ${dominant} (${percentages[dominant]}%)`;
+        document.getElementById('nameNatureDesc').textContent = nameMeta.desc;
+      } else {
+        document.getElementById('resNameElement').textContent = '—';
+        document.getElementById('resNamePct').textContent = 'أدخل اسماً أو نصاً';
+        const nameBanner = document.getElementById('nameBanner');
+        nameBanner.style.setProperty('--nature-color', '#d4af37');
+        document.getElementById('nameNatureTitle').textContent = 'طبع حروف الاسم';
+        document.getElementById('nameNatureDesc').textContent = 'لم يتم إدخال حروف لحساب طبع الاسم.';
+      }
 
       const zodiacBanner = document.getElementById('zodiacBanner');
       zodiacBanner.style.setProperty('--nature-color', zodiacMeta.color);
-      document.getElementById('zodiacNatureTitle').textContent =
-        `برج ${zodiac.name} — طبع البرج: ${zodiac.element} (${zodiacMeta.short})`;
-      document.getElementById('zodiacNatureDesc').textContent = zodiacMeta.desc;
-
-      const nameBanner = document.getElementById('nameBanner');
-      nameBanner.style.setProperty('--nature-color', nameMeta.color);
-      document.getElementById('nameNatureTitle').textContent =
-        `${text ? `حروف «${text}»` : 'الحروف'} — طبع حروف الاسم: ${dominant} (${percentages[dominant]}%)`;
-      document.getElementById('nameNatureDesc').textContent = nameMeta.desc;
+      if (hasDob) {
+        document.getElementById('zodiacNatureTitle').textContent =
+          `برج ${zodiac.name} — طبع البرج: ${zodiac.element} (${zodiacMeta.short})`;
+        document.getElementById('zodiacNatureDesc').textContent = zodiacMeta.desc;
+      } else {
+        document.getElementById('zodiacNatureTitle').textContent = 'طبع البرج';
+        document.getElementById('zodiacNatureDesc').textContent = 'اختر تاريخ الميلاد لعرض البرج وطبعه.';
+      }
 
       updateElementCards(percentages, dominant);
       document.getElementById('resultEmpty').style.display = 'none';
