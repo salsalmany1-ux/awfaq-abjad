@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مختبر الأوفاق (3×3 حتى 10×10) | مطابقة أسماء الله الحسنى</title>
+  <title>الاوفاق</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -88,13 +88,6 @@
       font-size: clamp(2rem, 4vw, 2.8rem);
       color: var(--gold);
       margin-bottom: 6px;
-    }
-
-    header p {
-      color: var(--muted);
-      font-size: 0.95rem;
-      max-width: 760px;
-      margin: 0 auto;
     }
 
     .size-selector-card, .controls-card {
@@ -191,7 +184,7 @@
     }
 
     .field {
-      flex: 1 1 220px;
+      flex: 1 1 240px;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -203,7 +196,7 @@
       font-weight: 600;
     }
 
-    input[type="text"], select {
+    input[type="text"] {
       background: var(--surface-2);
       border: 1px solid rgba(255,255,255,0.12);
       color: var(--text);
@@ -214,7 +207,7 @@
       outline: none;
     }
 
-    input:focus, select:focus {
+    input:focus {
       border-color: var(--gold);
     }
 
@@ -311,19 +304,10 @@
 
     table.grid-table td.names-cell {
       font-family: 'Amiri', serif;
-      font-size: 1.02rem;
+      font-size: 1.08rem;
       color: var(--gold-bright);
-      min-width: 96px;
+      min-width: 88px;
       padding: 6px 8px;
-    }
-
-    table.grid-table td.names-cell small {
-      display: block;
-      font-family: 'Cairo', sans-serif;
-      font-size: 0.68rem;
-      color: var(--muted);
-      font-weight: 600;
-      margin-top: 2px;
     }
 
     table.grid-table td.sum-cell {
@@ -396,14 +380,12 @@
     <nav class="nav-bar">
       <div class="nav-links">
         <a href="index.html" class="nav-link">← العودة إلى صفحة الحساب والطبائع</a>
-        <a href="wafq.html" class="nav-link active">صفحة الأوفاق (3×3 – 10×10)</a>
+        <a href="wafq.html" class="nav-link active">الاوفاق</a>
       </div>
-      <span style="font-size: 0.82rem; color: var(--muted);">مضاعفات التطابق مع أسماء الله الحسنى</span>
     </nav>
 
     <header>
-      <h1>مختبر الأوفاق ومطابقة أسماء الله الحسنى</h1>
-      <p>توليد أوفاق صحيحة الأعداد من 3×3 إلى 10×10، ومضاعفة قيمة كل خانة بالعشرات والمئات والألوف لمطابقتها مع أسماء الله الحسنى حسب حساب الجُمّل.</p>
+      <h1>الاوفاق</h1>
     </header>
 
     <section class="size-selector-card">
@@ -421,32 +403,17 @@
       <div class="controls-row">
         <div class="field">
           <label for="targetInput">أدخل عدداً صحيحاً أو اسماً / عبارة</label>
-          <input type="text" id="targetInput" value="45" placeholder="مثال: 45 أو اسم..." />
-        </div>
-        <div class="field">
-          <label for="modeSelect">النمط الحسابي للوفق</label>
-          <select id="modeSelect">
-            <option value="balanced">متوازن صحيح الأعداد (توزيع المجموع)</option>
-            <option value="canonical">الوفق القياسي المتسلسل (من 1 إلى N²)</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="scaleCap">سقف الضرب / المضاعفة</label>
-          <select id="scaleCap">
-            <option value="1000">حتى الألف (×10، ×100، ×1000)</option>
-            <option value="100">حتى المئة (×10، ×100)</option>
-            <option value="10000">حتى العشرة آلاف</option>
-          </select>
+          <input type="text" id="targetInput" value="" placeholder="مثال: 45 أو اسم..." />
         </div>
         <button class="btn" id="generateBtn">توليد النموذجين</button>
       </div>
-      <div class="meta-bar" id="metaBar"></div>
+      <div class="meta-bar" id="metaBar">اختر الوفق وأدخل القيمة ثم اضغط «توليد النموذجين».</div>
     </section>
 
     <div id="outputArea"></div>
 
     <div class="note">
-      <strong>تنويه:</strong> يتم في النموذج الثاني ضرب قيمة الخانة أو مضاعفة قيمة الاسم بعوامل عشرية/عددية للوصول إلى أقرب تطابق حسابي واضح وفق أبجد هوز.
+      <strong>تنويه:</strong> يتم عرض المصفوفة الرقمية الصحيحة وما يقابلها من أسماء الله الحسنى حسب حساب الجُمّل.
     </div>
   </div>
 
@@ -476,6 +443,9 @@
       'البديع', 'الباقي', 'الوارث', 'الرشيد', 'الصبور'
     ];
 
+    const DEFAULT_MODE = 'balanced';
+    const DEFAULT_CAP = 1000;
+
     function calcAbjadSum(str) {
       let sum = 0;
       for (const ch of str) {
@@ -502,6 +472,7 @@
 
     let selectedSize = 3;
     let isProUnlocked = false;
+    let hasGenerated = false;
 
     function parseTargetInteger(val) {
       const clean = val.trim();
@@ -632,11 +603,6 @@
       return { grid, actualSum, rowMagic, adjustedNote };
     }
 
-    /*
-      مطابقة قيمة الخانة مع أسماء الله الحسنى عبر مضاعفات عشريّة / عددية:
-      نختبر مضاعفات للخانة (مثل ×1، ×10، ×100، ×1000 أو معامل يطابق قيمة الاسم × 10^k)
-      حتى نجد أقرب أو أدق تطابق مع قيمة اسم من أسماء الله الحسنى.
-    */
     function matchCellWithScaling(cellVal, cap) {
       const decScales = [1, 10, 100, 1000, 10000].filter(s => s <= cap);
       let best = null;
@@ -648,7 +614,6 @@
           const targetNum = asma.val * aScale;
           if (targetNum > cellVal * cap && cellVal > 0) continue;
 
-          // إذا كان targetNum يقبل القسمة على cellVal ضمن السقف
           if (cellVal > 0 && targetNum % cellVal === 0) {
             const mult = targetNum / cellVal;
             if (mult <= cap) {
@@ -664,7 +629,6 @@
             }
           }
 
-          // تجربة المضاعفات العشرية المباشرة للخانة (×10، ×100، ×1000)
           for (const cScale of decScales) {
             const scaledCell = cellVal * cScale;
             const diff = Math.abs(scaledCell - targetNum);
@@ -708,7 +672,11 @@
         btn.addEventListener('click', () => {
           selectedSize = n;
           renderSizeButtons();
-          renderWorkspace();
+          if (selectedSize > 5 && !isProUnlocked) {
+            renderPaywall();
+          } else if (hasGenerated) {
+            renderWorkspace();
+          }
         });
         container.appendChild(btn);
       }
@@ -722,7 +690,7 @@
           <p>الأحجام من 3×3 إلى 5×5 مجانية بالكامل، بينما الأوفاق الكبيرة من 6×6 حتى 10×10 مخصصة للمشتركين.</p>
           <ul class="paywall-features">
             <li>توليد أوفاق صحيحة الأعداد من 6×6 حتى 10×10</li>
-            <li>مطابقة كل خانة مع أسماء الله الحسنى عبر المضاعفات</li>
+            <li>مطابقة كل خانة مع أسماء الله الحسنى</li>
             <li>نسخ سريع للنموذجين الرقمي والاسمي</li>
           </ul>
           <div class="paywall-actions">
@@ -739,7 +707,7 @@
       document.getElementById('unlockDemoBtn').addEventListener('click', () => {
         isProUnlocked = true;
         renderSizeButtons();
-        renderWorkspace();
+        if (hasGenerated) renderWorkspace();
       });
     }
 
@@ -752,10 +720,8 @@
 
       document.getElementById('controlsSection').style.display = 'block';
       const rawInput = document.getElementById('targetInput').value;
-      const mode = document.getElementById('modeSelect').value;
-      const cap = parseInt(document.getElementById('scaleCap').value, 10);
 
-      const { grid, actualSum, rowMagic, adjustedNote } = buildIntegerWafq(selectedSize, rawInput, mode);
+      const { grid, actualSum, rowMagic, adjustedNote } = buildIntegerWafq(selectedSize, rawInput, DEFAULT_MODE);
       const n = selectedSize;
 
       const rowSums = grid.map(r => r.reduce((a, b) => a + b, 0));
@@ -782,16 +748,15 @@
       }
       numTable += '<td class="sum-cell">مجموع</td></tr></tbody></table>';
 
-      const asmaGrid = grid.map(row => row.map(val => matchCellWithScaling(val, cap)));
+      const asmaGrid = grid.map(row => row.map(val => matchCellWithScaling(val, DEFAULT_CAP)));
       let namesTable = '<table class="grid-table"><tbody>';
       for (let r = 0; r < n; r++) {
         namesTable += '<tr>';
         for (let c = 0; c < n; c++) {
           const cell = asmaGrid[r][c];
           namesTable += `
-            <td class="names-cell" title="قيمة الاسم: ${cell.asmaVal} | العملية: ${cell.formula}">
+            <td class="names-cell" title="الاسم: ${cell.name}">
               ${cell.name}
-              <small>${cell.formula}</small>
             </td>
           `;
         }
@@ -826,7 +791,7 @@
       });
 
       document.getElementById('copyNamesBtn').addEventListener('click', () => {
-        const text = asmaGrid.map(r => r.map(x => `${x.name} (${x.formula})`).join('\t')).join('\n');
+        const text = asmaGrid.map(r => r.map(x => x.name).join('\t')).join('\n');
         navigator.clipboard.writeText(text);
         alert('تم نسخ نموذج أسماء الله الحسنى.');
       });
@@ -837,12 +802,12 @@
       document.getElementById('targetInput').value = params.get('sum');
     }
 
-    document.getElementById('generateBtn').addEventListener('click', renderWorkspace);
-    document.getElementById('modeSelect').addEventListener('change', renderWorkspace);
-    document.getElementById('scaleCap').addEventListener('change', renderWorkspace);
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      hasGenerated = true;
+      renderWorkspace();
+    });
 
     renderSizeButtons();
-    renderWorkspace();
   </script>
 </body>
 </html>
