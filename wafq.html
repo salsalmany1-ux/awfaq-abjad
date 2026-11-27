@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>الاوفاق</title>
+  <title>مولد الأوفاق الرقمية والأسمائية</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
     }
 
     .container {
-      max-width: 1140px;
+      max-width: 1040px;
       margin: 0 auto;
     }
 
@@ -76,9 +76,9 @@
 
     header {
       text-align: center;
+      margin-bottom: 24px;
       padding: 24px 18px;
-      margin-bottom: 22px;
-      background: linear-gradient(180deg, rgba(212,175,55,0.09), rgba(18,23,34,0.65));
+      background: linear-gradient(180deg, rgba(212,175,55,0.09), rgba(18,23,34,0.68));
       border: 1px solid var(--gold-border);
       border-radius: var(--radius);
     }
@@ -90,90 +90,20 @@
       margin-bottom: 6px;
     }
 
-    .size-selector-card, .controls-card {
+    header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
       background: var(--surface);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: var(--radius);
-      padding: 20px;
+      padding: 22px;
       margin-bottom: 20px;
-    }
-
-    .section-title {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .badge-free {
-      font-size: 0.78rem;
-      background: rgba(34, 197, 94, 0.15);
-      color: #4ade80;
-      border: 1px solid rgba(34, 197, 94, 0.35);
-      padding: 2px 10px;
-      border-radius: 999px;
-    }
-
-    .badge-pro {
-      font-size: 0.78rem;
-      background: var(--gold-soft);
-      color: var(--gold-bright);
-      border: 1px solid var(--gold-border);
-      padding: 2px 10px;
-      border-radius: 999px;
-    }
-
-    .sizes-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 10px;
-    }
-
-    .size-btn {
-      background: var(--surface-2);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 12px 8px;
-      font-family: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .size-btn:hover {
-      border-color: var(--gold-border);
-      transform: translateY(-1px);
-    }
-
-    .size-btn.active {
-      background: var(--gold-soft);
-      border-color: var(--gold);
-      color: var(--gold-bright);
-    }
-
-    .size-btn .tag {
-      font-size: 0.72rem;
-      padding: 1px 7px;
-      border-radius: 999px;
-    }
-
-    .size-btn.free-btn .tag {
-      background: rgba(34, 197, 94, 0.14);
-      color: #86efac;
-    }
-
-    .size-btn.pro-btn .tag {
-      background: rgba(212, 175, 55, 0.16);
-      color: var(--gold-bright);
+      box-shadow: 0 14px 35px rgba(0,0,0,0.3);
     }
 
     .controls-row {
@@ -184,31 +114,39 @@
     }
 
     .field {
-      flex: 1 1 240px;
+      flex: 1 1 200px;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
 
     label {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: var(--muted);
       font-weight: 600;
     }
 
-    input[type="text"] {
+    input[type="number"], select {
       background: var(--surface-2);
       border: 1px solid rgba(255,255,255,0.12);
       color: var(--text);
       border-radius: 10px;
-      padding: 11px 14px;
+      padding: 12px;
       font-family: inherit;
-      font-size: 0.98rem;
+      font-size: 0.96rem;
       outline: none;
+      width: 100%;
     }
 
-    input:focus {
+    input:focus, select:focus {
       border-color: var(--gold);
+    }
+
+    .mode-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
     }
 
     .btn {
@@ -216,162 +154,110 @@
       color: #111;
       border: none;
       border-radius: 10px;
-      padding: 11px 20px;
+      padding: 11px 18px;
       font-family: inherit;
       font-weight: 800;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       cursor: pointer;
-      transition: transform 0.15s ease;
+      transition: transform 0.15s ease, background 0.2s ease;
     }
 
     .btn:hover { transform: translateY(-1px); }
 
-    .btn-outline {
-      background: var(--surface-2);
-      color: var(--gold);
-      border: 1px solid var(--gold-border);
-    }
-
-    .meta-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .meta-bar span strong { color: var(--gold-bright); }
-
-    .models-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-      gap: 20px;
-    }
-
-    .model-card {
-      background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius);
-      padding: 20px;
-      overflow-x: auto;
-    }
-
-    .model-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .model-header h2 {
-      font-size: 1.08rem;
-      color: var(--gold);
-    }
-
-    .copy-btn {
+    .btn-mode {
       background: var(--surface-2);
       color: var(--text);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 8px;
-      padding: 5px 12px;
-      font-family: inherit;
-      font-size: 0.8rem;
-      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.12);
     }
 
-    .copy-btn:hover { border-color: var(--gold); color: var(--gold); }
-
-    table.grid-table {
-      border-collapse: collapse;
-      margin: 0 auto;
+    .btn-mode.active {
+      background: var(--gold-soft);
+      color: var(--gold-bright);
+      border-color: var(--gold);
     }
 
-    table.grid-table td {
-      min-width: 50px;
-      height: 50px;
-      padding: 4px 6px;
-      text-align: center;
-      vertical-align: middle;
-      border: 1px solid var(--gold-border);
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .summary-box {
       background: var(--surface-2);
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    table.grid-table td.names-cell {
-      font-family: 'Amiri', serif;
-      font-size: 1.08rem;
-      color: var(--gold-bright);
-      min-width: 88px;
-      padding: 6px 8px;
-    }
-
-    table.grid-table td.sum-cell {
-      background: transparent;
-      border: none;
-      color: var(--gold);
-      font-size: 0.8rem;
-      font-weight: 700;
-      min-width: 44px;
-    }
-
-    .paywall-card {
-      background: linear-gradient(145deg, rgba(212,175,55,0.11), rgba(18,23,34,0.95));
-      border: 1px solid var(--gold);
-      border-radius: var(--radius);
-      padding: 32px 24px;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 14px;
       text-align: center;
-      max-width: 660px;
-      margin: 24px auto;
     }
 
-    .paywall-card h2 {
+    .summary-box .k { font-size: 0.85rem; color: var(--muted); }
+    .summary-box .v {
+      font-size: 1.35rem;
+      font-weight: 800;
       color: var(--gold-bright);
-      font-size: 1.45rem;
-      margin-bottom: 10px;
+      margin-top: 4px;
     }
 
-    .paywall-card p {
-      color: var(--muted);
-      margin-bottom: 18px;
-      font-size: 0.96rem;
+    .wafq-wrapper {
+      overflow-x: auto;
+      padding: 10px 0;
     }
 
-    .paywall-features {
-      list-style: none;
-      text-align: right;
-      max-width: 460px;
-      margin: 0 auto 22px;
+    .wafq-grid {
       display: grid;
       gap: 8px;
-      font-size: 0.92rem;
+      margin: 0 auto;
+      width: fit-content;
     }
 
-    .paywall-features li::before {
-      content: "✦ ";
-      color: var(--gold);
-      font-weight: bold;
-    }
-
-    .paywall-actions {
+    .wafq-cell {
+      min-width: 86px;
+      min-height: 76px;
+      padding: 8px 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--gold-border);
+      border-radius: 10px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+      align-items: center;
       justify-content: center;
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--text);
     }
 
-    .note {
-      margin-top: 24px;
-      padding: 14px 16px;
-      border-radius: 12px;
-      background: rgba(212, 175, 55, 0.06);
-      border-right: 3px solid var(--gold);
+    .wafq-cell.center-cell {
+      background: var(--gold-soft);
+      border-color: var(--gold-bright);
+      color: var(--gold-bright);
+    }
+
+    .wafq-cell.unmatched {
       color: var(--muted);
-      font-size: 0.85rem;
+      border-style: dashed;
+    }
+
+    .paywall-box {
+      text-align: center;
+      padding: 28px 18px;
+      background: var(--surface-2);
+      border: 1px solid var(--gold-border);
+      border-radius: 14px;
+      display: grid;
+      gap: 12px;
+      max-width: 520px;
+      margin: 12px auto;
+    }
+
+    .paywall-box h3 {
+      color: var(--gold-bright);
+      font-size: 1.2rem;
+    }
+
+    .paywall-box p {
+      color: var(--muted);
+      font-size: 0.92rem;
     }
   </style>
 </head>
@@ -379,42 +265,62 @@
   <div class="container">
     <nav class="nav-bar">
       <div class="nav-links">
-        <a href="index.html" class="nav-link">← العودة إلى صفحة الحساب والطبائع</a>
+        <a href="index.html" class="nav-link">حاسبة الجُمّل والطبائع</a>
         <a href="wafq.html" class="nav-link active">الاوفاق</a>
       </div>
     </nav>
 
     <header>
-      <h1>الاوفاق</h1>
+      <h1>مولد الأوفاق الرقمية والأسمائية</h1>
+      <p>توليد شبكة وفق من 3×3 إلى 10×10 بأرقام غير مكررة، ومطابقتها مع الأسماء الحسنى بالـ التعريف أو بدونها.</p>
     </header>
 
-    <section class="size-selector-card">
-      <div class="section-title">
-        <span>اختر رتبة الوفق (حجم الشبكة)</span>
-        <div>
-          <span class="badge-free">3×3 حتى 5×5: مجاني</span>
-          <span class="badge-pro">6×6 حتى 10×10: باقة الاشتراك</span>
-        </div>
-      </div>
-      <div class="sizes-grid" id="sizesGrid"></div>
-    </section>
-
-    <section class="controls-card" id="controlsSection">
+    <section class="card">
       <div class="controls-row">
         <div class="field">
-          <label for="targetInput">أدخل عدداً صحيحاً أو اسماً / عبارة</label>
-          <input type="text" id="targetInput" value="" placeholder="مثال: 45 أو اسم..." />
+          <label for="targetSum">الرقم المستهدف (المجموع)</label>
+          <input type="number" id="targetSum" min="1" placeholder="أدخل رقماً..." />
         </div>
-        <button class="btn" id="generateBtn">توليد النموذجين</button>
+        <div class="field">
+          <label for="gridSize">مرتبة الوفق</label>
+          <select id="gridSize">
+            <option value="3">3 × 3 (مجاني)</option>
+            <option value="4">4 × 4 (مجاني)</option>
+            <option value="5">5 × 5 (مجاني)</option>
+            <option value="6">6 × 6</option>
+            <option value="7">7 × 7</option>
+            <option value="8">8 × 8</option>
+            <option value="9">9 × 9</option>
+            <option value="10">10 × 10</option>
+          </select>
+        </div>
       </div>
-      <div class="meta-bar" id="metaBar">اختر الوفق وأدخل القيمة ثم اضغط «توليد النموذجين».</div>
+
+      <div class="mode-btns">
+        <button class="btn btn-mode active" id="btnNumeric" data-mode="numeric">وفق رقمي</button>
+        <button class="btn btn-mode" id="btnWithAl" data-mode="withAl">وفق اسمي (بالـ التعريف)</button>
+        <button class="btn btn-mode" id="btnWithoutAl" data-mode="withoutAl">وفق اسمي (بدون الـ التعريف)</button>
+      </div>
+
+      <div class="summary-strip">
+        <div class="summary-box">
+          <div class="k">المرتبة</div>
+          <div class="v" id="metaSize">—</div>
+        </div>
+        <div class="summary-box">
+          <div class="k">المجموع المستهدف</div>
+          <div class="v" id="metaSum">—</div>
+        </div>
+        <div class="summary-box">
+          <div class="k">النمط الحالي</div>
+          <div class="v" id="metaMode">وفق رقمي</div>
+        </div>
+      </div>
     </section>
 
-    <div id="outputArea"></div>
-
-    <div class="note">
-      <strong>تنويه:</strong> يتم عرض المصفوفة الرقمية الصحيحة وما يقابلها من أسماء الله الحسنى حسب حساب الجُمّل.
-    </div>
+    <section class="card">
+      <div class="wafq-wrapper" id="wafqOutput"></div>
+    </section>
   </div>
 
   <script>
@@ -427,387 +333,249 @@
       'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
     };
 
-    const RAW_ASMA = [
-      'الله', 'الرحمن', 'الرحيم', 'الملك', 'القدوس', 'السلام', 'المؤمن', 'المهيمن', 'العزيز',
-      'الجبار', 'المتكبر', 'الخالق', 'البارئ', 'المصور', 'الغفار', 'القهار', 'الوهاب',
-      'الرزاق', 'الفتاح', 'العليم', 'القابض', 'الباسط', 'الخافض', 'الرافع', 'المعز',
-      'المذل', 'السميع', 'البصير', 'الحكم', 'العدل', 'اللطيف', 'الخبير', 'الحليم',
-      'العظيم', 'الغفور', 'الشكور', 'العلي', 'الكبير', 'الحفيظ', 'المقيت', 'الحسيب',
-      'الجليل', 'الكريم', 'الرقيب', 'المجيب', 'الواسع', 'الحكيم', 'الودود', 'المجيد',
-      'الباعث', 'الشهيد', 'الحق', 'الوكيل', 'القوي', 'المتين', 'الولي', 'الحميد',
-      'المحصي', 'المبدئ', 'المعيد', 'المحيي', 'المميت', 'الحي', 'القيوم', 'الواجد',
-      'الماجد', 'الواحد', 'الأحد', 'الصمد', 'القادر', 'المقتدر', 'المقدم', 'المؤخر',
-      'الأول', 'الآخر', 'الظاهر', 'الباطن', 'الوالي', 'المتعالي', 'البر', 'التواب',
-      'المنتقم', 'العفو', 'الرؤوف', 'مالك الملك', 'ذو الجلال والإكرام', 'المقسط',
-      'الجامع', 'الغني', 'المغني', 'المانع', 'الضار', 'النافع', 'النور', 'الهادي',
-      'البديع', 'الباقي', 'الوارث', 'الرشيد', 'الصبور'
+    const ASMA_WITH_AL = [
+      'الله', 'الرحمن', 'الرحيم', 'الملك', 'القدوس', 'السلام', 'المؤمن', 'المهيمن', 'العزيز', 'الجبار',
+      'المتكبر', 'الخالق', 'البارئ', 'المصور', 'الغفار', 'القهار', 'الوهاب', 'الرزاق', 'الفتاح', 'العليم',
+      'القابض', 'الباسط', 'الخافض', 'الرافع', 'المعز', 'المذل', 'السميع', 'البصير', 'الحكم', 'العدل',
+      'اللطيف', 'الخبير', 'الحليم', 'العظيم', 'الغفور', 'الشكور', 'العلي', 'الكبير', 'الحفيظ', 'المقيت',
+      'الحسيب', 'الجليل', 'الكريم', 'الرقيب', 'المجيب', 'الواسع', 'الحكيم', 'الودود', 'المجيد', 'الباعث',
+      'الشهيد', 'الحق', 'الوكيل', 'القوي', 'المتين', 'الولي', 'الحميد', 'المحصي', 'المبدئ', 'المعيد',
+      'المحيي', 'المميت', 'الحي', 'القيوم', 'الواجد', 'الماجد', 'الواحد', 'الأحد', 'الصمد', 'القادر',
+      'المقتدر', 'المقدم', 'المؤخر', 'الأول', 'الآخر', 'الظاهر', 'الباطن', 'الوالي', 'المتعالي', 'البر',
+      'التواب', 'المنتقم', 'العفو', 'الرؤوف', 'مالك الملك', 'ذو الجلال والإكرام', 'المقسط', 'الجامع', 'الغني', 'المغني',
+      'المانع', 'الضار', 'النافع', 'النور', 'الهادي', 'البديع', 'الباقي', 'الوارث', 'الرشيد', 'الصبور'
     ];
 
-    const DEFAULT_MODE = 'balanced';
-    const DEFAULT_CAP = 1000;
-
-    function calcAbjadSum(str) {
-      let sum = 0;
-      for (const ch of str) {
-        if (ABJAD_VALUES[ch]) sum += ABJAD_VALUES[ch];
-      }
-      return sum;
+    function stripAl(name) {
+      return name
+        .split(' ')
+        .map(word => word.startsWith('ال') ? word.slice(2) : word)
+        .join(' ');
     }
 
-    const ASMA_WITH_VAL = RAW_ASMA.map(name => ({
-      name,
-      val: calcAbjadSum(name)
+    function calcAbjad(text) {
+      let total = 0;
+      for (const ch of text) {
+        if (ABJAD_VALUES[ch]) total += ABJAD_VALUES[ch];
+      }
+      return total;
+    }
+
+    const ASMA_WITHOUT_AL = ASMA_WITH_AL.map(name => ({
+      display: stripAl(name),
+      value: calcAbjad(stripAl(name))
     }));
 
-    const SIZE_NAMES = {
-      3: 'الثلاثي (3×3)',
-      4: 'الرباعي (4×4)',
-      5: 'الخماسي (5×5)',
-      6: 'السداسي (6×6)',
-      7: 'السباعي (7×7)',
-      8: 'الثماني (8×8)',
-      9: 'التاسع (9×9)',
-      10: 'العشري (10×10)'
-    };
+    const ASMA_WITH_AL_LIST = ASMA_WITH_AL.map(name => ({
+      display: name,
+      value: calcAbjad(name)
+    }));
 
-    let selectedSize = 3;
-    let isProUnlocked = false;
-    let hasGenerated = false;
+    let currentMode = 'numeric';
+    let unlockedLargeGrids = false;
 
-    function parseTargetInteger(val) {
-      const clean = val.trim();
-      if (/^-?\d+$/.test(clean)) {
-        return Math.max(1, parseInt(clean, 10));
-      }
-      const fromText = calcAbjadSum(clean);
-      return fromText > 0 ? fromText : 45;
-    }
+    function buildUniqueMatrix(n, targetSum) {
+      const totalCells = n * n;
+      const baseMatrix = Array.from({ length: n }, () => Array(n).fill(0));
 
-    function generateOddMagicSquare(n) {
-      const grid = Array.from({ length: n }, () => Array(n).fill(0));
-      let r = 0;
-      let c = Math.floor(n / 2);
-
-      for (let num = 1; num <= n * n; num++) {
-        grid[r][c] = num;
-        const nextR = (r - 1 + n) % n;
-        const nextC = (c + 1) % n;
-        if (grid[nextR][nextC] !== 0) {
-          r = (r + 1) % n;
-        } else {
-          r = nextR;
-          c = nextC;
+      if (n % 2 === 1) {
+        let r = 0;
+        let c = Math.floor(n / 2);
+        for (let num = 1; num <= totalCells; num++) {
+          baseMatrix[r][c] = num;
+          const nextR = (r - 1 + n) % n;
+          const nextC = (c + 1) % n;
+          if (baseMatrix[nextR][nextC] !== 0) {
+            r = (r + 1) % n;
+          } else {
+            r = nextR;
+            c = nextC;
+          }
         }
-      }
-      return grid;
-    }
-
-    function generateEvenMagicSquare(n) {
-      if (n % 4 === 0) {
-        const grid = Array.from({ length: n }, (_, r) =>
-          Array.from({ length: n }, (_, c) => r * n + c + 1)
-        );
+      } else {
+        let counter = 1;
         for (let r = 0; r < n; r++) {
           for (let c = 0; c < n; c++) {
-            const inBlock = ((r % 4 === c % 4) || ((r % 4) + (c % 4) === 3));
-            if (inBlock) {
-              grid[r][c] = n * n + 1 - grid[r][c];
+            baseMatrix[r][c] = counter++;
+          }
+        }
+        for (let r = 0; r < n; r++) {
+          for (let c = 0; c < n; c++) {
+            const cond1 = (r % 4 === c % 4);
+            const cond2 = ((r % 4) + (c % 4) === 3);
+            if (cond1 || cond2) {
+              baseMatrix[r][c] = (totalCells + 1) - baseMatrix[r][c];
             }
           }
         }
-        return grid;
-      } else {
-        const half = n / 2;
-        const subSquare = generateOddMagicSquare(half);
-        const grid = Array.from({ length: n }, () => Array(n).fill(0));
-        const blockSize = half * half;
-
-        for (let r = 0; r < half; r++) {
-          for (let c = 0; c < half; c++) {
-            const base = subSquare[r][c];
-            grid[r][c] = base;
-            grid[r + half][c + half] = base + blockSize;
-            grid[r][c + half] = base + 2 * blockSize;
-            grid[r + half][c] = base + 3 * blockSize;
-          }
-        }
-
-        const k = (n - 2) / 4;
-        for (let r = 0; r < half; r++) {
-          for (let c = 0; c < k; c++) {
-            const col = (r === Math.floor(half / 2)) ? c + k : c;
-            const tmp = grid[r][col];
-            grid[r][col] = grid[r + half][col];
-            grid[r + half][col] = tmp;
-          }
-          for (let c = 0; c < k - 1; c++) {
-            const col = n - 1 - c;
-            const tmp = grid[r][col];
-            grid[r][col] = grid[r + half][col];
-            grid[r + half][col] = tmp;
-          }
-        }
-        return grid;
-      }
-    }
-
-    function generateBaseMagic(n) {
-      return (n % 2 === 1) ? generateOddMagicSquare(n) : generateEvenMagicSquare(n);
-    }
-
-    function buildIntegerWafq(n, rawInput, mode) {
-      const base = generateBaseMagic(n);
-      const totalCells = n * n;
-      const canonicalSum = (totalCells * (totalCells + 1)) / 2;
-
-      if (mode === 'canonical') {
-        return {
-          grid: base,
-          actualSum: canonicalSum,
-          rowMagic: canonicalSum / n,
-          adjustedNote: null
-        };
       }
 
-      const desiredSum = parseTargetInteger(rawInput);
-      let bestStep = 1;
-      let bestOffset = 0;
-      let bestDiff = Infinity;
+      const magicConstant = (n * (totalCells + 1)) / 2;
+      const diff = targetSum - magicConstant;
 
-      for (let step = 1; step <= 20; step++) {
-        const scaledSum = canonicalSum * step;
-        const rawOffset = Math.round((desiredSum - scaledSum) / totalCells);
-        const resultingSum = scaledSum + rawOffset * totalCells;
-        const diff = Math.abs(resultingSum - desiredSum);
-
-        if (diff < bestDiff) {
-          bestDiff = diff;
-          bestStep = step;
-          bestOffset = rawOffset;
-        }
-        if (diff === 0) break;
-      }
-
-      const grid = base.map(row =>
-        row.map(val => Math.max(1, val * bestStep + bestOffset))
+      return baseMatrix.map((row, rIdx) =>
+        row.map((val, cIdx) => {
+          const isCenter = (n % 2 === 1 && rIdx === Math.floor(n / 2) && cIdx === Math.floor(n / 2));
+          return isCenter ? val + diff : val;
+        })
       );
-
-      const actualSum = grid.flat().reduce((a, b) => a + b, 0);
-      const rowMagic = actualSum / n;
-
-      let adjustedNote = null;
-      if (actualSum !== desiredSum) {
-        adjustedNote = `تم ضبط المجموع تلقائياً إلى ${actualSum} (بدلاً من ${desiredSum}) لضمان بقاء جميع الأرقام صحيحة بدون كسور.`;
-      }
-
-      return { grid, actualSum, rowMagic, adjustedNote };
     }
 
-    function matchCellWithScaling(cellVal, cap) {
-      const decScales = [1, 10, 100, 1000, 10000].filter(s => s <= cap);
-      let best = null;
+    function getTraversalOrder(n) {
+      const order = [];
+      const visited = Array.from({ length: n }, () => Array(n).fill(false));
+      const center = Math.floor(n / 2);
 
-      for (const asma of ASMA_WITH_VAL) {
-        if (!asma.val) continue;
+      if (n % 2 === 1) {
+        let r = center;
+        let c = center;
+        order.push({ r, c });
+        visited[r][c] = true;
 
-        for (const aScale of decScales) {
-          const targetNum = asma.val * aScale;
-          if (targetNum > cellVal * cap && cellVal > 0) continue;
+        let step = 1;
+        const dirs = [
+          [0, 1],
+          [1, 0],
+          [0, -1],
+          [-1, 0]
+        ];
+        let dirIdx = 0;
 
-          if (cellVal > 0 && targetNum % cellVal === 0) {
-            const mult = targetNum / cellVal;
-            if (mult <= cap) {
-              const score = Math.abs(mult - 10) * 0.01 + (aScale === 1 ? 0 : 0.2);
-              if (!best || score < best.score) {
-                best = {
-                  name: asma.name,
-                  asmaVal: asma.val,
-                  formula: `${cellVal}×${mult} = ${targetNum}`,
-                  score
-                };
+        while (order.length < n * n) {
+          for (let rep = 0; rep < 2; rep++) {
+            const [dr, dc] = dirs[dirIdx % 4];
+            for (let s = 0; s < step; s++) {
+              r += dr;
+              c += dc;
+              if (r >= 0 && r < n && c >= 0 && c < n && !visited[r][c]) {
+                order.push({ r, c });
+                visited[r][c] = true;
               }
             }
+            dirIdx++;
           }
-
-          for (const cScale of decScales) {
-            const scaledCell = cellVal * cScale;
-            const diff = Math.abs(scaledCell - targetNum);
-            const relErr = targetNum > 0 ? diff / targetNum : diff;
-            const score = relErr * 100 + (diff === 0 ? 0 : 1);
-
-            if (!best || score < best.score) {
-              best = {
-                name: asma.name,
-                asmaVal: asma.val,
-                formula: diff === 0
-                  ? `${cellVal}×${cScale} = ${scaledCell}`
-                  : `${cellVal}×${cScale}=${scaledCell} (الاسم×${aScale}=${targetNum})`,
-                score
-              };
-            }
+          step++;
+        }
+      } else {
+        for (let r = 0; r < n; r++) {
+          for (let c = 0; c < n; c++) {
+            order.push({ r, c });
           }
         }
       }
 
-      return best || {
-        name: ASMA_WITH_VAL[0].name,
-        asmaVal: ASMA_WITH_VAL[0].val,
-        formula: `${cellVal}×10 = ${cellVal * 10}`,
-        score: 999
-      };
+      return order;
     }
 
-    function renderSizeButtons() {
-      const container = document.getElementById('sizesGrid');
-      container.innerHTML = '';
+    function matchNameByTensMultiplier(cellValue, namesList) {
+      if (!cellValue || cellValue <= 0) return null;
+      const MAX_EXPONENT = 12;
 
-      for (let n = 3; n <= 10; n++) {
-        const isFree = n <= 5;
-        const btn = document.createElement('button');
-        btn.className = `size-btn ${isFree ? 'free-btn' : 'pro-btn'} ${selectedSize === n ? 'active' : ''}`;
-        btn.innerHTML = `
-          <span>${n}×${n}</span>
-          <span class="tag">${isFree ? 'مجاني' : (isProUnlocked ? 'مفتوح' : 'اشتراك')}</span>
-        `;
-        btn.addEventListener('click', () => {
-          selectedSize = n;
-          renderSizeButtons();
-          if (selectedSize > 5 && !isProUnlocked) {
-            renderPaywall();
-          } else if (hasGenerated) {
-            renderWorkspace();
-          }
-        });
-        container.appendChild(btn);
+      for (let exp = 0; exp <= MAX_EXPONENT; exp++) {
+        const scaled = cellValue * Math.pow(10, exp);
+        if (!Number.isSafeInteger(scaled)) break;
+        const found = namesList.find(item => item.value === scaled);
+        if (found) return found.display;
       }
+
+      return null;
     }
 
-    function renderPaywall() {
-      document.getElementById('controlsSection').style.display = 'none';
-      document.getElementById('outputArea').innerHTML = `
-        <div class="paywall-card">
-          <h2>الوفق ${SIZE_NAMES[selectedSize]} متاح ضمن باقة الاشتراك</h2>
-          <p>الأحجام من 3×3 إلى 5×5 مجانية بالكامل، بينما الأوفاق الكبيرة من 6×6 حتى 10×10 مخصصة للمشتركين.</p>
-          <ul class="paywall-features">
-            <li>توليد أوفاق صحيحة الأعداد من 6×6 حتى 10×10</li>
-            <li>مطابقة كل خانة مع أسماء الله الحسنى</li>
-            <li>نسخ سريع للنموذجين الرقمي والاسمي</li>
-          </ul>
-          <div class="paywall-actions">
-            <button class="btn" id="payAlertBtn">اشترك لفتح 6×6 – 10×10</button>
-            <button class="btn btn-outline" id="unlockDemoBtn">تفعيل وضع المعاينة للتجربة الآن</button>
+    function renderWafq() {
+      const n = parseInt(document.getElementById('gridSize').value, 10);
+      const rawSum = parseInt(document.getElementById('targetSum').value, 10);
+      const targetSum = Number.isFinite(rawSum) && rawSum > 0 ? rawSum : ((n * (n * n + 1)) / 2);
+
+      const modeNames = {
+        numeric: 'وفق رقمي',
+        withAl: 'وفق اسمي (بالـ التعريف)',
+        withoutAl: 'وفق اسمي (بدون الـ التعريف)'
+      };
+
+      document.getElementById('metaSize').textContent = `${n} × ${n}`;
+      document.getElementById('metaSum').textContent = targetSum.toLocaleString('ar');
+      document.getElementById('metaMode').textContent = modeNames[currentMode];
+
+      const out = document.getElementById('wafqOutput');
+
+      if (n >= 6 && !unlockedLargeGrids) {
+        out.innerHTML = `
+          <div class="paywall-box">
+            <h3>الوفاق من ${n} × ${n} إلى 10 × 10</h3>
+            <p>الوفاق من 3×3 إلى 5×5 متاحة مجاناً، والوفاق من 6×6 فأعلى مخصصة للنسخة الكاملة.</p>
+            <button class="btn" id="unlockBtn">تفعيل العرض التجريبي</button>
           </div>
-        </div>
-      `;
-
-      document.getElementById('payAlertBtn').addEventListener('click', () => {
-        alert('سيتم ربط بوابة الدفع / الاشتراك هنا قريباً.');
-      });
-
-      document.getElementById('unlockDemoBtn').addEventListener('click', () => {
-        isProUnlocked = true;
-        renderSizeButtons();
-        if (hasGenerated) renderWorkspace();
-      });
-    }
-
-    function renderWorkspace() {
-      const isAllowed = selectedSize <= 5 || isProUnlocked;
-      if (!isAllowed) {
-        renderPaywall();
+        `;
+        document.getElementById('unlockBtn').addEventListener('click', () => {
+          unlockedLargeGrids = true;
+          renderWafq();
+        });
         return;
       }
 
-      document.getElementById('controlsSection').style.display = 'block';
-      const rawInput = document.getElementById('targetInput').value;
+      const matrix = buildUniqueMatrix(n, targetSum);
+      const traversal = getTraversalOrder(n);
+      const displayGrid = Array.from({ length: n }, () => Array(n).fill(''));
+      const matchedGrid = Array.from({ length: n }, () => Array(n).fill(true));
 
-      const { grid, actualSum, rowMagic, adjustedNote } = buildIntegerWafq(selectedSize, rawInput, DEFAULT_MODE);
-      const n = selectedSize;
+      const activeNames = currentMode === 'withAl' ? ASMA_WITH_AL_LIST : ASMA_WITHOUT_AL;
 
-      const rowSums = grid.map(r => r.reduce((a, b) => a + b, 0));
-      const colSums = Array.from({ length: n }, (_, c) => grid.reduce((acc, r) => acc + r[c], 0));
-
-      document.getElementById('metaBar').innerHTML = `
-        <span>الوفق: <strong>${SIZE_NAMES[n]}</strong></span>
-        <span>المجموع الكلي: <strong>${actualSum}</strong></span>
-        <span>مجموع الصف/العمود: <strong>${Number(rowMagic.toFixed(2))}</strong></span>
-        ${adjustedNote ? `<span style="color:#fbbf24;">${adjustedNote}</span>` : ''}
-      `;
-
-      let numTable = '<table class="grid-table"><tbody>';
-      for (let r = 0; r < n; r++) {
-        numTable += '<tr>';
-        for (let c = 0; c < n; c++) {
-          numTable += `<td>${grid[r][c]}</td>`;
+      for (const { r, c } of traversal) {
+        const val = matrix[r][c];
+        if (currentMode === 'numeric') {
+          displayGrid[r][c] = String(val);
+          matchedGrid[r][c] = true;
+        } else {
+          const matchedName = matchNameByTensMultiplier(val, activeNames);
+          if (matchedName) {
+            displayGrid[r][c] = matchedName;
+            matchedGrid[r][c] = true;
+          } else {
+            displayGrid[r][c] = '—';
+            matchedGrid[r][c] = false;
+          }
         }
-        numTable += `<td class="sum-cell">=${rowSums[r]}</td></tr>`;
       }
-      numTable += '<tr>';
-      for (let c = 0; c < n; c++) {
-        numTable += `<td class="sum-cell">=${colSums[c]}</td>`;
-      }
-      numTable += '<td class="sum-cell">مجموع</td></tr></tbody></table>';
 
-      const asmaGrid = grid.map(row => row.map(val => matchCellWithScaling(val, DEFAULT_CAP)));
-      let namesTable = '<table class="grid-table"><tbody>';
+      const gridEl = document.createElement('div');
+      gridEl.className = 'wafq-grid';
+      gridEl.style.gridTemplateColumns = `repeat(${n}, minmax(86px, 1fr))`;
+
+      const centerIdx = Math.floor(n / 2);
+
       for (let r = 0; r < n; r++) {
-        namesTable += '<tr>';
         for (let c = 0; c < n; c++) {
-          const cell = asmaGrid[r][c];
-          namesTable += `
-            <td class="names-cell" title="الاسم: ${cell.name}">
-              ${cell.name}
-            </td>
-          `;
+          const cell = document.createElement('div');
+          const isCenter = (n % 2 === 1 && r === centerIdx && c === centerIdx);
+          cell.className = 'wafq-cell' + (isCenter ? ' center-cell' : '') + (!matchedGrid[r][c] ? ' unmatched' : '');
+          cell.textContent = displayGrid[r][c];
+          gridEl.appendChild(cell);
         }
-        namesTable += '</tr>';
       }
-      namesTable += '</tbody></table>';
 
-      document.getElementById('outputArea').innerHTML = `
-        <div class="models-grid">
-          <div class="model-card">
-            <div class="model-header">
-              <h2>النموذج الأول: المصفوفة الرقمية</h2>
-              <button class="copy-btn" id="copyNumBtn">نسخ الأرقام</button>
-            </div>
-            ${numTable}
-          </div>
-
-          <div class="model-card">
-            <div class="model-header">
-              <h2>النموذج الثاني: مطابقة أسماء الله الحسنى</h2>
-              <button class="copy-btn" id="copyNamesBtn">نسخ الأسماء</button>
-            </div>
-            ${namesTable}
-          </div>
-        </div>
-      `;
-
-      document.getElementById('copyNumBtn').addEventListener('click', () => {
-        const text = grid.map(r => r.join('\t')).join('\n');
-        navigator.clipboard.writeText(text);
-        alert('تم نسخ النموذج الرقمي.');
-      });
-
-      document.getElementById('copyNamesBtn').addEventListener('click', () => {
-        const text = asmaGrid.map(r => r.map(x => x.name).join('\t')).join('\n');
-        navigator.clipboard.writeText(text);
-        alert('تم نسخ نموذج أسماء الله الحسنى.');
-      });
+      out.innerHTML = '';
+      out.appendChild(gridEl);
     }
 
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('sum')) {
-      document.getElementById('targetInput').value = params.get('sum');
-    }
-
-    document.getElementById('generateBtn').addEventListener('click', () => {
-      hasGenerated = true;
-      renderWorkspace();
+    document.querySelectorAll('.btn-mode').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.btn-mode').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMode = btn.dataset.mode;
+        renderWafq();
+      });
     });
 
-    renderSizeButtons();
+    document.getElementById('gridSize').addEventListener('change', renderWafq);
+    document.getElementById('targetSum').addEventListener('input', renderWafq);
+
+    const params = new URLSearchParams(window.location.search);
+    const paramSum = parseInt(params.get('sum'), 10);
+    if (Number.isFinite(paramSum) && paramSum > 0) {
+      document.getElementById('targetSum').value = String(paramSum);
+    }
+
+    renderWafq();
   </script>
 </body>
 </html>
