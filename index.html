@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>حاسبة الجُمّل والأسماء وفرز الطبائع</title>
+  <title>حاسبة الجُمّل والأسماء وفرز الطبائع والأبراج</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -118,7 +118,7 @@
     }
 
     .field {
-      flex: 1 1 260px;
+      flex: 1 1 220px;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -130,18 +130,18 @@
       font-weight: 600;
     }
 
-    input[type="text"] {
+    input[type="text"], input[type="date"] {
       background: var(--surface-2);
       border: 1px solid rgba(255,255,255,0.12);
       color: var(--text);
       border-radius: 10px;
       padding: 12px 14px;
       font-family: inherit;
-      font-size: 1.05rem;
+      font-size: 1rem;
       outline: none;
     }
 
-    input[type="text"]:focus {
+    input:focus {
       border-color: var(--gold);
     }
 
@@ -206,6 +206,52 @@
       justify-content: space-between;
       gap: 10px;
       font-size: 0.95rem;
+    }
+
+    .zodiac-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .zodiac-tab-btn {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .zodiac-tab-btn.active, .zodiac-tab-btn:hover {
+      background: var(--gold-soft);
+      border-color: var(--gold);
+      color: var(--gold-bright);
+    }
+
+    .zodiac-result-box {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .zodiac-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--gold-bright);
+    }
+
+    .zodiac-meta {
+      color: var(--muted);
+      font-size: 0.92rem;
     }
 
     .el-row {
@@ -291,12 +337,11 @@
         <a href="index.html" class="nav-link active">حاسبة الجُمّل والطبائع</a>
         <a href="wafq.html" class="nav-link" id="goWafqLink">الاوفاق</a>
       </div>
-      <span style="font-size: 0.82rem; color: var(--muted);">نظام أبجد هوز</span>
     </nav>
 
     <header>
       <h1>حاسبة الجُمّل والأسماء وفرز الطبائع</h1>
-      <p>احسب قيمة الأسماء والعبارات بحساب الجُمّل الكبير والصغير والوسيط، وافرِز حروفها حسب الطبائع الأربع بدقة وسرعة.</p>
+      <p>احسب قيمة الأسماء والعبارات بحساب الجُمّل الكبير والصغير والوسيط، وافرِز حروفها حسب الطبائع الأربع واحسب الأبراج من تاريخ الميلاد.</p>
     </header>
 
     <section class="card">
@@ -304,6 +349,10 @@
         <div class="field">
           <label for="textInput">أدخل اسماً أو كلمة أو عبارة</label>
           <input type="text" id="textInput" value="" placeholder="اكتب اسماً أو نصاً عربياً..." />
+        </div>
+        <div class="field">
+          <label for="birthInput">تاريخ الميلاد</label>
+          <input type="date" id="birthInput" />
         </div>
         <button class="btn" id="calcBtn">احسب</button>
         <button class="btn btn-secondary" id="exportBtn">حفظ بطاقة صورة</button>
@@ -329,7 +378,20 @@
         </div>
       </div>
 
-      <div class="dominant-banner" id="dominantBanner">أدخل نصاً ثم اضغط على زر «احسب» لعرض النتائج.</div>
+      <div class="dominant-banner" id="dominantBanner">أدخل نصاً أو تاريخ ميلاد ثم اضغط على زر «احسب» لعرض النتائج.</div>
+    </section>
+
+    <section class="card">
+      <h2 style="font-size: 1.08rem; color: var(--gold); margin-bottom: 12px;">حساب البرج حسب تاريخ الميلاد</h2>
+      <div class="zodiac-tabs">
+        <button class="zodiac-tab-btn active" data-ztype="monthly">البرج الشهري (الشمسي)</button>
+        <button class="zodiac-tab-btn" data-ztype="yearly">البرج السنوي (الصيني)</button>
+        <button class="zodiac-tab-btn" data-ztype="astro">البرج الفلكي / الطالع</button>
+      </div>
+      <div class="zodiac-result-box" id="zodiacResult">
+        <div class="zodiac-title">اختر تاريخ الميلاد واضغط «احسب»</div>
+        <div class="zodiac-meta">يمكنك التبديل بين البرج الشهري والسنوي والفلكي عبر الأزرار بالأعلى.</div>
+      </div>
     </section>
 
     <section class="card">
@@ -365,7 +427,7 @@
     </section>
 
     <div class="note">
-      <strong>تنويه:</strong> حساب الجُمّل وفرز الطبائع يُعرضان هنا كمعطيات عددية وتراثية للمعرفة والاستكشاف الثقافي.
+      <strong>تنويه:</strong> حساب الجُمّل وفرز الطبائع والأبراج يُعرضان كمعطيات عددية وتراثية وتقويمية للمعرفة والاستكشاف.
     </div>
   </div>
 
@@ -386,8 +448,32 @@
       water: { name: 'مائي',  icon: '💧', color: '#6366f1', chars: new Set(['د','ح','ل','ع','ر','خ','غ']) }
     };
 
+    const MONTHLY_ZODIAC = [
+      { name: 'الجدي', element: 'ترابي', range: '22 ديسمبر – 19 يناير', startM: 12, startD: 22, endM: 1, endD: 19 },
+      { name: 'الدلو', element: 'هوائي', range: '20 يناير – 18 فبراير', startM: 1, startD: 20, endM: 2, endD: 18 },
+      { name: 'الحوت', element: 'مائي', range: '19 فبراير – 20 مارس', startM: 2, startD: 19, endM: 3, endD: 20 },
+      { name: 'الحمل', element: 'ناري', range: '21 مارس – 19 أبريل', startM: 3, startD: 21, endM: 4, endD: 19 },
+      { name: 'الثور', element: 'ترابي', range: '20 أبريل – 20 مايو', startM: 4, startD: 20, endM: 5, endD: 20 },
+      { name: 'الجوزاء', element: 'هوائي', range: '21 مايو – 20 يونيو', startM: 5, startD: 21, endM: 6, endD: 20 },
+      { name: 'السرطان', element: 'مائي', range: '21 يونيو – 22 يوليو', startM: 6, startD: 21, endM: 7, endD: 22 },
+      { name: 'الأسد', element: 'ناري', range: '23 يوليو – 22 أغسطس', startM: 7, startD: 23, endM: 8, endD: 22 },
+      { name: 'العذراء', element: 'ترابي', range: '23 أغسطس – 22 سبتمبر', startM: 8, startD: 23, endM: 9, endD: 22 },
+      { name: 'الميزان', element: 'هوائي', range: '23 سبتمبر – 22 أكتوبر', startM: 9, startD: 23, endM: 10, endD: 22 },
+      { name: 'العقرب', element: 'مائي', range: '23 أكتوبر – 21 نوفمبر', startM: 10, startD: 23, endM: 11, endD: 21 },
+      { name: 'القوس', element: 'ناري', range: '22 نوفمبر – 21 ديسمبر', startM: 11, startD: 22, endM: 12, endD: 21 }
+    ];
+
+    const CHINESE_ANIMALS = [
+      'القرد', 'الديك', 'الكلب', 'الخنزير', 'الفأر', 'الثور',
+      'النمر', 'الأرنب', 'التنين', 'الأفعى', 'الحصان', 'العنزة'
+    ];
+
+    const CHINESE_ELEMENTS = ['معدن', 'معدن', 'ماء', 'ماء', 'خشب', 'خشب', 'نار', 'نار', 'أرض', 'أرض'];
+
     let lastResult = null;
     let lastText = '';
+    let lastBirthDate = null;
+    let activeZodiacType = 'monthly';
 
     function getElementKey(ch) {
       for (const [key, meta] of Object.entries(ELEMENTS_META)) {
@@ -423,9 +509,77 @@
       return { big, digitalRoot, wasit, items, sortedChars };
     }
 
+    function getMonthlyZodiac(month, day) {
+      for (const z of MONTHLY_ZODIAC) {
+        if (z.startM === z.endM) {
+          if (month === z.startM && day >= z.startD && day <= z.endD) return z;
+        } else if (z.startM > z.endM) {
+          if ((month === z.startM && day >= z.startD) || (month === z.endM && day <= z.endD)) return z;
+        } else {
+          if ((month === z.startM && day >= z.startD) || (month === z.endM && day <= z.endD)) return z;
+        }
+      }
+      return MONTHLY_ZODIAC[0];
+    }
+
+    function getYearlyZodiac(year) {
+      const animal = CHINESE_ANIMALS[((year % 12) + 12) % 12];
+      const element = CHINESE_ELEMENTS[((year % 10) + 10) % 10];
+      return { animal, element, year };
+    }
+
+    function getAstroZodiac(dateObj) {
+      const m = dateObj.getMonth() + 1;
+      const d = dateObj.getDate();
+      const y = dateObj.getFullYear();
+      const monthly = getMonthlyZodiac(m, d);
+      const cycleIndex = ((y + m + d) % 12 + 12) % 12;
+      const ascendant = MONTHLY_ZODIAC[cycleIndex];
+      return { monthly, ascendant, dayOfYear: Math.floor((dateObj - new Date(y, 0, 0)) / 86400000) };
+    }
+
+    function renderZodiacBox() {
+      const box = document.getElementById('zodiacResult');
+      if (!lastBirthDate) {
+        box.innerHTML = `
+          <div class="zodiac-title">لم يتم إدخال تاريخ ميلاد بعد</div>
+          <div class="zodiac-meta">اختر تاريخ الميلاد ثم اضغط «احسب» لعرض البرج.</div>
+        `;
+        return;
+      }
+
+      const y = lastBirthDate.getFullYear();
+      const m = lastBirthDate.getMonth() + 1;
+      const d = lastBirthDate.getDate();
+
+      if (activeZodiacType === 'monthly') {
+        const z = getMonthlyZodiac(m, d);
+        box.innerHTML = `
+          <div class="zodiac-title">البرج الشهري: ${z.name}</div>
+          <div class="zodiac-meta">العنصر: <strong>${z.element}</strong> • الفترة: <strong>${z.range}</strong></div>
+        `;
+      } else if (activeZodiacType === 'yearly') {
+        const yz = getYearlyZodiac(y);
+        box.innerHTML = `
+          <div class="zodiac-title">البرج السنوي: ${yz.animal} (${yz.element})</div>
+          <div class="zodiac-meta">سنة الميلاد: <strong>${y}</strong> • دورة الأبراج السنوية</div>
+        `;
+      } else {
+        const az = getAstroZodiac(lastBirthDate);
+        box.innerHTML = `
+          <div class="zodiac-title">البرج الفلكي: ${az.monthly.name} • الطالع التقريبي: ${az.ascendant.name}</div>
+          <div class="zodiac-meta">اليوم رقم <strong>${az.dayOfYear}</strong> من السنة • عنصر البرج: <strong>${az.monthly.element}</strong></div>
+        `;
+      }
+    }
+
     function renderAll() {
       const text = document.getElementById('textInput').value;
+      const birthVal = document.getElementById('birthInput').value;
+
       lastText = text.trim();
+      lastBirthDate = birthVal ? new Date(birthVal + 'T00:00:00') : null;
+
       const res = analyzeText(text);
       lastResult = res;
 
@@ -475,7 +629,7 @@
       document.getElementById('dominantBanner').innerHTML = res.items.length
         ? `<span>الطبع الغالب في النص: <strong style="color:${ELEMENTS_META[topKey].color};">${ELEMENTS_META[topKey].name} ${ELEMENTS_META[topKey].icon}</strong> (${counts[topKey]} حروف)</span>
            <span>الرمز الرقمي للجُمّل: <strong>${res.big}</strong></span>`
-        : `<span>لم يتم العثور على حروف عربية محتسبة.</span>`;
+        : `<span>تم تحديث الحساب.</span>`;
 
       document.getElementById('sortedGroups').innerHTML = Object.entries(ELEMENTS_META).map(([key, meta]) => `
         <div class="group-box">
@@ -494,6 +648,8 @@
           <span class="el">${item.elName}</span>
         </div>
       `).join('');
+
+      renderZodiacBox();
     }
 
     async function exportCard() {
@@ -558,6 +714,15 @@
       link.href = canvas.toDataURL('image/png');
       link.click();
     }
+
+    document.querySelectorAll('.zodiac-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.zodiac-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeZodiacType = btn.dataset.ztype;
+        renderZodiacBox();
+      });
+    });
 
     document.getElementById('calcBtn').addEventListener('click', renderAll);
     document.getElementById('exportBtn').addEventListener('click', exportCard);
