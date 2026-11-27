@@ -3,668 +3,679 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>الاوفاق</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <title>مولّد الأوفاق العددية</title>
   <style>
     :root {
       --bg: #0b0e14;
-      --surface: #121722;
-      --surface-2: #182030;
-      --gold: #d4af37;
-      --gold-bright: #f0cf65;
-      --gold-soft: rgba(212, 175, 55, 0.14);
-      --gold-border: rgba(212, 175, 55, 0.35);
+      --card: #131823;
+      --card-2: #192030;
       --text: #f3f5f8;
-      --muted: #9aa5b8;
-      --radius: 16px;
+      --muted: #9aa4b8;
+      --accent: #ff6a00;
+      --accent-2: #ff9447;
+      --border: rgba(255, 255, 255, 0.09);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      background: radial-gradient(circle at top, #171f30 0%, var(--bg) 62%);
+      font-family: system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+      background: radial-gradient(circle at top, #181f2e 0%, var(--bg) 60%);
       color: var(--text);
-      font-family: 'Cairo', sans-serif;
-      line-height: 1.7;
       min-height: 100vh;
-      padding: 24px 16px 70px;
+      padding: 20px 16px 60px;
+      line-height: 1.6;
+    }
+
+    /* عداد النقاط في أعلى يسار الصفحة */
+    .points-hud {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 999;
+      background: rgba(19, 24, 35, 0.94);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 106, 0, 0.45);
+      border-radius: 14px;
+      padding: 10px 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      max-width: 290px;
+    }
+
+    .points-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .points-badge {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--accent-2);
+    }
+
+    .ad-quick-btn {
+      background: var(--accent);
+      color: #0b0e14;
+      border: none;
+      border-radius: 9px;
+      padding: 6px 10px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .ad-quick-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .status-bar {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 6px;
     }
 
     .container {
-      max-width: 1040px;
-      margin: 0 auto;
-    }
-
-    .nav-bar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-      padding: 12px 16px;
-      background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-    }
-
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .nav-link {
-      text-decoration: none;
-      color: var(--muted);
-      background: var(--surface-2);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 7px 14px;
-      border-radius: 9px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      transition: 0.2s ease;
-    }
-
-    .nav-link.active, .nav-link:hover {
-      color: var(--gold-bright);
-      border-color: var(--gold-border);
-      background: var(--gold-soft);
+      max-width: 960px;
+      margin: 56px auto 0;
     }
 
     header {
       text-align: center;
       margin-bottom: 24px;
-      padding: 22px 18px;
-      background: linear-gradient(180deg, rgba(212,175,55,0.09), rgba(18,23,34,0.68));
-      border: 1px solid var(--gold-border);
-      border-radius: var(--radius);
     }
 
-    header h1 {
-      font-family: 'Amiri', serif;
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      color: var(--gold);
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 6px;
     }
 
-    .card {
-      background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius);
-      padding: 22px;
-      margin-bottom: 20px;
-      box-shadow: 0 14px 35px rgba(0,0,0,0.3);
-    }
-
-    .controls-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: flex-end;
-    }
-
-    .field {
-      flex: 1 1 200px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    label {
-      font-size: 0.9rem;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    input[type="number"], select {
-      background: var(--surface-2);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: var(--text);
-      border-radius: 10px;
-      padding: 12px;
-      font-family: inherit;
-      font-size: 0.96rem;
-      outline: none;
-      width: 100%;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--gold);
-    }
-
-    .mode-btns {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-      align-items: center;
-    }
-
-    .btn {
-      background: linear-gradient(135deg, var(--gold-bright), var(--gold));
-      color: #111;
-      border: none;
-      border-radius: 10px;
-      padding: 11px 20px;
-      font-family: inherit;
-      font-weight: 800;
-      font-size: 0.92rem;
-      cursor: pointer;
-      transition: transform 0.15s ease, background 0.2s ease;
-    }
-
-    .btn:hover { transform: translateY(-1px); }
-
-    .btn-mode {
-      background: var(--surface-2);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    .btn-mode.active {
-      background: var(--gold-soft);
-      color: var(--gold-bright);
-      border-color: var(--gold);
-    }
-
-    .summary-strip {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .summary-box {
-      background: var(--surface-2);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      padding: 14px;
-      text-align: center;
-    }
-
-    .summary-box .k { font-size: 0.85rem; color: var(--muted); }
-    .summary-box .v {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: var(--gold-bright);
-      margin-top: 4px;
-    }
-
-    .wafq-wrapper {
-      overflow-x: auto;
-      padding: 10px 0;
-      min-height: 90px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .empty-hint {
+    .subtitle {
       color: var(--muted);
       font-size: 0.95rem;
     }
 
-    .wafq-grid {
-      display: grid;
-      gap: 8px;
-      margin: 0 auto;
-      width: fit-content;
-    }
-
-    .wafq-cell {
-      min-width: 96px;
-      min-height: 76px;
-      padding: 8px 6px;
-      background: var(--surface-2);
-      border: 1px solid var(--gold-border);
-      border-radius: 10px;
+    .nav-links {
       display: flex;
-      align-items: center;
       justify-content: center;
-      text-align: center;
-      font-weight: 800;
-      font-size: 1.02rem;
-      color: var(--text);
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
     }
 
-    .wafq-cell.center-cell {
-      background: var(--gold-soft);
-      border-color: var(--gold-bright);
-      color: var(--gold-bright);
+    .nav-btn {
+      text-decoration: none;
+      color: var(--text);
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .nav-btn.primary {
+      background: var(--accent);
+      color: #0b0e14;
+      border-color: transparent;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: var(--accent-2);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: #d7dde8;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #0b0e14;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .btn.secondary {
+      background: var(--card-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .actions-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .cost-info {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+
+    .matrix-wrap {
+      overflow-x: auto;
+      margin-top: 16px;
+      padding-bottom: 8px;
+    }
+
+    table.wafq-grid {
+      border-collapse: collapse;
+      margin: 0 auto;
+      background: var(--card-2);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    table.wafq-grid td {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      min-width: 56px;
+      color: #fff;
+    }
+
+    .meta-box {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 14px;
+      font-size: 0.9rem;
+    }
+
+    .toast {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      display: none;
+    }
+
+    .toast.ok {
+      display: block;
+      background: rgba(34, 197, 94, 0.14);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #86efac;
+    }
+
+    .toast.err {
+      display: block;
+      background: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .muted-note {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 8px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <nav class="nav-bar">
-      <div class="nav-links">
-        <a href="index.html" class="nav-link">حاسبة الجُمّل والطبائع</a>
-        <a href="wafq.html" class="nav-link active">الاوفاق</a>
-      </div>
-    </nav>
 
+  <!-- عداد النقاط وشريط الحالة في أعلى اليسار -->
+  <aside class="points-hud" aria-live="polite">
+    <div class="points-top">
+      <div class="points-badge" id="pointsDisplay">النقاط: 0</div>
+      <button class="ad-quick-btn" id="watchAdBtn" type="button">+10 إعلان</button>
+    </div>
+    <div class="status-bar" id="statusBar">جاري تحميل حالة النقاط...</div>
+  </aside>
+
+  <div class="container">
     <header>
-      <h1>الاوفاق</h1>
+      <h1>مولّد الأوفاق العددية</h1>
+      <p class="subtitle">توليد مصفوفات أوفاق بأعداد صحيحة فريدة — تُخصم النقاط بمجرد التوليد حسب حجم الوفق</p>
+      <div class="nav-links">
+        <a class="nav-btn" href="index.html">الحاسبة والأبراج</a>
+        <a class="nav-btn primary" href="wafq.html">مولّد الأوفاق</a>
+      </div>
     </header>
 
     <section class="card">
-      <div class="controls-row">
-        <div class="field">
-          <label for="targetSum">الرقم المستهدف (المجموع)</label>
-          <input type="number" id="targetSum" min="1" step="1" placeholder="أدخل رقماً..." />
+      <div class="card-title">المكافآت السريعة</div>
+      <div class="actions-row">
+        <button class="btn secondary" id="dailyBonusBtn" type="button">مكافأة الدخول اليومي</button>
+        <button class="btn secondary" id="shareResultBtn" type="button">مشاركة النتيجة (+40 نقطة)</button>
+        <button class="btn secondary" id="copyInviteBtn" type="button">نسخ رابط دعوة صديق (+50 نقطة)</button>
+      </div>
+      <div class="toast" id="systemToast"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">إعدادات توليد الوفق</div>
+      <div class="grid-2">
+        <div>
+          <label for="targetSumInput">المجموع المطلوب (عدد صحيح موجب)</label>
+          <input type="number" id="targetSumInput" min="10" step="1" placeholder="مثال: 150" />
         </div>
-        <div class="field">
-          <label for="gridSize">مرتبة الوفق</label>
-          <select id="gridSize">
-            <option value="3">3 × 3</option>
-            <option value="4">4 × 4</option>
-            <option value="5">5 × 5</option>
-            <option value="6">6 × 6</option>
-            <option value="7">7 × 7</option>
-            <option value="8">8 × 8</option>
-            <option value="9">9 × 9</option>
-            <option value="10">10 × 10</option>
+        <div>
+          <label for="sizeSelect">حجم الوفق (المصفوفة)</label>
+          <select id="sizeSelect">
+            <option value="3">3×3 (ثلاثي — 10 نقاط)</option>
+            <option value="4">4×4 (رباعي — 10 نقاط)</option>
+            <option value="5">5×5 (خماسي — 15 نقطة)</option>
+            <option value="6">6×6 (سداسي — 15 نقطة)</option>
+            <option value="7">7×7 (سباعي — 20 نقطة)</option>
+            <option value="8">8×8 (ثماني — 20 نقطة)</option>
+            <option value="9">9×9 (تساعي — 25 نقطة)</option>
+            <option value="10">10×10 (عشاري — 25 نقطة)</option>
           </select>
         </div>
       </div>
 
-      <div class="mode-btns">
-        <button class="btn" id="generateBtn">توليد</button>
-        <button class="btn btn-mode active" id="btnNumeric" data-mode="numeric">وفق رقمي</button>
-        <button class="btn btn-mode" id="btnWithAl" data-mode="withAl">وفق اسمي (بالـ التعريف)</button>
-        <button class="btn btn-mode" id="btnWithoutAl" data-mode="withoutAl">وفق اسمي (بدون الـ التعريف)</button>
+      <div class="cost-info" id="wafqCostLabel">تكلفة التوليد الحالية: 10 نقاط</div>
+
+      <div class="actions-row">
+        <button class="btn" id="generateWafqBtn" type="button">توليد الوفق الآن</button>
       </div>
 
-      <div class="summary-strip">
-        <div class="summary-box">
-          <div class="k">المرتبة</div>
-          <div class="v" id="metaSize">—</div>
-        </div>
-        <div class="summary-box">
-          <div class="k">المجموع</div>
-          <div class="v" id="metaSum">—</div>
-        </div>
-        <div class="summary-box">
-          <div class="k">النمط الحالي</div>
-          <div class="v" id="metaMode">وفق رقمي</div>
-        </div>
+      <div class="muted-note">
+        أسعار التوليد: 3×3 و4×4 (10 نقاط) • 5×5 و6×6 (15 نقطة) • 7×7 و8×8 (20 نقطة) • 9×9 و10×10 (25 نقطة).
       </div>
-    </section>
 
-    <section class="card">
-      <div class="wafq-wrapper" id="wafqOutput">
-        <div class="empty-hint">اختر البيانات واضغط «توليد»</div>
-      </div>
+      <div id="wafqResultArea"></div>
     </section>
   </div>
 
   <script>
-    const ABJAD_VALUES = {
-      'ا': 1, 'أ': 1, 'إ': 1, 'آ': 1, 'ى': 1, 'ء': 1,
-      'ب': 2, 'ج': 3, 'د': 4, 'ه': 5, 'ة': 5, 'و': 6, 'ؤ': 6,
-      'ز': 7, 'ح': 8, 'ط': 9, 'ي': 10, 'ئ': 10, 'ك': 20, 'ل': 30,
-      'م': 40, 'ن': 50, 'س': 60, 'ع': 70, 'ف': 80, 'ص': 90,
-      'ق': 100, 'ر': 200, 'ش': 300, 'ت': 400, 'ث': 500, 'خ': 600,
-      'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
+    const SMART_LINK_URL = "https://asiafilm.org/4/56aaa9153709df41930060678aa64610";
+    const STORAGE_KEY = "abjad_wafq_points_state_v1";
+    const REF_CLAIMED_KEY = "abjad_wafq_ref_claimed_v1";
+
+    const CONFIG = {
+      WELCOME_BONUS: 25,
+      AD_REWARD: 10,
+      SHARE_REWARD: 40,
+      REFERRAL_REWARD: 50,
+      AD_COOLDOWN_SECONDS: 12,
+      MAX_ADS_PER_HOUR: 12,
+      MAX_ADS_PER_DAY: 40,
+      WEEKLY_DAILY_REWARDS: [5, 10, 15, 20, 25, 30, 40]
     };
 
-    const ASMA_WITH_AL = [
-      'الله', 'الرحمن', 'الرحيم', 'الملك', 'القدوس', 'السلام', 'المؤمن', 'المهيمن', 'العزيز', 'الجبار',
-      'المتكبر', 'الخالق', 'البارئ', 'المصور', 'الغفار', 'القهار', 'الوهاب', 'الرزاق', 'الفتاح', 'العليم',
-      'القابض', 'الباسط', 'الخافض', 'الرافع', 'المعز', 'المذل', 'السميع', 'البصير', 'الحكم', 'العدل',
-      'اللطيف', 'الخبير', 'الحليم', 'العظيم', 'الغفور', 'الشكور', 'العلي', 'الكبير', 'الحفيظ', 'المقيت',
-      'الحسيب', 'الجليل', 'الكريم', 'الرقيب', 'المجيب', 'الواسع', 'الحكيم', 'الودود', 'المجيد', 'الباعث',
-      'الشهيد', 'الحق', 'الوكيل', 'القوي', 'المتين', 'الولي', 'الحميد', 'المحصي', 'المبدئ', 'المعيد',
-      'المحيي', 'المميت', 'الحي', 'القيوم', 'الواجد', 'الماجد', 'الواحد', 'الأحد', 'الصمد', 'القادر',
-      'المقتدر', 'المقدم', 'المؤخر', 'الأول', 'الآخر', 'الظاهر', 'الباطن', 'الوالي', 'المتعالي', 'البر',
-      'التواب', 'المنتقم', 'العفو', 'الرؤوف', 'مالك الملك', 'ذو الجلال والإكرام', 'المقسط', 'الجامع', 'الغني', 'المغني',
-      'المانع', 'الضار', 'النافع', 'النور', 'الهادي', 'البديع', 'الباقي', 'الوارث', 'الرشيد', 'الصبور'
-    ];
-
-    function stripAl(name) {
-      if (name === 'الله') return 'الله';
-      return name
-        .split(' ')
-        .map(word => word === 'الله' ? 'الله' : (word.startsWith('ال') ? word.slice(2) : word))
-        .join(' ');
+    function getWafqCost(n) {
+      if (n === 3 || n === 4) return 10;
+      if (n === 5 || n === 6) return 15;
+      if (n === 7 || n === 8) return 20;
+      return 25; // 9 و 10
     }
 
-    function calcAbjad(text) {
-      let total = 0;
-      for (const ch of text) {
-        if (ABJAD_VALUES[ch]) total += ABJAD_VALUES[ch];
-      }
-      return total;
+    function getTodayKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     }
 
-    const ASMA_WITH_AL_LIST = ASMA_WITH_AL.map(name => ({
-      display: name,
-      value: calcAbjad(name)
-    }));
+    function generateRefCode() {
+      return "REF-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
 
-    const ASMA_WITHOUT_AL_LIST = ASMA_WITH_AL.map(name => {
-      const stripped = stripAl(name);
+    function getDefaultState() {
       return {
-        display: stripped,
-        value: calcAbjad(stripped)
+        points: CONFIG.WELCOME_BONUS,
+        refCode: generateRefCode(),
+        invitedCount: 0,
+        lastResultSummary: "",
+        lastCalculatedSum: null,
+        lastShareDate: "",
+        adTimestamps: [],
+        daily: {
+          streakDay: 0,
+          lastClaimDate: ""
+        }
       };
-    });
-
-    let currentMode = 'numeric';
-    let lastGeneratedState = null;
-
-    function getUnitOrderMatrix(n) {
-      const total = n * n;
-      const m = Array.from({ length: n }, () => Array(n).fill(0));
-
-      if (n % 2 === 1) {
-        let r = 0;
-        let c = Math.floor(n / 2);
-        for (let k = 1; k <= total; k++) {
-          m[r][c] = k;
-          const nr = (r - 1 + n) % n;
-          const nc = (c + 1) % n;
-          if (m[nr][nc] !== 0) {
-            r = (r + 1) % n;
-          } else {
-            r = nr;
-            c = nc;
-          }
-        }
-        return m;
-      }
-
-      if (n % 4 === 0) {
-        let idx = 1;
-        for (let r = 0; r < n; r++) {
-          for (let c = 0; c < n; c++) {
-            m[r][c] = idx++;
-          }
-        }
-        for (let r = 0; r < n; r++) {
-          for (let c = 0; c < n; c++) {
-            if ((r % 4 === c % 4) || ((r % 4) + (c % 4) === 3)) {
-              m[r][c] = (total + 1) - m[r][c];
-            }
-          }
-        }
-        return m;
-      }
-
-      const half = n / 2;
-      const subSize = half * half;
-      const subOrder = getUnitOrderMatrix(half);
-      const quadrantOffsets = [
-        { rOff: 0, cOff: 0, add: 0 },
-        { rOff: half, cOff: half, add: subSize },
-        { rOff: 0, cOff: half, add: 2 * subSize },
-        { rOff: half, cOff: 0, add: 3 * subSize }
-      ];
-
-      for (const q of quadrantOffsets) {
-        for (let r = 0; r < half; r++) {
-          for (let c = 0; c < half; c++) {
-            m[r + q.rOff][c + q.cOff] = subOrder[r][c] + q.add;
-          }
-        }
-      }
-
-      const k = (n - 2) / 4;
-      for (let r = 0; r < half; r++) {
-        for (let c = 0; c < k; c++) {
-          const actualC = (r === Math.floor(half / 2)) ? c + 1 : c;
-          const tmp = m[r][actualC];
-          m[r][actualC] = m[r + half][actualC];
-          m[r + half][actualC] = tmp;
-        }
-      }
-      for (let r = 0; r < half; r++) {
-        for (let c = 0; c < k - 1; c++) {
-          const col = n - 1 - c;
-          const tmp = m[r][col];
-          m[r][col] = m[r + half][col];
-          m[r + half][col] = tmp;
-        }
-      }
-
-      return m;
     }
 
-    function buildIntegerMagicMatrix(n, targetSum) {
-      const total = n * n;
-      const base = getUnitOrderMatrix(n);
-      const avgUnitSum = (total + 1) / 2;
-
-      let step = 1;
-      const rawKey = (targetSum - (n - 1) * avgUnitSum) / n;
-      let key = Math.floor(rawKey);
-      if (key < 1) key = 1;
-
-      const remainder = targetSum - (n * key + (n - 1) * avgUnitSum * step);
-      const extraPerCell = Math.round(remainder / (n * avgUnitSum));
-      if (extraPerCell !== 0) {
-        step = Math.max(1, step + extraPerCell);
-        key = Math.max(1, Math.floor((targetSum - (n - 1) * avgUnitSum * step) / n));
-      }
-
-      const matrix = Array.from({ length: n }, () => Array(n).fill(0));
-      const used = new Set();
-
-      for (let r = 0; r < n; r++) {
-        for (let c = 0; c < n; c++) {
-          let val = Math.round(key + (base[r][c] - 1) * step);
-          if (val < 1) val = 1;
-          while (used.has(val)) {
-            val += 1;
-          }
-          used.add(val);
-          matrix[r][c] = val;
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          const fresh = getDefaultState();
+          saveState(fresh);
+          return fresh;
         }
+        const parsed = JSON.parse(raw);
+        return {
+          ...getDefaultState(),
+          ...parsed,
+          daily: {
+            ...getDefaultState().daily,
+            ...(parsed.daily || {})
+          },
+          adTimestamps: Array.isArray(parsed.adTimestamps) ? parsed.adTimestamps : []
+        };
+      } catch {
+        return getDefaultState();
+      }
+    }
+
+    function saveState(s) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+
+    let state = loadState();
+    let adCooldownTimer = null;
+    let adRemainingSeconds = 0;
+
+    function showToast(msg, type = "ok") {
+      const el = document.getElementById("systemToast");
+      el.textContent = msg;
+      el.className = `toast ${type}`;
+    }
+
+    function pruneAdTimestamps() {
+      const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+      state.adTimestamps = state.adTimestamps.filter((ts) => ts >= oneDayAgo);
+    }
+
+    function getAdCounts() {
+      pruneAdTimestamps();
+      const now = Date.now();
+      const oneHourAgo = now - 60 * 60 * 1000;
+      return {
+        lastHour: state.adTimestamps.filter((ts) => ts >= oneHourAgo).length,
+        last24h: state.adTimestamps.length
+      };
+    }
+
+    function getNextDailyRewardInfo() {
+      const today = getTodayKey();
+      const alreadyClaimedToday = state.daily.lastClaimDate === today;
+      const nextIndex = state.daily.streakDay >= 7 ? 0 : state.daily.streakDay;
+      const reward = CONFIG.WEEKLY_DAILY_REWARDS[nextIndex];
+      return { alreadyClaimedToday, reward };
+    }
+
+    function updateWafqCostUI() {
+      const n = parseInt(document.getElementById("sizeSelect").value, 10);
+      const cost = getWafqCost(n);
+      document.getElementById("wafqCostLabel").textContent = `تكلفة توليد وفق ${n}×${n}: ${cost} نقاط`;
+    }
+
+    function renderHUD() {
+      pruneAdTimestamps();
+      saveState(state);
+
+      document.getElementById("pointsDisplay").textContent = `النقاط: ${state.points}`;
+
+      const { lastHour, last24h } = getAdCounts();
+      const watchBtn = document.getElementById("watchAdBtn");
+
+      if (adRemainingSeconds > 0) {
+        watchBtn.disabled = true;
+        watchBtn.textContent = `انتظر ${adRemainingSeconds}ث`;
+      } else if (lastHour >= CONFIG.MAX_ADS_PER_HOUR || last24h >= CONFIG.MAX_ADS_PER_DAY) {
+        watchBtn.disabled = true;
+        watchBtn.textContent = "حد الإعلانات";
+      } else {
+        watchBtn.disabled = false;
+        watchBtn.textContent = `+${CONFIG.AD_REWARD} إعلان`;
       }
 
+      const dailyInfo = getNextDailyRewardInfo();
+      const dailyBtn = document.getElementById("dailyBonusBtn");
+      if (dailyInfo.alreadyClaimedToday) {
+        dailyBtn.disabled = true;
+        dailyBtn.textContent = `تم استلام اليوم (${state.daily.streakDay}/7)`;
+      } else {
+        dailyBtn.disabled = false;
+        dailyBtn.textContent = `دخول يومي (+${dailyInfo.reward} نقطة)`;
+      }
+
+      document.getElementById("statusBar").textContent =
+        `إعلانات الساعة: ${lastHour}/${CONFIG.MAX_ADS_PER_HOUR} • اليوم: ${last24h}/${CONFIG.MAX_ADS_PER_DAY}`;
+
+      updateWafqCostUI();
+    }
+
+    function handleIncomingReferral() {
+      const params = new URLSearchParams(window.location.search);
+      const ref = (params.get("ref") || "").trim();
+      if (!ref || ref === state.refCode || localStorage.getItem(REF_CLAIMED_KEY)) return;
+      localStorage.setItem(REF_CLAIMED_KEY, ref);
+      state.points += CONFIG.REFERRAL_REWARD;
+      state.invitedCount += 1;
+      saveState(state);
+      showToast(`تم تفعيل دعوة الصديق وحصلت على +${CONFIG.REFERRAL_REWARD} نقطة!`, "ok");
+    }
+
+    function handleWatchAd() {
+      const { lastHour, last24h } = getAdCounts();
+      if (lastHour >= CONFIG.MAX_ADS_PER_HOUR) {
+        showToast(`بلغت الحد الأقصى للإعلانات في الساعة (${CONFIG.MAX_ADS_PER_HOUR}).`, "err");
+        renderHUD();
+        return;
+      }
+      if (last24h >= CONFIG.MAX_ADS_PER_DAY) {
+        showToast(`بلغت الحد الأقصى للإعلانات اليومي (${CONFIG.MAX_ADS_PER_DAY}).`, "err");
+        renderHUD();
+        return;
+      }
+      if (adRemainingSeconds > 0) return;
+
+      window.open(SMART_LINK_URL, "_blank", "noopener,noreferrer");
+      adRemainingSeconds = CONFIG.AD_COOLDOWN_SECONDS;
+      renderHUD();
+
+      clearInterval(adCooldownTimer);
+      adCooldownTimer = setInterval(() => {
+        adRemainingSeconds -= 1;
+        if (adRemainingSeconds <= 0) {
+          clearInterval(adCooldownTimer);
+          adRemainingSeconds = 0;
+          state.points += CONFIG.AD_REWARD;
+          state.adTimestamps.push(Date.now());
+          saveState(state);
+          showToast(`تمت إضافة +${CONFIG.AD_REWARD} نقطة بعد إتمام الإعلان.`, "ok");
+          renderHUD();
+        } else {
+          renderHUD();
+        }
+      }, 1000);
+    }
+
+    function handleDailyBonus() {
+      const info = getNextDailyRewardInfo();
+      if (info.alreadyClaimedToday) {
+        showToast("لقد استلمت مكافأة اليوم بالفعل.", "err");
+        return;
+      }
+      state.daily.streakDay = state.daily.streakDay >= 7 ? 1 : state.daily.streakDay + 1;
+      state.daily.lastClaimDate = getTodayKey();
+      state.points += info.reward;
+      saveState(state);
+      showToast(`حصلت على +${info.reward} نقطة (اليوم ${state.daily.streakDay} من 7).`, "ok");
+      renderHUD();
+    }
+
+    async function handleShareResult() {
+      const today = getTodayKey();
+      if (state.lastShareDate === today) {
+        showToast("لقد حصلت على مكافأة المشاركة لليوم (+40 نقطة).", "err");
+        return;
+      }
+      const text = state.lastResultSummary
+        ? `${state.lastResultSummary} — عبر مولّد الأوفاق`
+        : "جرّب مولّد الأوفاق العددية وحاسبة الجُمّل الآن!";
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: "مولّد الأوفاق العددية", text, url: window.location.href });
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(`${text} ${window.location.href}`);
+        }
+      } catch {
+        showToast("لم تكتمل عملية المشاركة.", "err");
+        return;
+      }
+      state.lastShareDate = today;
+      state.points += CONFIG.SHARE_REWARD;
+      saveState(state);
+      showToast(`تمت المشاركة وحصلت على +${CONFIG.SHARE_REWARD} نقطة!`, "ok");
+      renderHUD();
+    }
+
+    async function handleCopyInvite() {
+      const inviteUrl = `${window.location.origin}${window.location.pathname}?ref=${encodeURIComponent(state.refCode)}`;
+      try {
+        await navigator.clipboard.writeText(inviteUrl);
+      } catch {
+        prompt("انسخ رابط الدعوة:", inviteUrl);
+      }
+      showToast(`تم نسخ رابط الدعوة! ستحصل على +${CONFIG.REFERRAL_REWARD} نقطة لكل صديق جديد.`, "ok");
+    }
+
+    // توليد مصفوفة أعداد صحيحة فريدة تتطابق مع المجموع المطلوب قدر الإمكان
+    function buildUniqueIntegerMatrix(n, targetSum) {
+      const totalCells = n * n;
+      // نبدأ من أعداد صحيحة متتالية فريدة ثم نوزع الفارق لبلوغ المجموع المطلوب
+      const arr = Array.from({ length: totalCells }, (_, i) => i + 1);
+      const currentBaseSum = (totalCells * (totalCells + 1)) / 2;
+      let diff = targetSum - currentBaseSum;
+
+      const stepSign = diff >= 0 ? 1 : -1;
+      let absDiff = Math.abs(diff);
+
+      // نزيد أو ننقص الخلايا من النهاية وبخطوات متدرجة للحفاظ على الفردية والترتيب
+      let idx = totalCells - 1;
+      while (absDiff > 0) {
+        const addChunk = Math.min(absDiff, Math.max(1, Math.floor(absDiff / Math.max(1, totalCells))));
+        arr[idx] += stepSign * addChunk;
+        absDiff -= addChunk;
+        idx -= 1;
+        if (idx < 0) idx = totalCells - 1;
+      }
+
+      // ضمان تفرد القيم كأعداد صحيحة
+      const seen = new Set();
+      for (let i = 0; i < arr.length; i++) {
+        arr[i] = Math.round(arr[i]);
+        while (seen.has(arr[i])) {
+          arr[i] += 1;
+        }
+        seen.add(arr[i]);
+      }
+
+      // ضبط آخر عنصر ليطابق المجموع الكلي بدقة دون تكرار
+      const sumWithoutLast = arr.slice(0, -1).reduce((a, b) => a + b, 0);
+      const exactLast = targetSum - sumWithoutLast;
+      if (!seen.has(exactLast)) {
+        arr[arr.length - 1] = exactLast;
+      }
+
+      // توزيع عشوائي للمواقع داخل المصفوفة
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+
+      const matrix = [];
+      for (let r = 0; r < n; r++) {
+        matrix.push(arr.slice(r * n, (r + 1) * n));
+      }
       return matrix;
     }
 
-    function getTraversalOrderFromCenter(n) {
-      const order = [];
-      const visited = Array.from({ length: n }, () => Array(n).fill(false));
-      const startR = Math.floor((n - 1) / 2);
-      const startC = Math.floor((n - 1) / 2);
+    function handleGenerateWafq() {
+      const rawSum = parseInt(document.getElementById("targetSumInput").value, 10);
+      const n = parseInt(document.getElementById("sizeSelect").value, 10);
+      const cost = getWafqCost(n);
 
-      order.push({ r: startR, c: startC });
-      visited[startR][startC] = true;
-
-      let r = startR;
-      let c = startC;
-      let step = 1;
-      const dirs = [
-        [0, 1],
-        [1, 0],
-        [0, -1],
-        [-1, 0]
-      ];
-      let dirIdx = 0;
-
-      while (order.length < n * n) {
-        for (let rep = 0; rep < 2; rep++) {
-          const [dr, dc] = dirs[dirIdx % 4];
-          for (let s = 0; s < step; s++) {
-            r += dr;
-            c += dc;
-            if (r >= 0 && r < n && c >= 0 && c < n && !visited[r][c]) {
-              order.push({ r, c });
-              visited[r][c] = true;
-            }
-          }
-          dirIdx++;
-        }
-        step++;
+      if (!Number.isInteger(rawSum) || rawSum <= 0) {
+        showToast("يرجى إدخال مجموع صحيح موجب (مثال: 150).", "err");
+        return;
       }
 
-      return order;
+      if (state.points < cost) {
+        showToast(`رصيدك الحالي (${state.points}) غير كافٍ لتوليد وفق ${n}×${n} (المطلوب: ${cost} نقاط).`, "err");
+        return;
+      }
+
+      // خصم النقاط بمجرد التوليد
+      state.points -= cost;
+      const matrix = buildUniqueIntegerMatrix(n, rawSum);
+      const actualSum = matrix.flat().reduce((a, b) => a + b, 0);
+
+      state.lastResultSummary = `وفق ${n}×${n} بمجموع ${actualSum}`;
+      saveState(state);
+      renderHUD();
+
+      const rowsHtml = matrix
+        .map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`)
+        .join("");
+
+      document.getElementById("wafqResultArea").innerHTML = `
+        <div class="meta-box">
+          <div><strong>حجم المصفوفة:</strong> ${n}×${n} (${n * n} خانة بأعداد صحيحة فريدة)</div>
+          <div><strong>المجموع الكلي للمصفوفة:</strong> ${actualSum} • <strong>النقاط المخصومة:</strong> ${cost} نقاط</div>
+        </div>
+        <div class="matrix-wrap">
+          <table class="wafq-grid">
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+      `;
+
+      showToast(`تم توليد الوفق ${n}×${n} وخصم ${cost} نقاط من رصيدك.`, "ok");
     }
 
-    function resolveNameByRule(cellValue, namesList, usedNames) {
-      const MAX_EXP = 9;
-      const cellScaled = [];
-      for (let k = 0; k <= MAX_EXP; k++) {
-        const v = cellValue * Math.pow(10, k);
-        if (!Number.isSafeInteger(v)) break;
-        cellScaled.push(v);
-      }
+    document.getElementById("sizeSelect").addEventListener("change", updateWafqCostUI);
+    document.getElementById("watchAdBtn").addEventListener("click", handleWatchAd);
+    document.getElementById("dailyBonusBtn").addEventListener("click", handleDailyBonus);
+    document.getElementById("shareResultBtn").addEventListener("click", handleShareResult);
+    document.getElementById("copyInviteBtn").addEventListener("click", handleCopyInvite);
+    document.getElementById("generateWafqBtn").addEventListener("click", handleGenerateWafq);
 
-      for (const candidate of namesList) {
-        if (!candidate.value || candidate.value <= 0) continue;
-        if (usedNames.has(candidate.display)) continue;
-
-        for (let m = 0; m <= MAX_EXP; m++) {
-          const nameVal = candidate.value * Math.pow(10, m);
-          if (!Number.isSafeInteger(nameVal)) break;
-
-          for (const cVal of cellScaled) {
-            if (cVal === nameVal) {
-              return candidate.display;
-            }
-          }
-        }
-      }
-
-      let bestUnused = null;
-      let bestUnusedDiff = Infinity;
-
-      for (const candidate of namesList) {
-        if (!candidate.value || candidate.value <= 0) continue;
-        if (usedNames.has(candidate.display)) continue;
-
-        for (let m = 0; m <= MAX_EXP; m++) {
-          const nameVal = candidate.value * Math.pow(10, m);
-          if (!Number.isSafeInteger(nameVal)) break;
-
-          for (const cVal of cellScaled) {
-            const diff = Math.abs(cVal - nameVal);
-            if (diff < bestUnusedDiff) {
-              bestUnusedDiff = diff;
-              bestUnused = candidate.display;
-            }
-          }
-        }
-      }
-
-      if (bestUnused) return bestUnused;
-
-      let bestAny = namesList[0].display;
-      let bestAnyDiff = Infinity;
-
-      for (const candidate of namesList) {
-        if (!candidate.value || candidate.value <= 0) continue;
-
-        for (let m = 0; m <= MAX_EXP; m++) {
-          const nameVal = candidate.value * Math.pow(10, m);
-          if (!Number.isSafeInteger(nameVal)) break;
-
-          for (const cVal of cellScaled) {
-            const diff = Math.abs(cVal - nameVal);
-            if (diff < bestAnyDiff) {
-              bestAnyDiff = diff;
-              bestAny = candidate.display;
-            }
-          }
-        }
-      }
-
-      return bestAny;
+    // قراءة ?sum= إذا تم تمريره من index.html
+    const urlParams = new URLSearchParams(window.location.search);
+    const sumParam = parseInt(urlParams.get("sum") || "", 10);
+    if (Number.isInteger(sumParam) && sumParam > 0) {
+      document.getElementById("targetSumInput").value = sumParam;
     }
 
-    function renderFromState(state) {
-      if (!state) return;
-      const { n, targetSum, matrix } = state;
-
-      const modeNames = {
-        numeric: 'وفق رقمي',
-        withAl: 'وفق اسمي (بالـ التعريف)',
-        withoutAl: 'وفق اسمي (بدون الـ التعريف)'
-      };
-
-      document.getElementById('metaSize').textContent = `${n} × ${n}`;
-      document.getElementById('metaSum').textContent = targetSum.toLocaleString('ar');
-      document.getElementById('metaMode').textContent = modeNames[currentMode];
-
-      const traversal = getTraversalOrderFromCenter(n);
-      const displayGrid = Array.from({ length: n }, () => Array(n).fill(''));
-      const usedNames = new Set();
-      const activeNames = currentMode === 'withAl' ? ASMA_WITH_AL_LIST : ASMA_WITHOUT_AL_LIST;
-
-      for (const { r, c } of traversal) {
-        const val = matrix[r][c];
-        if (currentMode === 'numeric') {
-          displayGrid[r][c] = val.toLocaleString('ar');
-        } else {
-          const resolvedName = resolveNameByRule(val, activeNames, usedNames);
-          usedNames.add(resolvedName);
-          displayGrid[r][c] = resolvedName;
-        }
-      }
-
-      const gridEl = document.createElement('div');
-      gridEl.className = 'wafq-grid';
-      gridEl.style.gridTemplateColumns = `repeat(${n}, minmax(96px, 1fr))`;
-
-      const centerR = Math.floor((n - 1) / 2);
-      const centerC = Math.floor((n - 1) / 2);
-
-      for (let r = 0; r < n; r++) {
-        for (let c = 0; c < n; c++) {
-          const cell = document.createElement('div');
-          const isCenter = (r === centerR && c === centerC);
-          cell.className = 'wafq-cell' + (isCenter ? ' center-cell' : '');
-          cell.textContent = displayGrid[r][c];
-          gridEl.appendChild(cell);
-        }
-      }
-
-      const out = document.getElementById('wafqOutput');
-      out.innerHTML = '';
-      out.appendChild(gridEl);
-    }
-
-    function generateWafq() {
-      const n = parseInt(document.getElementById('gridSize').value, 10);
-      const rawSum = parseInt(document.getElementById('targetSum').value, 10);
-      const defaultSum = (n * (n * n + 1)) / 2;
-      const targetSum = Number.isFinite(rawSum) && rawSum > 0 ? rawSum : defaultSum;
-
-      const matrix = buildIntegerMagicMatrix(n, targetSum);
-      lastGeneratedState = { n, targetSum, matrix };
-      renderFromState(lastGeneratedState);
-    }
-
-    document.querySelectorAll('.btn-mode').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.btn-mode').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentMode = btn.dataset.mode;
-        if (lastGeneratedState) {
-          renderFromState(lastGeneratedState);
-        } else {
-          const modeNames = {
-            numeric: 'وفق رقمي',
-            withAl: 'وفق اسمي (بالـ التعريف)',
-            withoutAl: 'وفق اسمي (بدون الـ التعريف)'
-          };
-          document.getElementById('metaMode').textContent = modeNames[currentMode];
-        }
-      });
-    });
-
-    document.getElementById('generateBtn').addEventListener('click', generateWafq);
-
-    const params = new URLSearchParams(window.location.search);
-    const paramSum = parseInt(params.get('sum'), 10);
-    if (Number.isFinite(paramSum) && paramSum > 0) {
-      document.getElementById('targetSum').value = String(paramSum);
-    }
+    handleIncomingReferral();
+    renderHUD();
   </script>
 </body>
 </html>
