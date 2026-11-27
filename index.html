@@ -74,9 +74,52 @@
       padding-top: 6px;
     }
 
-    .container {
-      max-width: 920px;
+    .page-shell {
+      max-width: 1280px;
       margin: 56px auto 0;
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr) 160px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .side-ads {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .banner-slot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 14px auto;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .banner-slot iframe {
+      border: 0;
+      background: transparent;
+      display: block;
+    }
+
+    .desktop-only-banner { display: flex; }
+    .mobile-only-banner { display: none; }
+
+    @media (max-width: 1024px) {
+      .page-shell {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .side-ads {
+        display: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .desktop-only-banner { display: none; }
+      .mobile-only-banner { display: flex; }
     }
 
     header {
@@ -264,79 +307,140 @@
     <div class="status-bar" id="statusBar">جاري تحميل حالة النقاط...</div>
   </aside>
 
-  <div class="container">
-    <header>
-      <h1>حاسبة الجُمّل والحروف والأبراج</h1>
-      <p class="subtitle">حساب الجُمّل بالأبجدية، تحليل نسب طبائع الحروف، واستخراج البرج الفلكي وطبعه</p>
-      <div class="nav-links">
-        <a class="nav-btn primary" href="index.html">الحاسبة والأبراج</a>
-        <a class="nav-btn" href="wafq.html">مولّد الأوفاق</a>
-      </div>
-    </header>
+  <div class="page-shell">
+    <!-- عمود الإعلانات الجانبي الأيمن (160x600 و 160x300) -->
+    <aside class="side-ads" aria-label="إعلانات جانبية">
+      <div class="banner-slot" data-ad-key="2c097ab44a64c6c0606b2fb1836488bd" data-ad-w="160" data-ad-h="600"></div>
+      <div class="banner-slot" data-ad-key="3dcfa0e5cf63449c449860c04792b50a" data-ad-w="160" data-ad-h="300"></div>
+    </aside>
 
-    <section class="card">
-      <div class="card-title">مركز النقاط والمكافآت</div>
-      <div class="actions-row">
-        <button class="btn secondary" id="dailyBonusBtn" type="button">مكافأة الدخول اليومي</button>
-        <button class="btn secondary" id="shareResultBtn" type="button">مشاركة النتيجة (+40 نقطة)</button>
-        <button class="btn secondary" id="copyInviteBtn" type="button">نسخ رابط دعوة صديق (+50 نقطة)</button>
-      </div>
-      <div class="muted-note" id="dailyCycleInfo"></div>
-      <div class="toast" id="systemToast"></div>
-    </section>
+    <main class="container">
+      <header>
+        <h1>حاسبة الجُمّل والحروف والأبراج</h1>
+        <p class="subtitle">حساب الجُمّل بالأبجدية، تحليل نسب طبائع الحروف، واستخراج البرج الفلكي وطبعه</p>
+        <div class="nav-links">
+          <a class="nav-btn primary" href="index.html">الحاسبة والأبراج</a>
+          <a class="nav-btn" href="wafq.html">مولّد الأوفاق</a>
+        </div>
+      </header>
 
-    <section class="card">
-      <div class="card-title">1. حساب الجُمّل ونسب طبائع الحروف</div>
-      <label for="abjadInput">أدخل النص أو الاسم أو العبارة (يتم احتساب الحروف فقط)</label>
-      <input type="text" id="abjadInput" placeholder="مثال: سعد خليل الجبوري" />
-      <div class="actions-row">
-        <button class="btn" id="calcAbjadBtn" type="button">تنفيذ الحساب (10 نقاط)</button>
-        <button class="btn secondary" id="openWafqFromSumBtn" type="button" disabled>توليد وفق بهذا المجموع</button>
-      </div>
-      <div id="abjadOutput"></div>
-    </section>
+      <!-- بانر علوي للشاشات العريضة (728x90) وللهواتف (320x50) -->
+      <div class="banner-slot desktop-only-banner" data-ad-key="43c6a2cdb89df92f1d10bf50c7cc3af0" data-ad-w="728" data-ad-h="90"></div>
+      <div class="banner-slot mobile-only-banner" data-ad-key="9cea9f341703cacbcc9254423d8e316f" data-ad-w="320" data-ad-h="50"></div>
 
-    <section class="card">
-      <div class="card-title">2. البرج الفلكي وطبعه حسب تاريخ الميلاد</div>
-      <div class="grid-3">
-        <div>
-          <label for="birthDaySelect">اليوم</label>
-          <select id="birthDaySelect"></select>
+      <section class="card">
+        <div class="card-title">مركز النقاط والمكافآت</div>
+        <div class="actions-row">
+          <button class="btn secondary" id="dailyBonusBtn" type="button">مكافأة الدخول اليومي</button>
+          <button class="btn secondary" id="shareResultBtn" type="button">مشاركة النتيجة (+40 نقطة)</button>
+          <button class="btn secondary" id="copyInviteBtn" type="button">نسخ رابط دعوة صديق (+50 نقطة)</button>
         </div>
-        <div>
-          <label for="birthMonthSelect">الشهر</label>
-          <select id="birthMonthSelect">
-            <option value="">اختر الشهر</option>
-            <option value="1">1 - يناير / كانون الثاني</option>
-            <option value="2">2 - فبراير / شباط</option>
-            <option value="3">3 - مارس / آذار</option>
-            <option value="4">4 - أبريل / نيسان</option>
-            <option value="5">5 - مايو / أيار</option>
-            <option value="6">6 - يونيو / حزيران</option>
-            <option value="7">7 - يوليو / تموز</option>
-            <option value="8">8 - أغسطس / آب</option>
-            <option value="9">9 - سبتمبر / أيلول</option>
-            <option value="10">10 - أكتوبر / تشرين الأول</option>
-            <option value="11">11 - نوفمبر / تشرين الثاني</option>
-            <option value="12">12 - ديسمبر / كانون الأول</option>
-          </select>
+        <div class="muted-note" id="dailyCycleInfo"></div>
+        <div class="toast" id="systemToast"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-title">1. حساب الجُمّل ونسب طبائع الحروف</div>
+        <label for="abjadInput">أدخل النص أو الاسم أو العبارة (يتم احتساب الحروف فقط)</label>
+        <input type="text" id="abjadInput" placeholder="مثال: سعد خليل الجبوري" />
+        <div class="actions-row">
+          <button class="btn" id="calcAbjadBtn" type="button">تنفيذ الحساب (10 نقاط)</button>
+          <button class="btn secondary" id="openWafqFromSumBtn" type="button" disabled>توليد وفق بهذا المجموع</button>
         </div>
-        <div>
-          <label for="birthYearSelect">السنة</label>
-          <select id="birthYearSelect"></select>
+        <div id="abjadOutput"></div>
+      </section>
+
+      <!-- بانر متوسط (468x60) -->
+      <div class="banner-slot" data-ad-key="d18f65e3e3e650c995bfae571ec658e4" data-ad-w="468" data-ad-h="60"></div>
+
+      <section class="card">
+        <div class="card-title">2. البرج الفلكي وطبعه حسب تاريخ الميلاد</div>
+        <div class="grid-3">
+          <div>
+            <label for="birthDaySelect">اليوم</label>
+            <select id="birthDaySelect"></select>
+          </div>
+          <div>
+            <label for="birthMonthSelect">الشهر</label>
+            <select id="birthMonthSelect">
+              <option value="">اختر الشهر</option>
+              <option value="1">1 - يناير / كانون الثاني</option>
+              <option value="2">2 - فبراير / شباط</option>
+              <option value="3">3 - مارس / آذار</option>
+              <option value="4">4 - أبريل / نيسان</option>
+              <option value="5">5 - مايو / أيار</option>
+              <option value="6">6 - يونيو / حزيران</option>
+              <option value="7">7 - يوليو / تموز</option>
+              <option value="8">8 - أغسطس / آب</option>
+              <option value="9">9 - سبتمبر / أيلول</option>
+              <option value="10">10 - أكتوبر / تشرين الأول</option>
+              <option value="11">11 - نوفمبر / تشرين الثاني</option>
+              <option value="12">12 - ديسمبر / كانون الأول</option>
+            </select>
+          </div>
+          <div>
+            <label for="birthYearSelect">السنة</label>
+            <select id="birthYearSelect"></select>
+          </div>
         </div>
-      </div>
-      <div class="actions-row">
-        <button class="btn" id="calcZodiacBtn" type="button">استخراج البرج (10 نقاط)</button>
-      </div>
-      <div id="zodiacOutput"></div>
-    </section>
+        <div class="actions-row">
+          <button class="btn" id="calcZodiacBtn" type="button">استخراج البرج (10 نقاط)</button>
+        </div>
+        <div id="zodiacOutput"></div>
+      </section>
+
+      <!-- بانر سفلي مربع (300x250) -->
+      <div class="banner-slot" data-ad-key="297dd0dec9845987bf6e7f08ee8f028e" data-ad-w="300" data-ad-h="250"></div>
+    </main>
+
+    <aside class="side-ads" aria-hidden="true"></aside>
   </div>
 
   <script>
     const SMART_LINK_URL = "https://asiafilm.org/4/56aaa9153709df41930060678aa64610";
+    const AD_SCRIPT_BASE = "https://bicea.org/22";
     const STORAGE_KEY = "abjad_wafq_points_state_v1";
     const REF_CLAIMED_KEY = "abjad_wafq_ref_claimed_v1";
+
+    function mountIsolatedBanners() {
+      document.querySelectorAll(".banner-slot[data-ad-key]").forEach((slot) => {
+        const key = slot.getAttribute("data-ad-key");
+        const w = parseInt(slot.getAttribute("data-ad-w"), 10);
+        const h = parseInt(slot.getAttribute("data-ad-h"), 10);
+        if (!key || !w || !h) return;
+
+        const iframe = document.createElement("iframe");
+        iframe.width = String(w);
+        iframe.height = String(h);
+        iframe.style.width = `${w}px`;
+        iframe.style.height = `${h}px`;
+        iframe.style.border = "0";
+        iframe.style.overflow = "hidden";
+        iframe.loading = "lazy";
+        iframe.scrolling = "no";
+
+        slot.innerHTML = "";
+        slot.appendChild(iframe);
+
+        const doc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (doc) {
+          doc.open();
+          doc.write(`<!DOCTYPE html><html><head><style>html,body{margin:0;padding:0;background:transparent;overflow:hidden;}</style></head><body>
+            <script>
+              atOptions = {
+                'key' : '${key}',
+                'format' : 'iframe',
+                'height' : ${h},
+                'width' : ${w},
+                'params' : {}
+              };
+            <\/script>
+            <script data-cfasync="false" src="${AD_SCRIPT_BASE}/${key}"><\/script>
+          </body></html>`);
+          doc.close();
+        }
+      });
+    }
 
     const CONFIG = {
       WELCOME_BONUS: 25,
@@ -622,7 +726,7 @@
       } catch {
         prompt("انسخ رابط الدعوة:", inviteUrl);
       }
-      showToast(`تم نسخ رابط دعوتك! ستحصل على +${CONFIG.REFERRAL_REWARD} نقطة لكل صديق جديد.`, "ok");
+      showToast(`تم نسخ رابط الدعوة! ستحصل على +${CONFIG.REFERRAL_REWARD} نقطة لكل صديق جديد.`, "ok");
     }
 
     function spendTaskPoints() {
@@ -742,6 +846,7 @@
       showToast(`تم استخراج البرج وخصم ${CONFIG.TASK_COST} نقاط.`, "ok");
     }
 
+    mountIsolatedBanners();
     populateBirthSelects();
     document.getElementById("watchAdBtn").addEventListener("click", handleWatchAd);
     document.getElementById("dailyBonusBtn").addEventListener("click", handleDailyBonus);
