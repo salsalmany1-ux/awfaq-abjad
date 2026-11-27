@@ -19,6 +19,10 @@
       --text: #f3f5f8;
       --muted: #9aa5b8;
       --radius: 16px;
+      --fire: #ff6b35;
+      --earth: #c89d54;
+      --air: #56cfe1;
+      --water: #4ea8de;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -232,12 +236,78 @@
       margin-top: 4px;
     }
 
-    .info-line {
+    .nature-banner {
       background: var(--surface-2);
       border: 1px solid var(--gold-border);
-      border-radius: 12px;
-      padding: 14px 16px;
-      font-weight: 700;
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nature-banner::before {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      background: var(--nature-color, var(--gold));
+    }
+
+    .nature-title {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--nature-color, var(--gold-bright));
+    }
+
+    .nature-desc {
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .elements-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .element-card {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 15px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .element-card.active-element {
+      transform: translateY(-2px);
+      border-color: var(--el-color);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+    }
+
+    .element-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--el-color);
+    }
+
+    .element-letters {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+
+    .element-trait {
+      font-size: 0.88rem;
       color: var(--text);
     }
 
@@ -317,8 +387,8 @@
             <div class="v" id="resTotal">—</div>
           </div>
           <div class="stat-box">
-            <div class="k">الرقم المختزل</div>
-            <div class="v" id="resReduced">—</div>
+            <div class="k">الرقم المبسط</div>
+            <div class="v" id="resSimple">—</div>
           </div>
           <div class="stat-box">
             <div class="k">الطبع</div>
@@ -329,7 +399,36 @@
             <div class="v" id="resZodiac">—</div>
           </div>
         </div>
-        <div class="info-line" id="resSummary"></div>
+
+        <div class="nature-banner" id="natureBanner">
+          <div class="nature-title" id="natureTitle"></div>
+          <div class="nature-desc" id="natureDesc"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="elements-showcase" id="elementsShowcase">
+        <div class="element-card" data-el="ناري" style="--el-color: var(--fire);">
+          <div class="element-head"><span>ناري</span><span>حار يابس</span></div>
+          <div class="element-letters">ا · هـ · ط · م · ف · ش · ذ</div>
+          <div class="element-trait">اندفاع، حزم، مبادرة وحضور قيادي</div>
+        </div>
+        <div class="element-card" data-el="ترابي" style="--el-color: var(--earth);">
+          <div class="element-head"><span>ترابي</span><span>بارد يابس</span></div>
+          <div class="element-letters">ب · و · ي · ن · ص · ت · ض</div>
+          <div class="element-trait">ثبات، واقعية، صبر وبناء منهجي</div>
+        </div>
+        <div class="element-card" data-el="هوائي" style="--el-color: var(--air);">
+          <div class="element-head"><span>هوائي</span><span>حار رطب</span></div>
+          <div class="element-letters">ج · ز · ك · س · ق · ث · ظ</div>
+          <div class="element-trait">تواصل، سرعة بديهة، تحليل ومرونة</div>
+        </div>
+        <div class="element-card" data-el="مائي" style="--el-color: var(--water);">
+          <div class="element-head"><span>مائي</span><span>بارد رطب</span></div>
+          <div class="element-letters">د · ح · ل · ع · ر · خ · غ</div>
+          <div class="element-trait">حدس، عمق شعوري، احتواء وتأمل</div>
+        </div>
       </div>
     </section>
   </div>
@@ -344,7 +443,26 @@
       'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
     };
 
-    const ELEMENTS = ['ناري', 'ترابي', 'هوائي', 'مائي'];
+    const ELEMENTS_META = {
+      'ناري': {
+        color: '#ff6b35',
+        desc: 'الطبع الناري (حار يابس): يغلب عليه العزم والحركة السريعة والوضوح في القرار.'
+      },
+      'ترابي': {
+        color: '#c89d54',
+        desc: 'الطبع الترابي (بارد يابس): يغلب عليه التأنّي والاتزان والقدرة على التحمل والرسوخ.'
+      },
+      'هوائي': {
+        color: '#56cfe1',
+        desc: 'الطبع الهوائي (حار رطب): يغلب عليه الفكر المتجدد وسرعة التكيّف والتعبير.'
+      },
+      'مائي': {
+        color: '#4ea8de',
+        desc: 'الطبع المائي (بارد رطب): يغلب عليه الإحساس العميق والسكينة والقدرة على الاحتواء.'
+      }
+    };
+
+    const ELEMENTS_ORDER = ['ناري', 'ترابي', 'هوائي', 'مائي'];
     const ZODIACS = [
       'الحمل', 'الثور', 'الجوزاء', 'السرطان', 'الأسد', 'العذراء',
       'الميزان', 'العقرب', 'القوس', 'الجدي', 'الدلو', 'الحوت'
@@ -401,7 +519,7 @@
       return sum;
     }
 
-    function reduceWithMaster(num) {
+    function simplifyWithMaster(num) {
       let current = Math.abs(Math.trunc(num));
       if (current === 0) return 0;
       while (current > 9 && ![11, 22, 33].includes(current)) {
@@ -447,6 +565,12 @@
       return ZODIACS[(total - 1 + 12) % 12];
     }
 
+    function highlightElementCard(elementName) {
+      document.querySelectorAll('.element-card').forEach(card => {
+        card.classList.toggle('active-element', card.dataset.el === elementName);
+      });
+    }
+
     function updateWafqLinks(sumVal) {
       const targetUrl = sumVal && sumVal > 0 ? `wafq.html?sum=${sumVal}` : 'wafq.html';
       document.getElementById('sendToWafqBtn').href = targetUrl;
@@ -466,6 +590,7 @@
       if (total <= 0) {
         lastTotal = null;
         updateWafqLinks(null);
+        highlightElementCard(null);
         document.getElementById('resultContent').style.display = 'none';
         document.getElementById('resultEmpty').style.display = 'block';
         return;
@@ -474,19 +599,23 @@
       lastTotal = total;
       updateWafqLinks(total);
 
-      const reduced = reduceWithMaster(total);
-      const element = ELEMENTS[(total - 1) % 4];
+      const simpleNum = simplifyWithMaster(total);
+      const element = ELEMENTS_ORDER[(total - 1) % 4];
       const zodiac = getZodiacLabel(total, day, month, year);
+      const meta = ELEMENTS_META[element];
 
       document.getElementById('resTotal').textContent = total.toLocaleString('ar');
-      document.getElementById('resReduced').textContent = reduced.toLocaleString('ar');
+      document.getElementById('resSimple').textContent = simpleNum.toLocaleString('ar');
       document.getElementById('resElement').textContent = element;
       document.getElementById('resZodiac').textContent = zodiac;
 
-      const labelText = text ? `النتيجة لـ «${text}»` : 'نتيجة الحساب';
-      document.getElementById('resSummary').textContent =
-        `${labelText}: المجموع ${total.toLocaleString('ar')} — المختزل ${reduced.toLocaleString('ar')} — الطبع ${element} — البرج ${zodiac}`;
+      const banner = document.getElementById('natureBanner');
+      banner.style.setProperty('--nature-color', meta.color);
+      document.getElementById('natureTitle').textContent =
+        `${text ? `«${text}» — ` : ''}الطبع ${element} · البرج ${zodiac} · الرقم المبسط ${simpleNum.toLocaleString('ar')}`;
+      document.getElementById('natureDesc').textContent = meta.desc;
 
+      highlightElementCard(element);
       document.getElementById('resultEmpty').style.display = 'none';
       document.getElementById('resultContent').style.display = 'block';
     }
