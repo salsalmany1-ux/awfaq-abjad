@@ -3,794 +3,786 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>حاسبة الجُمّل والطبائع</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <title>حاسبة الجُمّل والحروف والأبراج</title>
   <style>
     :root {
       --bg: #0b0e14;
-      --surface: #121722;
-      --surface-2: #182030;
-      --gold: #d4af37;
-      --gold-bright: #f0cf65;
-      --gold-soft: rgba(212, 175, 55, 0.14);
-      --gold-border: rgba(212, 175, 55, 0.35);
+      --card: #131823;
+      --card-2: #192030;
       --text: #f3f5f8;
-      --muted: #9aa5b8;
-      --radius: 16px;
-      --fire: #ff6b35;
-      --earth: #c89d54;
-      --air: #56cfe1;
-      --water: #4ea8de;
+      --muted: #9aa4b8;
+      --accent: #ff6a00;
+      --accent-2: #ff9447;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --border: rgba(255, 255, 255, 0.09);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      background: radial-gradient(circle at top, #171f30 0%, var(--bg) 62%);
+      font-family: system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+      background: radial-gradient(circle at top, #181f2e 0%, var(--bg) 60%);
       color: var(--text);
-      font-family: 'Cairo', sans-serif;
-      line-height: 1.7;
       min-height: 100vh;
-      padding: 24px 16px 70px;
+      padding: 20px 16px 60px;
+      line-height: 1.6;
+    }
+
+    /* عداد النقاط في أعلى يسار الصفحة */
+    .points-hud {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 999;
+      background: rgba(19, 24, 35, 0.94);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 106, 0, 0.45);
+      border-radius: 14px;
+      padding: 10px 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      max-width: 290px;
+    }
+
+    .points-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .points-badge {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--accent-2);
+    }
+
+    .ad-quick-btn {
+      background: var(--accent);
+      color: #0b0e14;
+      border: none;
+      border-radius: 9px;
+      padding: 6px 10px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .ad-quick-btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .ad-quick-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .status-bar {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 6px;
     }
 
     .container {
-      max-width: 1040px;
-      margin: 0 auto;
-    }
-
-    .nav-bar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-      padding: 12px 16px;
-      background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-    }
-
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .nav-link {
-      text-decoration: none;
-      color: var(--muted);
-      background: var(--surface-2);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 7px 14px;
-      border-radius: 9px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      transition: 0.2s ease;
-    }
-
-    .nav-link.active, .nav-link:hover {
-      color: var(--gold-bright);
-      border-color: var(--gold-border);
-      background: var(--gold-soft);
+      max-width: 920px;
+      margin: 56px auto 0;
     }
 
     header {
       text-align: center;
       margin-bottom: 24px;
-      padding: 22px 18px;
-      background: linear-gradient(180deg, rgba(212,175,55,0.09), rgba(18,23,34,0.68));
-      border: 1px solid var(--gold-border);
-      border-radius: var(--radius);
     }
 
-    header h1 {
-      font-family: 'Amiri', serif;
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      color: var(--gold);
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      text-decoration: none;
+      color: var(--text);
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .nav-btn.primary {
+      background: var(--accent);
+      color: #0b0e14;
+      border-color: transparent;
     }
 
     .card {
-      background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius);
-      padding: 22px;
-      margin-bottom: 20px;
-      box-shadow: 0 14px 35px rgba(0,0,0,0.3);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: var(--accent-2);
     }
 
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-    }
-
-    .dob-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      gap: 14px;
     }
 
     label {
+      display: block;
       font-size: 0.9rem;
-      color: var(--muted);
-      font-weight: 600;
+      margin-bottom: 6px;
+      color: #d7dde8;
     }
 
-    input[type="text"], select {
-      background: var(--surface-2);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: var(--text);
-      border-radius: 10px;
-      padding: 11px 12px;
-      font-family: inherit;
-      font-size: 0.95rem;
-      outline: none;
+    input[type="text"],
+    input[type="date"],
+    select {
       width: 100%;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--gold);
-    }
-
-    .zodiac-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 16px;
-    }
-
-    .tab-btn {
-      background: var(--surface-2);
-      color: var(--muted);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 9px;
-      padding: 8px 14px;
-      font-family: inherit;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-
-    .tab-btn.active {
-      color: var(--gold-bright);
-      border-color: var(--gold);
-      background: var(--gold-soft);
-    }
-
-    .actions-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-      align-items: center;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
     }
 
     .btn {
-      background: linear-gradient(135deg, var(--gold-bright), var(--gold));
-      color: #111;
+      background: var(--accent);
+      color: #0b0e14;
       border: none;
       border-radius: 10px;
-      padding: 11px 22px;
-      font-family: inherit;
-      font-weight: 800;
-      font-size: 0.94rem;
-      cursor: pointer;
-      transition: transform 0.15s ease;
-    }
-
-    .btn:hover { transform: translateY(-1px); }
-
-    .btn-link {
-      text-decoration: none;
-      background: var(--surface-2);
-      color: var(--gold-bright);
-      border: 1px solid var(--gold-border);
-      border-radius: 10px;
-      padding: 10px 18px;
-      font-family: inherit;
+      padding: 10px 16px;
       font-weight: 700;
+      cursor: pointer;
       font-size: 0.92rem;
-      display: inline-flex;
-      align-items: center;
-      transition: background 0.2s ease;
     }
 
-    .btn-link:hover {
-      background: var(--gold-soft);
+    .btn.secondary {
+      background: var(--card-2);
+      color: var(--text);
+      border: 1px solid var(--border);
     }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-      gap: 12px;
-      margin-bottom: 16px;
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .actions-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
     }
 
-    .stat-box {
-      background: var(--surface-2);
-      border: 1px solid rgba(255,255,255,0.07);
+    .result-box {
+      background: var(--card-2);
+      border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 14px;
-      text-align: center;
+      padding: 16px;
+      margin-top: 14px;
     }
 
-    .stat-box .k {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .stat-box .v {
-      font-size: 1.3rem;
+    .big-num {
+      font-size: 1.7rem;
       font-weight: 800;
-      color: var(--gold-bright);
-      margin-top: 4px;
+      color: var(--accent-2);
     }
 
-    .stat-box .sub {
-      font-size: 0.84rem;
-      color: var(--muted);
-      margin-top: 3px;
-      font-weight: 600;
-    }
-
-    .split-natures {
+    .bars {
+      margin-top: 10px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 12px;
+      gap: 8px;
     }
 
-    .nature-banner {
-      background: var(--surface-2);
-      border: 1px solid var(--gold-border);
-      border-radius: 14px;
-      padding: 15px 17px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .nature-banner::before {
-      content: "";
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 5px;
-      background: var(--nature-color, var(--gold));
-    }
-
-    .nature-title {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--nature-color, var(--gold-bright));
-    }
-
-    .nature-desc {
-      color: var(--text);
-      font-size: 0.93rem;
-    }
-
-    .elements-showcase {
+    .bar-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 12px;
-    }
-
-    .element-card {
-      background: var(--surface-2);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      padding: 15px;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .element-card.active-element {
-      transform: translateY(-2px);
-      border-color: var(--el-color);
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
-    }
-
-    .element-head {
-      display: flex;
-      justify-content: space-between;
+      grid-template-columns: 75px 1fr 52px;
       align-items: center;
-      margin-bottom: 6px;
-      font-weight: 800;
-      font-size: 1.05rem;
-      color: var(--el-color);
-    }
-
-    .element-pct {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--el-color);
-      margin-bottom: 8px;
-    }
-
-    .pct-bar-wrap {
-      width: 100%;
-      height: 7px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 99px;
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-
-    .pct-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--el-color);
-      border-radius: 99px;
-      transition: width 0.3s ease;
-    }
-
-    .element-letters {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 6px;
-      word-break: break-word;
-    }
-
-    .element-trait {
+      gap: 10px;
       font-size: 0.88rem;
-      color: var(--text);
     }
 
-    .empty-msg {
+    .bar-track {
+      height: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: 999px;
+    }
+
+    .toast {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      display: none;
+    }
+
+    .toast.ok {
+      display: block;
+      background: rgba(34, 197, 94, 0.14);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #86efac;
+    }
+
+    .toast.err {
+      display: block;
+      background: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .muted-note {
+      font-size: 0.82rem;
       color: var(--muted);
-      text-align: center;
-      padding: 12px 0;
+      margin-top: 8px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <nav class="nav-bar">
-      <div class="nav-links">
-        <a href="index.html" class="nav-link active">حاسبة الجُمّل والطبائع</a>
-        <a href="wafq.html" class="nav-link" id="topWafqLink">الاوفاق</a>
-      </div>
-    </nav>
 
+  <!-- عداد النقاط وشريط الحالة في أعلى اليسار -->
+  <aside class="points-hud" aria-live="polite">
+    <div class="points-top">
+      <div class="points-badge" id="pointsDisplay">النقاط: 0</div>
+      <button class="ad-quick-btn" id="watchAdBtn" type="button">+10 إعلان</button>
+    </div>
+    <div class="status-bar" id="statusBar">جاري تحميل حالة النقاط...</div>
+  </aside>
+
+  <div class="container">
     <header>
-      <h1>حاسبة الجُمّل والطبائع</h1>
+      <h1>حاسبة الجُمّل والحروف والأبراج</h1>
+      <p class="subtitle">حساب الجُمّل بالأبجدية، تحليل نسب طبائع الحروف، واستخراج البرج الفلكي وطبعه (تكلفة المهمة: 10 نقاط)</p>
+      <div class="nav-links">
+        <a class="nav-btn primary" href="index.html">الحاسبة والأبراج</a>
+        <a class="nav-btn" href="wafq.html">مولّد الأوفاق</a>
+      </div>
     </header>
 
+    <!-- المكافآت السريعة: دخول يومي متدرج أسبوعي + مشاركة + دعوة صديق -->
     <section class="card">
-      <div class="grid-2">
-        <div class="field">
-          <label for="nameInput">الاسم أو النص</label>
-          <input type="text" id="nameInput" autocomplete="off" />
-        </div>
-
-        <div class="field">
-          <label>تاريخ الميلاد</label>
-          <div class="dob-grid">
-            <select id="birthDay">
-              <option value="">اليوم</option>
-            </select>
-            <select id="birthMonth">
-              <option value="">الشهر</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-            </select>
-            <select id="birthYear">
-              <option value="">السنة</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="zodiac-tabs">
-        <button type="button" class="tab-btn active" data-zodiac="monthly">البرج الشهري</button>
-        <button type="button" class="tab-btn" data-zodiac="yearly">البرج السنوي</button>
-        <button type="button" class="tab-btn" data-zodiac="astrological">البرج الفلكي</button>
-      </div>
-
+      <div class="card-title">مركز النقاط والمكافآت</div>
       <div class="actions-row">
-        <button type="button" class="btn" id="calcBtn">احسب</button>
-        <a href="wafq.html" class="btn-link" id="sendToWafqBtn">إرسال المجموع إلى الأوفاق</a>
+        <button class="btn secondary" id="dailyBonusBtn" type="button">مكافأة الدخول اليومي</button>
+        <button class="btn secondary" id="shareResultBtn" type="button">مشاركة النتيجة (+40 نقطة)</button>
+        <button class="btn secondary" id="copyInviteBtn" type="button">نسخ رابط دعوة صديق (+50 نقطة)</button>
       </div>
+      <div class="muted-note" id="dailyCycleInfo"></div>
+      <div class="toast" id="systemToast"></div>
     </section>
 
-    <section class="card" id="resultCard">
-      <div class="empty-msg" id="resultEmpty">أدخل البيانات ثم اضغط «احسب»</div>
-      <div id="resultContent" style="display: none;">
-        <div class="stats-grid">
-          <div class="stat-box">
-            <div class="k">المجموع</div>
-            <div class="v" id="resTotal">—</div>
-          </div>
-          <div class="stat-box">
-            <div class="k">الرقم المبسط</div>
-            <div class="v" id="resSimple">—</div>
-          </div>
-          <div class="stat-box">
-            <div class="k">البرج</div>
-            <div class="v" id="resZodiac">—</div>
-            <div class="sub" id="resZodiacElement">—</div>
-          </div>
-          <div class="stat-box">
-            <div class="k">طبع حروف الاسم</div>
-            <div class="v" id="resNameElement">—</div>
-            <div class="sub" id="resNamePct">—</div>
-          </div>
-        </div>
-
-        <div class="split-natures">
-          <div class="nature-banner" id="zodiacBanner">
-            <div class="nature-title" id="zodiacNatureTitle"></div>
-            <div class="nature-desc" id="zodiacNatureDesc"></div>
-          </div>
-
-          <div class="nature-banner" id="nameBanner">
-            <div class="nature-title" id="nameNatureTitle"></div>
-            <div class="nature-desc" id="nameNatureDesc"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    <!-- 1. حاسبة الجُمّل وتحليل الحروف -->
     <section class="card">
-      <div class="elements-showcase" id="elementsShowcase">
-        <div class="element-card" data-el="ناري" style="--el-color: var(--fire);">
-          <div class="element-head"><span>ناري</span><span>حار يابس</span></div>
-          <div class="element-pct" id="pctFire">0%</div>
-          <div class="pct-bar-wrap"><div class="pct-bar-fill" id="barFire"></div></div>
-          <div class="element-letters">ا · هـ · ط · م · ف · ش · ذ</div>
-          <div class="element-trait">اندفاع، حزم، مبادرة وحضور قيادي</div>
+      <div class="card-title">1. حساب الجُمّل ونسب طبائع الحروف</div>
+      <label for="abjadInput">أدخل النص أو الاسم أو العبارة (يتم احتساب الحروف فقط)</label>
+      <input type="text" id="abjadInput" placeholder="مثال: سعد خليل الجبوري" />
+      <div class="actions-row">
+        <button class="btn" id="calcAbjadBtn" type="button">تنفيذ الحساب (10 نقاط)</button>
+        <button class="btn secondary" id="openWafqFromSumBtn" type="button" disabled>توليد وفق بهذا المجموع</button>
+      </div>
+      <div id="abjadOutput"></div>
+    </section>
+
+    <!-- 2. البرج الفلكي وطبعه -->
+    <section class="card">
+      <div class="card-title">2. البرج الفلكي وطبعه حسب تاريخ الميلاد</div>
+      <div class="grid-2">
+        <div>
+          <label for="birthDateInput">اختر تاريخ الميلاد</label>
+          <input type="date" id="birthDateInput" />
         </div>
-        <div class="element-card" data-el="ترابي" style="--el-color: var(--earth);">
-          <div class="element-head"><span>ترابي</span><span>بارد يابس</span></div>
-          <div class="element-pct" id="pctEarth">0%</div>
-          <div class="pct-bar-wrap"><div class="pct-bar-fill" id="barEarth"></div></div>
-          <div class="element-letters">ب · و · ي · ن · ص · ت · ض</div>
-          <div class="element-trait">ثبات، واقعية، صبر وبناء منهجي</div>
-        </div>
-        <div class="element-card" data-el="هوائي" style="--el-color: var(--air);">
-          <div class="element-head"><span>هوائي</span><span>حار رطب</span></div>
-          <div class="element-pct" id="pctAir">0%</div>
-          <div class="pct-bar-wrap"><div class="pct-bar-fill" id="barAir"></div></div>
-          <div class="element-letters">ج · ز · ك · س · ق · ث · ظ</div>
-          <div class="element-trait">تواصل، سرعة بديهة، تحليل ومرونة</div>
-        </div>
-        <div class="element-card" data-el="مائي" style="--el-color: var(--water);">
-          <div class="element-head"><span>مائي</span><span>بارد رطب</span></div>
-          <div class="element-pct" id="pctWater">0%</div>
-          <div class="pct-bar-wrap"><div class="pct-bar-fill" id="barWater"></div></div>
-          <div class="element-letters">د · ح · ل · ع · ر · خ · غ</div>
-          <div class="element-trait">حدس، عمق شعوري، احتواء وتأمل</div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="btn" id="calcZodiacBtn" type="button">استخراج البرج (10 نقاط)</button>
         </div>
       </div>
+      <div id="zodiacOutput"></div>
     </section>
   </div>
 
   <script>
-    const ABJAD_VALUES = {
-      'ا': 1, 'أ': 1, 'إ': 1, 'آ': 1, 'ى': 1, 'ء': 1,
-      'ب': 2, 'ج': 3, 'د': 4, 'ه': 5, 'ة': 5, 'و': 6, 'ؤ': 6,
-      'ز': 7, 'ح': 8, 'ط': 9, 'ي': 10, 'ئ': 10, 'ك': 20, 'ل': 30,
-      'م': 40, 'ن': 50, 'س': 60, 'ع': 70, 'ف': 80, 'ص': 90,
-      'ق': 100, 'ر': 200, 'ش': 300, 'ت': 400, 'ث': 500, 'خ': 600,
-      'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
+    // =========================================================================
+    // إعدادات النظام والربط
+    // =========================================================================
+    const SMART_LINK_URL = "https://asiafilm.org/4/56aaa9153709df41930060678aa64610";
+
+    const STORAGE_KEY = "abjad_wafq_points_state_v1";
+    const REF_CLAIMED_KEY = "abjad_wafq_ref_claimed_v1";
+
+    const CONFIG = {
+      WELCOME_BONUS: 25,
+      AD_REWARD: 10,
+      TASK_COST: 10,
+      SHARE_REWARD: 40,
+      REFERRAL_REWARD: 50,
+      AD_COOLDOWN_SECONDS: 12,
+      MAX_ADS_PER_HOUR: 12,
+      MAX_ADS_PER_DAY: 40,
+      WEEKLY_DAILY_REWARDS: [5, 10, 15, 20, 25, 30, 40] // تتصفّر كل 7 أيام
     };
 
+    // قيم أبجد هوز
+    const ABJAD_MAP = {
+      "أ": 1, "ا": 1, "إ": 1, "آ": 1,
+      "ب": 2,
+      "ج": 3,
+      "د": 4,
+      "ه": 5, "ة": 5,
+      "و": 6,
+      "ز": 7,
+      "ح": 8,
+      "ط": 9,
+      "ي": 10, "ى": 10,
+      "ك": 20,
+      "ل": 30,
+      "م": 40,
+      "ن": 50,
+      "س": 60,
+      "ع": 70,
+      "ف": 80,
+      "ص": 90,
+      "ق": 100,
+      "ر": 200,
+      "ش": 300,
+      "ت": 400,
+      "ث": 500,
+      "خ": 600,
+      "ذ": 700,
+      "ض": 800,
+      "ظ": 900,
+      "غ": 1000
+    };
+
+    // طبائع الحروف (ناري، ترابي، هوائي، مائي)
     const LETTER_ELEMENT = {
-      'ا': 'ناري', 'أ': 'ناري', 'إ': 'ناري', 'آ': 'ناري', 'ى': 'ناري', 'ء': 'ناري',
-      'ه': 'ناري', 'ة': 'ناري', 'ط': 'ناري', 'م': 'ناري', 'ف': 'ناري', 'ش': 'ناري', 'ذ': 'ناري',
+      "أ": "ناري", "ا": "ناري", "إ": "ناري", "آ": "ناري",
+      "ه": "ناري", "ة": "ناري",
+      "ط": "ناري", "م": "ناري", "ف": "ناري", "ش": "ناري", "ذ": "ناري",
 
-      'ب': 'ترابي', 'و': 'ترابي', 'ؤ': 'ترابي', 'ي': 'ترابي', 'ئ': 'ترابي',
-      'ن': 'ترابي', 'ص': 'ترابي', 'ت': 'ترابي', 'ض': 'ترابي',
+      "ب": "ترابي", "و": "ترابي", "ي": "ترابي", "ى": "ترابي",
+      "ن": "ترابي", "ص": "ترابي", "ت": "ترابي", "ض": "ترابي",
 
-      'ج': 'هوائي', 'ز': 'هوائي', 'ك': 'هوائي', 'س': 'هوائي', 'ق': 'هوائي', 'ث': 'هوائي', 'ظ': 'هوائي',
+      "ج": "هوائي", "ز": "هوائي", "ك": "هوائي", "س": "هوائي",
+      "ق": "هوائي", "ث": "هوائي", "ظ": "هوائي",
 
-      'د': 'مائي', 'ح': 'مائي', 'ل': 'مائي', 'ع': 'مائي', 'ر': 'مائي', 'خ': 'مائي', 'غ': 'مائي'
+      "د": "مائي", "ح": "مائي", "ل": "مائي", "ع": "مائي",
+      "ر": "مائي", "خ": "مائي", "غ": "مائي"
     };
 
-    const ELEMENTS_META = {
-      'ناري': {
-        color: '#ff6b35',
-        short: 'حرارة وحزم',
-        desc: 'طبع ناري يغلب عليه العزم والحركة والمبادرة وسرعة الحسم.'
-      },
-      'ترابي': {
-        color: '#c89d54',
-        short: 'ثبات واتزان',
-        desc: 'طبع ترابي يغلب عليه التأنّي والواقعية والصبر والبناء الثابت.'
-      },
-      'هوائي': {
-        color: '#56cfe1',
-        short: 'فكر ومرونة',
-        desc: 'طبع هوائي يغلب عليه التواصل وسرعة البديهة والتحليل والمرونة.'
-      },
-      'مائي': {
-        color: '#4ea8de',
-        short: 'عمق وحدس',
-        desc: 'طبع مائي يغلب عليه الإحساس العميق والسكينة والحدس والاحتواء.'
-      }
-    };
-
-    const ZODIAC_ELEMENT = {
-      'الحمل': 'ناري', 'الأسد': 'ناري', 'القوس': 'ناري',
-      'الثور': 'ترابي', 'العذراء': 'ترابي', 'الجدي': 'ترابي',
-      'الجوزاء': 'هوائي', 'الميزان': 'هوائي', 'الدلو': 'هوائي',
-      'السرطان': 'مائي', 'العقرب': 'مائي', 'الحوت': 'مائي',
-      'الفأر': 'مائي', 'الثور_ص': 'ترابي', 'النمر': 'هوائي', 'الأرنب': 'هوائي',
-      'التنين': 'ترابي', 'الأفعى': 'ناري', 'الحصان': 'ناري', 'العنزة': 'ترابي',
-      'القرد': 'هوائي', 'الديك': 'ترابي', 'الكلب': 'ترابي', 'الخنزير': 'مائي'
-    };
-
-    const ELEMENTS_ORDER = ['ناري', 'ترابي', 'هوائي', 'مائي'];
-    const ZODIACS = [
-      'الحمل', 'الثور', 'الجوزاء', 'السرطان', 'الأسد', 'العذراء',
-      'الميزان', 'العقرب', 'القوس', 'الجدي', 'الدلو', 'الحوت'
-    ];
-    const CHINESE_ZODIACS = [
-      'الفأر', 'الثور', 'النمر', 'الأرنب', 'التنين', 'الأفعى',
-      'الحصان', 'العنزة', 'القرد', 'الديك', 'الكلب', 'الخنزير'
+    const ZODIAC_DATA = [
+      { name: "الحمل", element: "ناري", start: [3, 21], end: [4, 19], traits: "مبادرة، جرأة، حماس وسرعة قرار." },
+      { name: "الثور", element: "ترابي", start: [4, 20], end: [5, 20], traits: "ثبات، صبر، عملية وتقدير للاستقرار." },
+      { name: "الجوزاء", element: "هوائي", start: [5, 21], end: [6, 20], traits: "تواصل، فضول معرفي، سرعة بديهة وتنوع." },
+      { name: "السرطان", element: "مائي", start: [6, 21], end: [7, 22], traits: "حدس، عاطفة، حماية وانتماء عميق." },
+      { name: "الأسد", element: "ناري", start: [7, 23], end: [8, 22], traits: "حضور قيادي، كرم، ثقة وطموح واضح." },
+      { name: "العذراء", element: "ترابي", start: [8, 23], end: [9, 22], traits: "دقة، تحليل، تنظيم وميل للتحسين المستمر." },
+      { name: "الميزان", element: "هوائي", start: [9, 23], end: [10, 22], traits: "توازن، دبلوماسية، ذوق وحس عدالة." },
+      { name: "العقرب", element: "مائي", start: [10, 23], end: [11, 21], traits: "عمق، إصرار، كتمان وقوة ملاحظة." },
+      { name: "القوس", element: "ناري", start: [11, 22], end: [12, 21], traits: "تفاؤل، انفتاح، حب السفر والبحث عن المعنى." },
+      { name: "الجدي", element: "ترابي", start: [12, 22], end: [1, 19], traits: "انضباط، مسؤولية، نفس طويل وبناء منهجي." },
+      { name: "الدلو", element: "هوائي", start: [1, 20], end: [2, 18], traits: "استقلالية، ابتكار، رؤية جماعية وتجديد." },
+      { name: "الحوت", element: "مائي", start: [2, 19], end: [3, 20], traits: "خيال واسع، تعاطف، مرونة وإلهام." }
     ];
 
-    let activeZodiacType = 'monthly';
-    let lastCalculated = false;
-
-    function populateDays() {
-      const daySel = document.getElementById('birthDay');
-      const monthVal = parseInt(document.getElementById('birthMonth').value, 10);
-      const yearVal = parseInt(document.getElementById('birthYear').value, 10);
-      const prevDay = daySel.value;
-
-      let maxDays = 31;
-      if (monthVal) {
-        const y = yearVal || 2000;
-        maxDays = new Date(y, monthVal, 0).getDate();
-      }
-
-      daySel.innerHTML = '<option value="">اليوم</option>';
-      for (let d = 1; d <= maxDays; d++) {
-        const opt = document.createElement('option');
-        opt.value = String(d);
-        opt.textContent = String(d);
-        daySel.appendChild(opt);
-      }
-
-      if (prevDay && parseInt(prevDay, 10) <= maxDays) {
-        daySel.value = prevDay;
-      }
+    function getTodayKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     }
 
-    function populateYears() {
-      const yearSel = document.getElementById('birthYear');
-      const currentYear = new Date().getFullYear();
-      for (let y = currentYear; y >= 1920; y--) {
-        const opt = document.createElement('option');
-        opt.value = String(y);
-        opt.textContent = String(y);
-        yearSel.appendChild(opt);
-      }
+    function generateRefCode() {
+      return "REF-" + Math.random().toString(36).substring(2, 8).toUpperCase();
     }
 
-    function calcAbjadSum(text) {
-      let sum = 0;
-      for (const ch of text) {
-        if (ABJAD_VALUES[ch]) sum += ABJAD_VALUES[ch];
-      }
-      return sum;
-    }
-
-    function calcElementPercentages(text) {
-      const counts = { 'ناري': 0, 'ترابي': 0, 'هوائي': 0, 'مائي': 0 };
-      let totalLetters = 0;
-
-      for (const ch of text) {
-        const el = LETTER_ELEMENT[ch];
-        if (el) {
-          counts[el] += 1;
-          totalLetters += 1;
+    function getDefaultState() {
+      return {
+        points: CONFIG.WELCOME_BONUS,
+        refCode: generateRefCode(),
+        invitedCount: 0,
+        lastResultSummary: "",
+        lastCalculatedSum: null,
+        lastShareDate: "",
+        adTimestamps: [],
+        daily: {
+          streakDay: 0,        // 0 إلى 7؛ يتصفّر بعد اكتمال 7 أيام
+          lastClaimDate: ""
         }
-      }
+      };
+    }
 
-      const percentages = { 'ناري': 0, 'ترابي': 0, 'هوائي': 0, 'مائي': 0 };
-      let dominant = null;
-
-      if (totalLetters > 0) {
-        let maxCount = -1;
-        for (const el of ELEMENTS_ORDER) {
-          percentages[el] = Number(((counts[el] / totalLetters) * 100).toFixed(1));
-          if (counts[el] > maxCount) {
-            maxCount = counts[el];
-            dominant = el;
-          }
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          const fresh = getDefaultState();
+          saveState(fresh);
+          return fresh;
         }
+        const parsed = JSON.parse(raw);
+        return {
+          ...getDefaultState(),
+          ...parsed,
+          daily: {
+            ...getDefaultState().daily,
+            ...(parsed.daily || {})
+          },
+          adTimestamps: Array.isArray(parsed.adTimestamps) ? parsed.adTimestamps : []
+        };
+      } catch {
+        return getDefaultState();
       }
-
-      return { percentages, dominant, totalLetters };
     }
 
-    function simplifyWithMaster(num) {
-      let current = Math.abs(Math.trunc(num));
-      if (current === 0) return 0;
-      while (current > 9 && ![11, 22, 33].includes(current)) {
-        current = String(current)
-          .split('')
-          .reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-      }
-      return current;
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    function getAstroZodiac(day, month) {
-      if (!day || !month) return ZODIACS[0];
-      const md = month * 100 + day;
-      if (md >= 321 && md <= 419) return 'الحمل';
-      if (md >= 420 && md <= 520) return 'الثور';
-      if (md >= 521 && md <= 620) return 'الجوزاء';
-      if (md >= 621 && md <= 722) return 'السرطان';
-      if (md >= 723 && md <= 822) return 'الأسد';
-      if (md >= 823 && md <= 922) return 'العذراء';
-      if (md >= 923 && md <= 1022) return 'الميزان';
-      if (md >= 1023 && md <= 1121) return 'العقرب';
-      if (md >= 1122 && md <= 1221) return 'القوس';
-      if (md >= 1222 || md <= 119) return 'الجدي';
-      if (md >= 120 && md <= 218) return 'الدلو';
-      return 'الحوت';
+    let state = loadState();
+    let adCooldownTimer = null;
+    let adRemainingSeconds = 0;
+
+    function showToast(msg, type = "ok") {
+      const el = document.getElementById("systemToast");
+      el.textContent = msg;
+      el.className = `toast ${type}`;
     }
 
-    function getZodiacInfo(day, month, year) {
-      if (activeZodiacType === 'monthly') {
-        const idx = month ? (month - 1) % 12 : 0;
-        const name = ZODIACS[idx];
-        return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
+    function pruneAdTimestamps() {
+      const now = Date.now();
+      const oneDayAgo = now - 24 * 60 * 60 * 1000;
+      state.adTimestamps = state.adTimestamps.filter((ts) => ts >= oneDayAgo);
+    }
+
+    function getAdCounts() {
+      pruneAdTimestamps();
+      const now = Date.now();
+      const oneHourAgo = now - 60 * 60 * 1000;
+      const lastHour = state.adTimestamps.filter((ts) => ts >= oneHourAgo).length;
+      const last24h = state.adTimestamps.length;
+      return { lastHour, last24h };
+    }
+
+    function getNextDailyRewardInfo() {
+      const today = getTodayKey();
+      const alreadyClaimedToday = state.daily.lastClaimDate === today;
+      // إذا أكمل 7 أيام في الدورة السابقة يتصفّر إلى اليوم 1
+      const nextIndex = state.daily.streakDay >= 7 ? 0 : state.daily.streakDay;
+      const reward = CONFIG.WEEKLY_DAILY_REWARDS[nextIndex];
+      const dayNumber = nextIndex + 1;
+      return { alreadyClaimedToday, reward, dayNumber };
+    }
+
+    function renderHUD() {
+      pruneAdTimestamps();
+      saveState(state);
+
+      document.getElementById("pointsDisplay").textContent = `النقاط: ${state.points}`;
+
+      const { lastHour, last24h } = getAdCounts();
+      const watchBtn = document.getElementById("watchAdBtn");
+
+      if (adRemainingSeconds > 0) {
+        watchBtn.disabled = true;
+        watchBtn.textContent = `انتظر ${adRemainingSeconds}ث`;
+      } else if (lastHour >= CONFIG.MAX_ADS_PER_HOUR || last24h >= CONFIG.MAX_ADS_PER_DAY) {
+        watchBtn.disabled = true;
+        watchBtn.textContent = "حد الإعلانات";
+      } else {
+        watchBtn.disabled = false;
+        watchBtn.textContent = `+${CONFIG.AD_REWARD} إعلان`;
       }
-      if (activeZodiacType === 'yearly') {
-        if (year) {
-          const idx = ((year - 4) % 12 + 12) % 12;
-          const name = CHINESE_ZODIACS[idx];
-          const element = idx === 1 ? 'ترابي' : (ZODIAC_ELEMENT[name] || 'ناري');
-          return { name, element };
+
+      const dailyInfo = getNextDailyRewardInfo();
+      const dailyBtn = document.getElementById("dailyBonusBtn");
+      if (dailyInfo.alreadyClaimedToday) {
+        dailyBtn.disabled = true;
+        dailyBtn.textContent = `تم استلام اليوم (${state.daily.streakDay}/7)`;
+      } else {
+        dailyBtn.disabled = false;
+        dailyBtn.textContent = `دخول يومي (+${dailyInfo.reward} نقطة)`;
+      }
+
+      document.getElementById("dailyCycleInfo").textContent =
+        `دورة المكافأة الأسبوعية (تتصفّر كل 7 أيام): اليوم ${dailyInfo.dayNumber} من 7 بقيمة +${dailyInfo.reward} نقطة | المدعوون: ${state.invitedCount}`;
+
+      document.getElementById("statusBar").textContent =
+        `إعلانات الساعة: ${lastHour}/${CONFIG.MAX_ADS_PER_HOUR} • اليوم: ${last24h}/${CONFIG.MAX_ADS_PER_DAY}`;
+
+      const openWafqBtn = document.getElementById("openWafqFromSumBtn");
+      openWafqBtn.disabled = !(typeof state.lastCalculatedSum === "number" && state.lastCalculatedSum > 0);
+    }
+
+    // معالجة دعوة صديق عبر ?ref=
+    function handleIncomingReferral() {
+      const params = new URLSearchParams(window.location.search);
+      const ref = (params.get("ref") || "").trim();
+      if (!ref) return;
+      if (ref === state.refCode) return;
+      if (localStorage.getItem(REF_CLAIMED_KEY)) return;
+
+      localStorage.setItem(REF_CLAIMED_KEY, ref);
+      state.points += CONFIG.REFERRAL_REWARD;
+      state.invitedCount += 1;
+      saveState(state);
+      showToast(`تم تفعيل دعوة الصديق وحصلت على +${CONFIG.REFERRAL_REWARD} نقطة!`, "ok");
+    }
+
+    // مشاهدة إعلان عبر السمارت لنك
+    function handleWatchAd() {
+      const { lastHour, last24h } = getAdCounts();
+      if (lastHour >= CONFIG.MAX_ADS_PER_HOUR) {
+        showToast(`بلغت الحد الأقصى للإعلانات في الساعة (${CONFIG.MAX_ADS_PER_HOUR}).`, "err");
+        renderHUD();
+        return;
+      }
+      if (last24h >= CONFIG.MAX_ADS_PER_DAY) {
+        showToast(`بلغت الحد الأقصى للإعلانات اليومي (${CONFIG.MAX_ADS_PER_DAY}).`, "err");
+        renderHUD();
+        return;
+      }
+      if (adRemainingSeconds > 0) return;
+
+      window.open(SMART_LINK_URL, "_blank", "noopener,noreferrer");
+      adRemainingSeconds = CONFIG.AD_COOLDOWN_SECONDS;
+      renderHUD();
+
+      clearInterval(adCooldownTimer);
+      adCooldownTimer = setInterval(() => {
+        adRemainingSeconds -= 1;
+        if (adRemainingSeconds <= 0) {
+          clearInterval(adCooldownTimer);
+          adRemainingSeconds = 0;
+          state.points += CONFIG.AD_REWARD;
+          state.adTimestamps.push(Date.now());
+          saveState(state);
+          showToast(`تمت إضافة +${CONFIG.AD_REWARD} نقطة بعد إتمام الإعلان.`, "ok");
+          renderHUD();
+        } else {
+          renderHUD();
         }
-        const name = ZODIACS[0];
-        return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
-      }
-      if (day && month) {
-        const name = getAstroZodiac(day, month);
-        return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
-      }
-      const name = ZODIACS[0];
-      return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
+      }, 1000);
     }
 
-    function updateElementCards(percentages, dominantElement) {
-      const map = [
-        { el: 'ناري', pctId: 'pctFire', barId: 'barFire' },
-        { el: 'ترابي', pctId: 'pctEarth', barId: 'barEarth' },
-        { el: 'هوائي', pctId: 'pctAir', barId: 'barAir' },
-        { el: 'مائي', pctId: 'pctWater', barId: 'barWater' }
-      ];
-
-      for (const item of map) {
-        const pct = percentages ? percentages[item.el] : 0;
-        document.getElementById(item.pctId).textContent = `${pct}%`;
-        document.getElementById(item.barId).style.width = `${pct}%`;
-      }
-
-      document.querySelectorAll('.element-card').forEach(card => {
-        card.classList.toggle('active-element', Boolean(dominantElement) && card.dataset.el === dominantElement);
-      });
-    }
-
-    function updateWafqLinks(sumVal) {
-      const targetUrl = sumVal && sumVal > 0 ? `wafq.html?sum=${sumVal}` : 'wafq.html';
-      document.getElementById('sendToWafqBtn').href = targetUrl;
-      document.getElementById('topWafqLink').href = targetUrl;
-    }
-
-    function runCalculation() {
-      const text = document.getElementById('nameInput').value.trim();
-      const day = parseInt(document.getElementById('birthDay').value, 10) || 0;
-      const month = parseInt(document.getElementById('birthMonth').value, 10) || 0;
-      const year = parseInt(document.getElementById('birthYear').value, 10) || 0;
-
-      const lettersSum = calcAbjadSum(text);
-      const { percentages, dominant, totalLetters } = calcElementPercentages(text);
-      const hasDob = Boolean(day || month || year);
-
-      if (lettersSum <= 0 && !hasDob) {
-        lastCalculated = false;
-        updateWafqLinks(null);
-        updateElementCards(null, null);
-        document.getElementById('resultContent').style.display = 'none';
-        document.getElementById('resultEmpty').style.display = 'block';
+    // مكافأة الدخول اليومي المتدرجة (تتصفّر كل 7 أيام)
+    function handleDailyBonus() {
+      const info = getNextDailyRewardInfo();
+      if (info.alreadyClaimedToday) {
+        showToast("لقد استلمت مكافأة اليوم بالفعل.", "err");
         return;
       }
 
-      lastCalculated = true;
-      updateWafqLinks(lettersSum > 0 ? lettersSum : null);
-
-      const simpleNum = lettersSum > 0 ? simplifyWithMaster(lettersSum) : 0;
-      const zodiac = getZodiacInfo(day, month, year);
-      const zodiacMeta = ELEMENTS_META[zodiac.element];
-
-      document.getElementById('resTotal').textContent =
-        lettersSum > 0 ? lettersSum.toLocaleString('ar') : '—';
-      document.getElementById('resSimple').textContent =
-        lettersSum > 0 ? simpleNum.toLocaleString('ar') : '—';
-      document.getElementById('resZodiac').textContent = hasDob ? zodiac.name : '—';
-      document.getElementById('resZodiacElement').textContent =
-        hasDob ? `طبع البرج: ${zodiac.element} (${zodiacMeta.short})` : 'اختر تاريخ الميلاد';
-
-      if (totalLetters > 0 && dominant) {
-        const nameMeta = ELEMENTS_META[dominant];
-        document.getElementById('resNameElement').textContent = dominant;
-        document.getElementById('resNamePct').textContent = `${percentages[dominant]}% · ${nameMeta.short}`;
-
-        const nameBanner = document.getElementById('nameBanner');
-        nameBanner.style.setProperty('--nature-color', nameMeta.color);
-        document.getElementById('nameNatureTitle').textContent =
-          `${text ? `حروف «${text}»` : 'الحروف'} — طبع حروف الاسم: ${dominant} (${percentages[dominant]}%)`;
-        document.getElementById('nameNatureDesc').textContent = nameMeta.desc;
+      if (state.daily.streakDay >= 7) {
+        state.daily.streakDay = 1;
       } else {
-        document.getElementById('resNameElement').textContent = '—';
-        document.getElementById('resNamePct').textContent = 'أدخل اسماً أو نصاً';
-        const nameBanner = document.getElementById('nameBanner');
-        nameBanner.style.setProperty('--nature-color', '#d4af37');
-        document.getElementById('nameNatureTitle').textContent = 'طبع حروف الاسم';
-        document.getElementById('nameNatureDesc').textContent = 'لم يتم إدخال حروف لحساب طبع الاسم.';
+        state.daily.streakDay += 1;
       }
 
-      const zodiacBanner = document.getElementById('zodiacBanner');
-      zodiacBanner.style.setProperty('--nature-color', zodiacMeta.color);
-      if (hasDob) {
-        document.getElementById('zodiacNatureTitle').textContent =
-          `برج ${zodiac.name} — طبع البرج: ${zodiac.element} (${zodiacMeta.short})`;
-        document.getElementById('zodiacNatureDesc').textContent = zodiacMeta.desc;
-      } else {
-        document.getElementById('zodiacNatureTitle').textContent = 'طبع البرج';
-        document.getElementById('zodiacNatureDesc').textContent = 'اختر تاريخ الميلاد لعرض البرج وطبعه.';
-      }
-
-      updateElementCards(percentages, dominant);
-      document.getElementById('resultEmpty').style.display = 'none';
-      document.getElementById('resultContent').style.display = 'block';
+      state.daily.lastClaimDate = getTodayKey();
+      state.points += info.reward;
+      saveState(state);
+      showToast(`مبروك! حصلت على +${info.reward} نقطة (اليوم ${state.daily.streakDay} من الدورة الأسبوعية).`, "ok");
+      renderHUD();
     }
 
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeZodiacType = btn.dataset.zodiac;
-        if (lastCalculated) {
-          runCalculation();
+    // مشاركة النتيجة (+40 نقطة بحد مرة واحدة يومياً بعد وجود نتيجة)
+    async function handleShareResult() {
+      const today = getTodayKey();
+      if (state.lastShareDate === today) {
+        showToast("لقد حصلت على مكافأة المشاركة لليوم (+40 نقطة). يمكنك المشاركة مجدداً غداً.", "err");
+        return;
+      }
+
+      const textToShare = state.lastResultSummary
+        ? `${state.lastResultSummary} — عبر حاسبة الجُمّل والأوفاق`
+        : "جرّب حاسبة الجُمّل والأبراج ومولّد الأوفاق الآن!";
+
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: "حاسبة الجُمّل والأوفاق", text: textToShare, url: window.location.href });
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(`${textToShare} ${window.location.href}`);
         }
-      });
+      } catch {
+        // لو ألغى المستخدم نافذة المشاركة لا نمنح النقاط
+        showToast("لم تكتمل عملية المشاركة.", "err");
+        return;
+      }
+
+      state.lastShareDate = today;
+      state.points += CONFIG.SHARE_REWARD;
+      saveState(state);
+      showToast(`تمت المشاركة وحصلت على +${CONFIG.SHARE_REWARD} نقطة!`, "ok");
+      renderHUD();
+    }
+
+    // نسخ رابط دعوة صديق (+50 نقطة لكل صديق جديد عند دخوله)
+    async function handleCopyInvite() {
+      const inviteUrl = `${window.location.origin}${window.location.pathname}?ref=${encodeURIComponent(state.refCode)}`;
+      try {
+        await navigator.clipboard.writeText(inviteUrl);
+      } catch {
+        prompt("انسخ رابط الدعوة:", inviteUrl);
+      }
+      showToast(`تم نسخ رابط دعوتك! ستحصل على +${CONFIG.REFERRAL_REWARD} نقطة لكل صديق جديد يدخل عبره.`, "ok");
+    }
+
+    function spendTaskPoints() {
+      if (state.points < CONFIG.TASK_COST) {
+        showToast(`رصيدك الحالي (${state.points}) أقل من تكلفة المهمة (${CONFIG.TASK_COST} نقاط). شاهد إعلاناً أو استلم المكافآت.`, "err");
+        return false;
+      }
+      state.points -= CONFIG.TASK_COST;
+      saveState(state);
+      renderHUD();
+      return true;
+    }
+
+    // حساب الجُمّل ونسب طبائع الحروف (حروف فقط)
+    function calculateAbjad() {
+      const raw = document.getElementById("abjadInput").value || "";
+      const letters = [];
+      let total = 0;
+
+      const elementCounts = { "ناري": 0, "ترابي": 0, "هوائي": 0, "مائي": 0 };
+
+      for (const ch of raw) {
+        if (Object.prototype.hasOwnProperty.call(ABJAD_MAP, ch)) {
+          letters.push(ch);
+          total += ABJAD_MAP[ch];
+          const el = LETTER_ELEMENT[ch] || "ترابي";
+          elementCounts[el] += 1;
+        }
+      }
+
+      if (letters.length === 0) {
+        showToast("يرجى إدخال حروف عربية صالحة للحساب.", "err");
+        return;
+      }
+
+      if (!spendTaskPoints()) return;
+
+      const count = letters.length;
+      const pct = (k) => Math.round((elementCounts[k] / count) * 100);
+
+      const firePct = pct("ناري");
+      const earthPct = pct("ترابي");
+      const airPct = pct("هوائي");
+      const waterPct = pct("مائي");
+
+      state.lastCalculatedSum = total;
+      state.lastResultSummary = `حساب الجُمّل لـ "${raw.trim()}" = ${total} (عدد الحروف: ${count})`;
+      saveState(state);
+      renderHUD();
+
+      document.getElementById("abjadOutput").innerHTML = `
+        <div class="result-box">
+          <div>المجموع الأبجدي (حساب الجُمّل):</div>
+          <div class="big-num">${total}</div>
+          <div class="muted-note">عدد الحروف المحتسبة: ${count}</div>
+
+          <div class="bars">
+            <div class="bar-row">
+              <span>ناري</span>
+              <div class="bar-track"><div class="bar-fill" style="width:${firePct}%"></div></div>
+              <span>${firePct}%</span>
+            </div>
+            <div class="bar-row">
+              <span>ترابي</span>
+              <div class="bar-track"><div class="bar-fill" style="width:${earthPct}%"></div></div>
+              <span>${earthPct}%</span>
+            </div>
+            <div class="bar-row">
+              <span>هوائي</span>
+              <div class="bar-track"><div class="bar-fill" style="width:${airPct}%"></div></div>
+              <span>${airPct}%</span>
+            </div>
+            <div class="bar-row">
+              <span>مائي</span>
+              <div class="bar-track"><div class="bar-fill" style="width:${waterPct}%"></div></div>
+              <span>${waterPct}%</span>
+            </div>
+          </div>
+        </div>
+      `;
+      showToast(`تم تنفيذ الحساب وخصم ${CONFIG.TASK_COST} نقاط.`, "ok");
+    }
+
+    function getZodiacByMonthDay(month, day) {
+      const inRange = (m, d, start, end) => {
+        const [sm, sd] = start;
+        const [em, ed] = end;
+        if (sm <= em) {
+          return (m > sm || (m === sm && d >= sd)) && (m < em || (m === em && d <= ed));
+        }
+        // يعبر نهاية السنة (مثل الجدي 12/22 إلى 1/19)
+        return (m > sm || (m === sm && d >= sd)) || (m < em || (m === em && d <= ed));
+      };
+
+      return ZODIAC_DATA.find((z) => inRange(month, day, z.start, z.end)) || ZODIAC_DATA[0];
+    }
+
+    function calculateZodiac() {
+      const dateVal = document.getElementById("birthDateInput").value;
+      if (!dateVal) {
+        showToast("يرجى اختيار تاريخ الميلاد أولاً.", "err");
+        return;
+      }
+
+      const parts = dateVal.split("-");
+      const month = parseInt(parts[1], 10);
+      const day = parseInt(parts[2], 10);
+
+      if (!spendTaskPoints()) return;
+
+      const zodiac = getZodiacByMonthDay(month, day);
+      state.lastResultSummary = `البرج: ${zodiac.name} (الطبع: ${zodiac.element})`;
+      saveState(state);
+
+      document.getElementById("zodiacOutput").innerHTML = `
+        <div class="result-box">
+          <div>البرج الفلكي:</div>
+          <div class="big-num">${zodiac.name}</div>
+          <div style="margin-top:6px;"><strong>طبع البرج:</strong> ${zodiac.element}</div>
+          <div class="muted-note"><strong>أبرز السمات:</strong> ${zodiac.traits}</div>
+        </div>
+      `;
+      showToast(`تم استخراج البرج وخصم ${CONFIG.TASK_COST} نقاط.`, "ok");
+    }
+
+    document.getElementById("watchAdBtn").addEventListener("click", handleWatchAd);
+    document.getElementById("dailyBonusBtn").addEventListener("click", handleDailyBonus);
+    document.getElementById("shareResultBtn").addEventListener("click", handleShareResult);
+    document.getElementById("copyInviteBtn").addEventListener("click", handleCopyInvite);
+    document.getElementById("calcAbjadBtn").addEventListener("click", calculateAbjad);
+    document.getElementById("calcZodiacBtn").addEventListener("click", calculateZodiac);
+    document.getElementById("openWafqFromSumBtn").addEventListener("click", () => {
+      if (typeof state.lastCalculatedSum === "number" && state.lastCalculatedSum > 0) {
+        window.location.href = `wafq.html?sum=${encodeURIComponent(state.lastCalculatedSum)}`;
+      }
     });
 
-    document.getElementById('birthMonth').addEventListener('change', populateDays);
-    document.getElementById('birthYear').addEventListener('change', populateDays);
-    document.getElementById('calcBtn').addEventListener('click', runCalculation);
-
-    populateYears();
-    populateDays();
+    handleIncomingReferral();
+    renderHUD();
   </script>
 </body>
 </html>
