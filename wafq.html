@@ -214,7 +214,7 @@
     }
 
     .wafq-cell {
-      min-width: 90px;
+      min-width: 96px;
       min-height: 76px;
       padding: 8px 6px;
       background: var(--surface-2);
@@ -505,9 +505,7 @@
       return order;
     }
 
-    function findNameMatchByTens(cellValue, namesList, usedNames) {
-      if (!Number.isSafeInteger(cellValue) || cellValue <= 0) return null;
-
+    function resolveNameByRule(cellValue, namesList, usedNames) {
       const MAX_EXP = 9;
       const cellScaled = [];
       for (let k = 0; k <= MAX_EXP; k++) {
@@ -532,7 +530,50 @@
         }
       }
 
-      return null;
+      let bestUnused = null;
+      let bestUnusedDiff = Infinity;
+
+      for (const candidate of namesList) {
+        if (!candidate.value || candidate.value <= 0) continue;
+        if (usedNames.has(candidate.display)) continue;
+
+        for (let m = 0; m <= MAX_EXP; m++) {
+          const nameVal = candidate.value * Math.pow(10, m);
+          if (!Number.isSafeInteger(nameVal)) break;
+
+          for (const cVal of cellScaled) {
+            const diff = Math.abs(cVal - nameVal);
+            if (diff < bestUnusedDiff) {
+              bestUnusedDiff = diff;
+              bestUnused = candidate.display;
+            }
+          }
+        }
+      }
+
+      if (bestUnused) return bestUnused;
+
+      let bestAny = namesList[0].display;
+      let bestAnyDiff = Infinity;
+
+      for (const candidate of namesList) {
+        if (!candidate.value || candidate.value <= 0) continue;
+
+        for (let m = 0; m <= MAX_EXP; m++) {
+          const nameVal = candidate.value * Math.pow(10, m);
+          if (!Number.isSafeInteger(nameVal)) break;
+
+          for (const cVal of cellScaled) {
+            const diff = Math.abs(cVal - nameVal);
+            if (diff < bestAnyDiff) {
+              bestAnyDiff = diff;
+              bestAny = candidate.display;
+            }
+          }
+        }
+      }
+
+      return bestAny;
     }
 
     function renderFromState(state) {
@@ -559,19 +600,15 @@
         if (currentMode === 'numeric') {
           displayGrid[r][c] = val.toLocaleString('ar');
         } else {
-          const matched = findNameMatchByTens(val, activeNames, usedNames);
-          if (matched) {
-            usedNames.add(matched);
-            displayGrid[r][c] = matched;
-          } else {
-            displayGrid[r][c] = val.toLocaleString('ar');
-          }
+          const resolvedName = resolveNameByRule(val, activeNames, usedNames);
+          usedNames.add(resolvedName);
+          displayGrid[r][c] = resolvedName;
         }
       }
 
       const gridEl = document.createElement('div');
       gridEl.className = 'wafq-grid';
-      gridEl.style.gridTemplateColumns = `repeat(${n}, minmax(90px, 1fr))`;
+      gridEl.style.gridTemplateColumns = `repeat(${n}, minmax(96px, 1fr))`;
 
       const centerR = Math.floor((n - 1) / 2);
       const centerC = Math.floor((n - 1) / 2);
