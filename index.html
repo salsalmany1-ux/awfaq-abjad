@@ -211,7 +211,7 @@
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
       gap: 12px;
       margin-bottom: 16px;
     }
@@ -230,17 +230,30 @@
     }
 
     .stat-box .v {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 800;
       color: var(--gold-bright);
       margin-top: 4px;
+    }
+
+    .stat-box .sub {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-top: 3px;
+      font-weight: 600;
+    }
+
+    .split-natures {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
     }
 
     .nature-banner {
       background: var(--surface-2);
       border: 1px solid var(--gold-border);
       border-radius: 14px;
-      padding: 16px 18px;
+      padding: 15px 17px;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -259,14 +272,14 @@
     }
 
     .nature-title {
-      font-size: 1.12rem;
+      font-size: 1.05rem;
       font-weight: 800;
       color: var(--nature-color, var(--gold-bright));
     }
 
     .nature-desc {
       color: var(--text);
-      font-size: 0.95rem;
+      font-size: 0.93rem;
     }
 
     .elements-showcase {
@@ -415,18 +428,27 @@
             <div class="v" id="resSimple">—</div>
           </div>
           <div class="stat-box">
-            <div class="k">الطبع الغالب</div>
-            <div class="v" id="resElement">—</div>
-          </div>
-          <div class="stat-box">
             <div class="k">البرج</div>
             <div class="v" id="resZodiac">—</div>
+            <div class="sub" id="resZodiacElement">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="k">طبع حروف الاسم</div>
+            <div class="v" id="resNameElement">—</div>
+            <div class="sub" id="resNamePct">—</div>
           </div>
         </div>
 
-        <div class="nature-banner" id="natureBanner">
-          <div class="nature-title" id="natureTitle"></div>
-          <div class="nature-desc" id="natureDesc"></div>
+        <div class="split-natures">
+          <div class="nature-banner" id="zodiacBanner">
+            <div class="nature-title" id="zodiacNatureTitle"></div>
+            <div class="nature-desc" id="zodiacNatureDesc"></div>
+          </div>
+
+          <div class="nature-banner" id="nameBanner">
+            <div class="nature-title" id="nameNatureTitle"></div>
+            <div class="nature-desc" id="nameNatureDesc"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -490,20 +512,34 @@
     const ELEMENTS_META = {
       'ناري': {
         color: '#ff6b35',
-        desc: 'الطبع الناري (حار يابس): يغلب عليه العزم والحركة السريعة والوضوح في القرار.'
+        short: 'حرارة وحزم',
+        desc: 'طبع ناري يغلب عليه العزم والحركة والمبادرة وسرعة الحسم.'
       },
       'ترابي': {
         color: '#c89d54',
-        desc: 'الطبع الترابي (بارد يابس): يغلب عليه التأنّي والاتزان والقدرة على التحمل والرسوخ.'
+        short: 'ثبات واتزان',
+        desc: 'طبع ترابي يغلب عليه التأنّي والواقعية والصبر والبناء الثابت.'
       },
       'هوائي': {
         color: '#56cfe1',
-        desc: 'الطبع الهوائي (حار رطب): يغلب عليه الفكر المتجدد وسرعة التكيّف والتعبير.'
+        short: 'فكر ومرونة',
+        desc: 'طبع هوائي يغلب عليه التواصل وسرعة البديهة والتحليل والمرونة.'
       },
       'مائي': {
         color: '#4ea8de',
-        desc: 'الطبع المائي (بارد رطب): يغلب عليه الإحساس العميق والسكينة والقدرة على الاحتواء.'
+        short: 'عمق وحدس',
+        desc: 'طبع مائي يغلب عليه الإحساس العميق والسكينة والحدس والاحتواء.'
       }
+    };
+
+    const ZODIAC_ELEMENT = {
+      'الحمل': 'ناري', 'الأسد': 'ناري', 'القوس': 'ناري',
+      'الثور': 'ترابي', 'العذراء': 'ترابي', 'الجدي': 'ترابي',
+      'الجوزاء': 'هوائي', 'الميزان': 'هوائي', 'الدلو': 'هوائي',
+      'السرطان': 'مائي', 'العقرب': 'مائي', 'الحوت': 'مائي',
+      'الفأر': 'مائي', 'الثور_ص': 'ترابي', 'النمر': 'هوائي', 'الأرنب': 'هوائي',
+      'التنين': 'ترابي', 'الأفعى': 'ناري', 'الحصان': 'ناري', 'العنزة': 'ترابي',
+      'القرد': 'هوائي', 'الديك': 'ترابي', 'الكلب': 'ترابي', 'الخنزير': 'مائي'
     };
 
     const ELEMENTS_ORDER = ['ناري', 'ترابي', 'هوائي', 'مائي'];
@@ -622,22 +658,28 @@
       return 'الحوت';
     }
 
-    function getZodiacLabel(total, day, month, year) {
+    function getZodiacInfo(total, day, month, year) {
       if (activeZodiacType === 'monthly') {
         const idx = month ? (month - 1) % 12 : (total - 1 + 12) % 12;
-        return ZODIACS[idx];
+        const name = ZODIACS[idx];
+        return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
       }
       if (activeZodiacType === 'yearly') {
         if (year) {
           const idx = ((year - 4) % 12 + 12) % 12;
-          return CHINESE_ZODIACS[idx];
+          const name = CHINESE_ZODIACS[idx];
+          const element = idx === 1 ? 'ترابي' : (ZODIAC_ELEMENT[name] || 'ناري');
+          return { name, element };
         }
-        return ZODIACS[(total - 1 + 12) % 12];
+        const name = ZODIACS[(total - 1 + 12) % 12];
+        return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
       }
       if (day && month) {
-        return getAstroZodiac(day, month);
+        const name = getAstroZodiac(day, month);
+        return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
       }
-      return ZODIACS[(total - 1 + 12) % 12];
+      const name = ZODIACS[(total - 1 + 12) % 12];
+      return { name, element: ZODIAC_ELEMENT[name] || 'ناري' };
     }
 
     function updateElementCards(percentages, dominantElement) {
@@ -689,19 +731,29 @@
 
       const simpleNum = textSum > 0 ? simplifyWithMaster(textSum) : simplifyWithMaster(dobSum);
       const { percentages, dominant } = calcElementPercentages(text, total);
-      const zodiac = getZodiacLabel(total, day, month, year);
-      const meta = ELEMENTS_META[dominant];
+      const zodiac = getZodiacInfo(total, day, month, year);
+
+      const zodiacMeta = ELEMENTS_META[zodiac.element];
+      const nameMeta = ELEMENTS_META[dominant];
 
       document.getElementById('resTotal').textContent = total.toLocaleString('ar');
       document.getElementById('resSimple').textContent = simpleNum.toLocaleString('ar');
-      document.getElementById('resElement').textContent = `${dominant} (${percentages[dominant]}%)`;
-      document.getElementById('resZodiac').textContent = zodiac;
+      document.getElementById('resZodiac').textContent = zodiac.name;
+      document.getElementById('resZodiacElement').textContent = `طبع البرج: ${zodiac.element} (${zodiacMeta.short})`;
+      document.getElementById('resNameElement').textContent = dominant;
+      document.getElementById('resNamePct').textContent = `${percentages[dominant]}% · ${nameMeta.short}`;
 
-      const banner = document.getElementById('natureBanner');
-      banner.style.setProperty('--nature-color', meta.color);
-      document.getElementById('natureTitle').textContent =
-        `${text ? `«${text}» — ` : ''}الطبع الغالب ${dominant} (${percentages[dominant]}%) · البرج ${zodiac} · الرقم المبسط ${simpleNum.toLocaleString('ar')}`;
-      document.getElementById('natureDesc').textContent = meta.desc;
+      const zodiacBanner = document.getElementById('zodiacBanner');
+      zodiacBanner.style.setProperty('--nature-color', zodiacMeta.color);
+      document.getElementById('zodiacNatureTitle').textContent =
+        `برج ${zodiac.name} — طبع البرج: ${zodiac.element} (${zodiacMeta.short})`;
+      document.getElementById('zodiacNatureDesc').textContent = zodiacMeta.desc;
+
+      const nameBanner = document.getElementById('nameBanner');
+      nameBanner.style.setProperty('--nature-color', nameMeta.color);
+      document.getElementById('nameNatureTitle').textContent =
+        `${text ? `حروف «${text}»` : 'الحروف'} — طبع حروف الاسم: ${dominant} (${percentages[dominant]}%)`;
+      document.getElementById('nameNatureDesc').textContent = nameMeta.desc;
 
       updateElementCards(percentages, dominant);
       document.getElementById('resultEmpty').style.display = 'none';
