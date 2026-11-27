@@ -324,9 +324,10 @@
     ];
 
     function stripAl(name) {
+      if (name === 'الله') return 'الله';
       return name
         .split(' ')
-        .map(word => word.startsWith('ال') ? word.slice(2) : word)
+        .map(word => word === 'الله' ? 'الله' : (word.startsWith('ال') ? word.slice(2) : word))
         .join(' ');
     }
 
