@@ -450,6 +450,11 @@
     const STORAGE_KEY = "abjad_wafq_points_state_v1";
     const REF_CLAIMED_KEY = "abjad_wafq_ref_claimed_v1";
 
+    function formatInsufficientPointsMessage(requiredPoints, currentPoints) {
+      const needed = Math.max(0, requiredPoints - currentPoints);
+      return `رصيدك الحالي (${currentPoints} نقطة) غير كافٍ — المطلوب ${requiredPoints} نقاط (ينقصك ${needed} نقطة). شاهد إعلاناً (+10) أو استلم مكافأتك اليومية أو شارك النتيجة (+40) أو ادعُ صديقاً (+50).`;
+    }
+
     function getWafqPageUrl(sumValue) {
       const targetUrl = new URL("wafq.html", window.location.href);
       if (typeof sumValue === "number" && Number.isFinite(sumValue) && sumValue > 0) {
@@ -814,7 +819,7 @@
 
     function spendTaskPoints() {
       if (state.points < CONFIG.TASK_COST) {
-        showToast(`رصيدك الحالي (${state.points}) أقل من تكلفة المهمة (${CONFIG.TASK_COST} نقاط).`, "err");
+        showToast(formatInsufficientPointsMessage(CONFIG.TASK_COST, state.points), "err");
         return false;
       }
       state.points -= CONFIG.TASK_COST;
