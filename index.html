@@ -200,12 +200,6 @@
       color: var(--gold-bright);
       margin-top: 2px;
     }
-    .stat-card .sub-step {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 4px;
-      min-height: 20px;
-    }
 
     .dominant-banner {
       margin-top: 16px;
@@ -398,22 +392,18 @@
         <div class="stat-card">
           <div class="label">الجُمّل الكبير</div>
           <div class="value" id="bigTotal">0</div>
-          <div class="sub-step" id="bigStep"></div>
         </div>
         <div class="stat-card">
-          <div class="label">الرقم المميز (11، 22، 33 لا تُبسط)</div>
+          <div class="label">الرقم المميز</div>
           <div class="value" id="specialTotal">0</div>
-          <div class="sub-step" id="specialStep"></div>
         </div>
         <div class="stat-card">
-          <div class="label">الوسيط (الباقي على 12)</div>
+          <div class="label">الوسيط</div>
           <div class="value" id="wasitTotal">0</div>
-          <div class="sub-step"></div>
         </div>
         <div class="stat-card">
           <div class="label">عدد الحروف المحتسبة</div>
           <div class="value" id="lettersCount">0</div>
-          <div class="sub-step"></div>
         </div>
       </div>
 
@@ -517,18 +507,15 @@
     let activeZodiacType = 'monthly';
 
     function reduceSpecialNumber(num) {
-      if (!num || num <= 0) return { value: 0, steps: [] };
+      if (!num || num <= 0) return 0;
       let current = num;
-      const steps = [String(current)];
-
       while (current > 9 && !MASTER_NUMBERS.has(current)) {
-        const digits = String(current).split('').map(Number);
-        const sum = digits.reduce((a, b) => a + b, 0);
-        steps.push(`${digits.join(' + ')} = ${sum}`);
-        current = sum;
+        current = String(current)
+          .split('')
+          .map(Number)
+          .reduce((a, b) => a + b, 0);
       }
-
-      return { value: current, steps };
+      return current;
     }
 
     function populateDateSelects() {
@@ -681,10 +668,7 @@
       lastResult = res;
 
       document.getElementById('bigTotal').textContent = res.big.toLocaleString('ar');
-      document.getElementById('specialTotal').textContent = res.special.value;
-      document.getElementById('specialStep').textContent = res.special.steps.length > 1
-        ? res.special.steps.slice(1).join(' | ')
-        : (MASTER_NUMBERS.has(res.special.value) ? 'رقم مميز لا يُبسط' : '');
+      document.getElementById('specialTotal').textContent = res.special;
       document.getElementById('wasitTotal').textContent = res.wasit;
       document.getElementById('lettersCount').textContent = res.items.length;
 
@@ -728,7 +712,7 @@
 
       document.getElementById('dominantBanner').innerHTML = res.items.length
         ? `<span>الطبع الغالب في النص: <strong style="color:${ELEMENTS_META[topKey].color};">${ELEMENTS_META[topKey].name} ${ELEMENTS_META[topKey].icon}</strong> (${counts[topKey]} حروف)</span>
-           <span>الرمز الرقمي للجُمّل: <strong>${res.big}</strong> • الرقم المميز: <strong>${res.special.value}</strong></span>`
+           <span>الرمز الرقمي للجُمّل: <strong>${res.big}</strong> • الرقم المميز: <strong>${res.special}</strong></span>`
         : `<span>تم تحديث الحساب.</span>`;
 
       document.getElementById('sortedGroups').innerHTML = Object.entries(ELEMENTS_META).map(([key, meta]) => `
@@ -794,7 +778,7 @@
 
       ctx.fillStyle = '#e2e8f0';
       ctx.font = '600 35px Cairo, sans-serif';
-      ctx.fillText(`الرقم المميز: ${res.special.value}   |   الوسيط: ${res.wasit}`, canvas.width / 2, 735);
+      ctx.fillText(`الرقم المميز: ${res.special}   |   الوسيط: ${res.wasit}`, canvas.width / 2, 735);
 
       const totalEl = res.items.length || 1;
       const pct = (n) => Math.round((n / totalEl) * 100);
