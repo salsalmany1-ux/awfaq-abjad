@@ -201,6 +201,31 @@
       font-size: 0.95rem;
     }
 
+    .radio-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .radio-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      padding: 9px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .radio-pill input {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
     .btn {
       background: var(--accent);
       color: #0b0e14;
@@ -235,10 +260,17 @@
       margin-top: 14px;
     }
 
-    .big-num {
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: var(--accent-2);
+    .details-grid {
+      display: grid;
+      gap: 8px;
+      font-size: 0.94rem;
+    }
+
+    .details-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 12px;
     }
 
     .bars {
@@ -316,10 +348,10 @@
     <main class="container">
       <header>
         <h1>حاسبة الجُمّل والحروف والأبراج</h1>
-        <p class="subtitle">حساب الجُمّل بالأبجدية، تحليل نسب طبائع الحروف، واستخراج البرج الفلكي وطبعه</p>
+        <p class="subtitle">حساب الجُمّل بالأبجدية، تحليل نسب طبائع الحروف، واستخراج الأبراج الفلكية والصينية والشهرية</p>
         <div class="nav-links">
           <a class="nav-btn primary" href="index.html">الحاسبة والأبراج</a>
-          <a class="nav-btn" href="wafq.html">مولّد الأوفاق</a>
+          <a class="nav-btn" id="wafqNavLink" href="wafq.html">مولّد الأوفاق</a>
         </div>
       </header>
 
@@ -351,7 +383,7 @@
       <div class="banner-slot" data-ad-key="d18f65e3e3e650c995bfae571ec658e4" data-ad-w="468" data-ad-h="60"></div>
 
       <section class="card">
-        <div class="card-title">2. البرج الفلكي وطبعه حسب تاريخ الميلاد</div>
+        <div class="card-title">2. البرج الفلكي والصيني والشهري</div>
         <div class="grid-3">
           <div>
             <label for="birthDaySelect">اليوم</label>
@@ -380,6 +412,26 @@
             <select id="birthYearSelect"></select>
           </div>
         </div>
+
+        <div class="radio-group" role="radiogroup" aria-label="اختر نوع البرج">
+          <label class="radio-pill">
+            <input type="radio" name="zodiacMode" value="all" checked />
+            <span>استخراج كل الأنواع بنفس الضغطة</span>
+          </label>
+          <label class="radio-pill">
+            <input type="radio" name="zodiacMode" value="astro" />
+            <span>البرج الفلكي</span>
+          </label>
+          <label class="radio-pill">
+            <input type="radio" name="zodiacMode" value="chinese" />
+            <span>البرج الصيني</span>
+          </label>
+          <label class="radio-pill">
+            <input type="radio" name="zodiacMode" value="monthly" />
+            <span>البرج الشهري</span>
+          </label>
+        </div>
+
         <div class="actions-row">
           <button class="btn" id="calcZodiacBtn" type="button">استخراج البرج (10 نقاط)</button>
         </div>
@@ -397,6 +449,14 @@
     const AD_SCRIPT_BASE = "https://bicea.org/22";
     const STORAGE_KEY = "abjad_wafq_points_state_v1";
     const REF_CLAIMED_KEY = "abjad_wafq_ref_claimed_v1";
+
+    function getWafqPageUrl(sumValue) {
+      const targetUrl = new URL("wafq.html", window.location.href);
+      if (typeof sumValue === "number" && Number.isFinite(sumValue) && sumValue > 0) {
+        targetUrl.searchParams.set("sum", String(sumValue));
+      }
+      return targetUrl.toString();
+    }
 
     function mountIsolatedBanners() {
       document.querySelectorAll(".banner-slot[data-ad-key]").forEach((slot) => {
@@ -472,20 +532,42 @@
       "ر": "مائي", "خ": "مائي", "غ": "مائي"
     };
 
-    const ZODIAC_DATA = [
-      { name: "الحمل", element: "ناري", start: [3, 21], end: [4, 19], traits: "مبادرة، جرأة، حماس وسرعة قرار." },
-      { name: "الثور", element: "ترابي", start: [4, 20], end: [5, 20], traits: "ثبات، صبر، عملية وتقدير للاستقرار." },
-      { name: "الجوزاء", element: "هوائي", start: [5, 21], end: [6, 20], traits: "تواصل، فضول معرفي، سرعة بديهة وتنوع." },
-      { name: "السرطان", element: "مائي", start: [6, 21], end: [7, 22], traits: "حدس، عاطفة، حماية وانتماء عميق." },
-      { name: "الأسد", element: "ناري", start: [7, 23], end: [8, 22], traits: "حضور قيادي، كرم، ثقة وطموح واضح." },
-      { name: "العذراء", element: "ترابي", start: [8, 23], end: [9, 22], traits: "دقة، تحليل، تنظيم وميل للتحسين المستمر." },
-      { name: "الميزان", element: "هوائي", start: [9, 23], end: [10, 22], traits: "توازن، دبلوماسية، ذوق وحس عدالة." },
-      { name: "العقرب", element: "مائي", start: [10, 23], end: [11, 21], traits: "عمق، إصرار، كتمان وقوة ملاحظة." },
-      { name: "القوس", element: "ناري", start: [11, 22], end: [12, 21], traits: "تفاؤل، انفتاح، حب السفر والبحث عن المعنى." },
-      { name: "الجدي", element: "ترابي", start: [12, 22], end: [1, 19], traits: "انضباط، مسؤولية، نفس طويل وبناء منهجي." },
-      { name: "الدلو", element: "هوائي", start: [1, 20], end: [2, 18], traits: "استقلالية، ابتكار، رؤية جماعية وتجديد." },
-      { name: "الحوت", element: "مائي", start: [2, 19], end: [3, 20], traits: "خيال واسع، تعاطف، مرونة وإلهام." }
+    const ASTRO_ZODIAC = [
+      { name: "الحمل", element: "ناري", start: [3, 21], end: [4, 19] },
+      { name: "الثور", element: "ترابي", start: [4, 20], end: [5, 20] },
+      { name: "الجوزاء", element: "هوائي", start: [5, 21], end: [6, 20] },
+      { name: "السرطان", element: "مائي", start: [6, 21], end: [7, 22] },
+      { name: "الأسد", element: "ناري", start: [7, 23], end: [8, 22] },
+      { name: "العذراء", element: "ترابي", start: [8, 23], end: [9, 22] },
+      { name: "الميزان", element: "هوائي", start: [9, 23], end: [10, 22] },
+      { name: "العقرب", element: "مائي", start: [10, 23], end: [11, 21] },
+      { name: "القوس", element: "ناري", start: [11, 22], end: [12, 21] },
+      { name: "الجدي", element: "ترابي", start: [12, 22], end: [1, 19] },
+      { name: "الدلو", element: "هوائي", start: [1, 20], end: [2, 18] },
+      { name: "الحوت", element: "مائي", start: [2, 19], end: [3, 20] }
     ];
+
+    const CHINESE_ANIMALS = [
+      "الفأر", "الثور", "النمر", "الأرنب", "التنين", "الأفعى",
+      "الحصان", "الماعز", "القرد", "الديك", "الكلب", "الخنزير"
+    ];
+
+    const CHINESE_ELEMENTS = ["خشب", "نار", "أرض", "معدن", "ماء"];
+
+    const MONTHLY_ZODIAC = {
+      1: "الجدي / الدلو",
+      2: "الدلو / الحوت",
+      3: "الحوت / الحمل",
+      4: "الحمل / الثور",
+      5: "الثور / الجوزاء",
+      6: "الجوزاء / السرطان",
+      7: "السرطان / الأسد",
+      8: "الأسد / العذراء",
+      9: "العذراء / الميزان",
+      10: "الميزان / العقرب",
+      11: "العقرب / القوس",
+      12: "القوس / الجدي"
+    };
 
     function populateBirthSelects() {
       const daySel = document.getElementById("birthDaySelect");
@@ -625,8 +707,13 @@
       document.getElementById("statusBar").textContent =
         `إعلانات الساعة: ${lastHour}/${CONFIG.MAX_ADS_PER_HOUR} • اليوم: ${last24h}/${CONFIG.MAX_ADS_PER_DAY}`;
 
+      const wafqNavLink = document.getElementById("wafqNavLink");
+      if (wafqNavLink) {
+        wafqNavLink.href = getWafqPageUrl(state.lastCalculatedSum);
+      }
+
       const openWafqBtn = document.getElementById("openWafqFromSumBtn");
-      openWafqBtn.disabled = !(typeof state.lastCalculatedSum === "number" && state.lastCalculatedSum > 0);
+      openWafqBtn.disabled = !(typeof state.lastCalculatedSum === "number" && Number.isFinite(state.lastCalculatedSum) && state.lastCalculatedSum >= 0);
     }
 
     function handleIncomingReferral() {
@@ -773,7 +860,7 @@
       document.getElementById("abjadOutput").innerHTML = `
         <div class="result-box">
           <div>المجموع الأبجدي (حساب الجُمّل):</div>
-          <div class="big-num">${total}</div>
+          <div style="font-size:1.7rem;font-weight:800;color:var(--accent-2);">${total}</div>
           <div class="muted-note">عدد الحروف المحتسبة: ${count}</div>
 
           <div class="bars">
@@ -803,7 +890,7 @@
       showToast(`تم تنفيذ الحساب وخصم ${CONFIG.TASK_COST} نقاط.`, "ok");
     }
 
-    function getZodiacByMonthDay(month, day) {
+    function getAstroZodiac(month, day) {
       const inRange = (m, d, start, end) => {
         const [sm, sd] = start;
         const [em, ed] = end;
@@ -812,7 +899,21 @@
         }
         return (m > sm || (m === sm && d >= sd)) || (m < em || (m === em && d <= ed));
       };
-      return ZODIAC_DATA.find((z) => inRange(month, day, z.start, z.end)) || ZODIAC_DATA[0];
+      return ASTRO_ZODIAC.find((z) => inRange(month, day, z.start, z.end)) || ASTRO_ZODIAC[0];
+    }
+
+    function getChineseZodiac(year) {
+      const animalIndex = ((year - 4) % 12 + 12) % 12;
+      const elementIndex = Math.floor((((year - 4) % 10 + 10) % 10) / 2);
+      return {
+        animal: CHINESE_ANIMALS[animalIndex],
+        element: CHINESE_ELEMENTS[elementIndex]
+      };
+    }
+
+    function getSelectedZodiacMode() {
+      const checked = document.querySelector('input[name="zodiacMode"]:checked');
+      return checked ? checked.value : "all";
     }
 
     function calculateZodiac() {
@@ -827,18 +928,41 @@
 
       if (!spendTaskPoints()) return;
 
-      const zodiac = getZodiacByMonthDay(month, day);
-      state.lastResultSummary = `البرج: ${zodiac.name} (الطبع: ${zodiac.element})`;
+      const astro = getAstroZodiac(month, day);
+      const chinese = getChineseZodiac(year);
+      const monthly = MONTHLY_ZODIAC[month] || "";
+      const mode = getSelectedZodiacMode();
+
+      const astroHtml = `<div class="details-item"><strong>البرج الفلكي:</strong> ${astro.name} (${astro.element})</div>`;
+      const chineseHtml = `<div class="details-item"><strong>البرج الصيني:</strong> ${chinese.animal} (${chinese.element})</div>`;
+      const monthlyHtml = `<div class="details-item"><strong>البرج الشهري:</strong> ${monthly}</div>`;
+
+      let renderedItems = "";
+      let summaryText = "";
+
+      if (mode === "astro") {
+        renderedItems = astroHtml;
+        summaryText = `البرج الفلكي: ${astro.name} (${astro.element})`;
+      } else if (mode === "chinese") {
+        renderedItems = chineseHtml;
+        summaryText = `البرج الصيني: ${chinese.animal} (${chinese.element})`;
+      } else if (mode === "monthly") {
+        renderedItems = monthlyHtml;
+        summaryText = `البرج الشهري: ${monthly}`;
+      } else {
+        renderedItems = `${astroHtml}${chineseHtml}${monthlyHtml}`;
+        summaryText = `الفلكي: ${astro.name} • الصيني: ${chinese.animal} • الشهري: ${monthly}`;
+      }
+
+      state.lastResultSummary = summaryText;
       saveState(state);
 
       document.getElementById("zodiacOutput").innerHTML = `
         <div class="result-box">
-          <div>البرج الفلكي:</div>
-          <div class="big-num">${zodiac.name}</div>
-          <div style="margin-top:6px;"><strong>طبع البرج:</strong> ${zodiac.element}</div>
-          <div class="muted-note"><strong>أبرز السمات:</strong> ${zodiac.traits}</div>
+          <div class="details-grid">${renderedItems}</div>
         </div>
       `;
+
       showToast(`تم استخراج البرج وخصم ${CONFIG.TASK_COST} نقاط.`, "ok");
     }
 
@@ -850,9 +974,15 @@
     document.getElementById("copyInviteBtn").addEventListener("click", handleCopyInvite);
     document.getElementById("calcAbjadBtn").addEventListener("click", calculateAbjad);
     document.getElementById("calcZodiacBtn").addEventListener("click", calculateZodiac);
+
+    document.getElementById("wafqNavLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      window.location.href = getWafqPageUrl(state.lastCalculatedSum);
+    });
+
     document.getElementById("openWafqFromSumBtn").addEventListener("click", () => {
-      if (typeof state.lastCalculatedSum === "number" && state.lastCalculatedSum > 0) {
-        window.location.href = `wafq.html?sum=${encodeURIComponent(state.lastCalculatedSum)}`;
+      if (typeof state.lastCalculatedSum === "number" && Number.isFinite(state.lastCalculatedSum) && state.lastCalculatedSum >= 0) {
+        window.location.href = getWafqPageUrl(state.lastCalculatedSum);
       }
     });
 
